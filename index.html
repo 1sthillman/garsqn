@@ -539,7 +539,12 @@ header {
         // Supabase bağlantısı
         const SUPABASE_URL = 'https://crilryndqxtpnyrxfapo.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNyaWxyeW5kcXh0cG55cnhmYXBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTcwMTI3NzcsImV4cCI6MjAzMjU4ODc3N30.gKA9QsaS4L9oPpkDovbH5IQhyXZEgKfhVNQoNQNYp7o';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+            headers: {
+                'apikey': SUPABASE_KEY,
+                'Authorization': `Bearer ${SUPABASE_KEY}`
+            }
+        });
 
         // Uygulama durumu
         const state = {
