@@ -6,7 +6,7 @@
     <title>Restoran Menü</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Supabase.js kütüphanesini kullanmıyoruz, doğrudan fetch API ile çalışıyoruz -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * {
             margin: 0;
@@ -539,14 +539,8 @@ header {
         // Supabase bağlantısı
         const SUPABASE_URL = 'https://crilryndqxtpnyrxfapo.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNyaWxyeW5kcXh0cG55cnhmYXBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTcwMTI3NzcsImV4cCI6MjAzMjU4ODc3N30.gKA9QsaS4L9oPpkDovbH5IQhyXZEgKfhVNQoNQNYp7o';
-        
-        // Supabase.js kullanımını kaldırdık, doğrudan fetch API kullanıyoruz
-        // const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
-        //     headers: {
-        //         'apikey': SUPABASE_KEY,
-        //         'Authorization': `Bearer ${SUPABASE_KEY}`
-        //     }
-        // });
+        // Supabase-JS istemcisi
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         // Uygulama durumu
         const state = {
@@ -600,49 +594,24 @@ header {
         async function loadRestaurantData(restaurantId) {
             showLoading(true);
             try {
-                console.log("Restoran verileri yükleniyor:", restaurantId);
-                
-                // Doğrudan fetch API kullanarak kontrol edelim
-                console.log("API anahtarı:", SUPABASE_KEY);
-                const response = await fetch(`${SUPABASE_URL}/rest/v1/restaurants?id=eq.${restaurantId}&select=*`, {
-                    method: 'GET',
-                    headers: {
-                        'apikey': SUPABASE_KEY,
-                        'Authorization': `Bearer ${SUPABASE_KEY}`,
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    }
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`API yanıtı başarısız: ${response.status} ${response.statusText}`);
-                }
-                
-                const restaurants = await response.json();
-                if (!restaurants || restaurants.length === 0) {
-                    throw new Error('Restoran bulunamadı');
-                }
-                
-                const restaurant = restaurants[0];
-                console.log("Restoran verisi alındı:", restaurant);
-                
+                const { data: restaurant, error: restaurantError } = await supabase
+                    .from('restaurants')
+                    .select('*')
+                    .eq('id', restaurantId)
+                    .single();
+                if (restaurantError) throw restaurantError;
                 state.restaurant = restaurant;
                 elements.restaurantName.textContent = restaurant.name;
                 const today = new Date();
-                
                 // 1) Aktif ödeme var mı?
-                const subResponse = await fetch(`${SUPABASE_URL}/rest/v1/subscriptions?restaurant_id=eq.${restaurantId}&order=end_date.desc&limit=1`, {
-                    method: 'GET',
-                    headers: {
-                        'apikey': SUPABASE_KEY,
-                        'Authorization': `Bearer ${SUPABASE_KEY}`,
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    }
-                });
-                
-                const subscriptions = await subResponse.json();
-                const sub = subscriptions.length > 0 ? subscriptions[0] : null;
+                const { data: sub, error: subErr } = await supabase
+                    .from('subscriptions')
+                    .select('*')
+                    .eq('restaurant_id', restaurantId)
+                    .order('end_date', { ascending: false })
+                    .limit(1)
+                    .maybeSingle();
+                if (subErr) throw subErr;
                 let active = false;
                 if (sub && sub.is_active && new Date(sub.end_date) > today) {
                     active = true;
@@ -684,50 +653,29 @@ header {
                 }
                 
                 // Kategorileri al
-                const catResponse = await fetch(`${SUPABASE_URL}/rest/v1/categories?restaurant_id=eq.${restaurantId}&order=position`, {
-                    method: 'GET',
-                    headers: {
-                        'apikey': SUPABASE_KEY,
-                        'Authorization': `Bearer ${SUPABASE_KEY}`,
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    }
-                });
-                if (!catResponse.ok) throw new Error(`Kategori verisi alınamadı: ${catResponse.status}`);
-                const categories = await catResponse.json();
+                const { data: categories, error: catErr } = await supabase
+                    .from('categories')
+                    .select('*')
+                    .eq('restaurant_id', restaurantId)
+                    .order('position');
+                if (catErr) throw catErr;
                 state.categories = categories;
-                console.log("Kategoriler alındı:", categories);
-                
-                // Ürünleri al
-                const prodResponse = await fetch(`${SUPABASE_URL}/rest/v1/products?restaurant_id=eq.${restaurantId}`, {
-                    method: 'GET',
-                    headers: {
-                        'apikey': SUPABASE_KEY,
-                        'Authorization': `Bearer ${SUPABASE_KEY}`,
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    }
-                });
-                if (!prodResponse.ok) throw new Error(`Ürün verisi alınamadı: ${prodResponse.status}`);
-                const products = await prodResponse.json();
+                const { data: products, error: prodErr } = await supabase
+                    .from('products')
+                    .select('*')
+                    .eq('restaurant_id', restaurantId);
+                if (prodErr) throw prodErr;
                 state.products = products;
-                console.log("Ürünler alındı:", products);
 
                 // Masanın uuid'sini bul
-                const tableResponse = await fetch(`${SUPABASE_URL}/rest/v1/tables?restaurant_id=eq.${restaurantId}&number=eq.${state.tableNumber}`, {
-                    method: 'GET',
-                    headers: {
-                        'apikey': SUPABASE_KEY,
-                        'Authorization': `Bearer ${SUPABASE_KEY}`,
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    }
-                });
-                if (!tableResponse.ok) throw new Error(`Masa verisi alınamadı: ${tableResponse.status}`);
-                const tables = await tableResponse.json();
-                if (tables.length === 0) throw new Error(`Masa bulunamadı: ${state.tableNumber}`);
-                state.tableId = tables[0].id;
-                console.log("Masa ID:", state.tableId);
+                const { data: tablesData, error: tblErr } = await supabase
+                    .from('tables')
+                    .select('*')
+                    .eq('restaurant_id', restaurantId)
+                    .eq('number', state.tableNumber)
+                    .single();
+                if (tblErr) throw tblErr;
+                state.tableId = tablesData.id;
 
                 renderCategories();
                 renderProducts();
@@ -1010,29 +958,12 @@ header {
             }
             showLoading(true);
             try {
-                // Sipariş oluştur
-                const orderResponse = await fetch(`${SUPABASE_URL}/rest/v1/orders`, {
-                    method: 'POST',
-                    headers: {
-                        'apikey': SUPABASE_KEY,
-                        'Authorization': `Bearer ${SUPABASE_KEY}`,
-                        'Content-Type': 'application/json',
-                        'Prefer': 'return=representation'
-                    },
-                    body: JSON.stringify({ 
-                        restaurant_id: state.restaurant.id, 
-                        table_id: state.tableId, 
-                        status: 'pending', 
-                        notes: state.orderNotes 
-                    })
-                });
-                
-                if (!orderResponse.ok) throw new Error(`Sipariş oluşturulamadı: ${orderResponse.status}`);
-                const orders = await orderResponse.json();
-                const order = orders[0];
-                console.log("Sipariş oluşturuldu:", order);
-                
-                // Sipariş öğelerini oluştur
+                const { data: order, error: orderError } = await supabase
+                    .from('orders')
+                    .insert([{ restaurant_id: state.restaurant.id, table_id: state.tableId, status: 'pending', notes: state.orderNotes }])
+                    .select()
+                    .single();
+                if (orderError) throw orderError;
                 const orderItems = state.cart.map(item => ({
                     order_id: order.id,
                     product_id: item.product.id,
@@ -1040,18 +971,8 @@ header {
                     options: { spiciness: item.option },
                     notes: item.notes
                 }));
-                
-                const itemsResponse = await fetch(`${SUPABASE_URL}/rest/v1/order_items`, {
-                    method: 'POST',
-                    headers: {
-                        'apikey': SUPABASE_KEY,
-                        'Authorization': `Bearer ${SUPABASE_KEY}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(orderItems)
-                });
-                
-                if (!itemsResponse.ok) throw new Error(`Sipariş öğeleri eklenemedi: ${itemsResponse.status}`);
+                const { error: itemsError } = await supabase.from('order_items').insert(orderItems);
+                if (itemsError) throw itemsError;
                 state.cart = [];
                 updateCartBadge();
                 closeModal(elements.cartModal);
@@ -1076,23 +997,8 @@ header {
                 return;
             }
             try {
-                const response = await fetch(`${SUPABASE_URL}/rest/v1/calls`, {
-                    method: 'POST',
-                    headers: {
-                        'apikey': SUPABASE_KEY,
-                        'Authorization': `Bearer ${SUPABASE_KEY}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ 
-                        restaurant_id: state.restaurant.id, 
-                        table_id: state.tableId, 
-                        type: 'waiter', 
-                        status: 'pending' 
-                    })
-                });
-                
-                if (!response.ok) throw new Error(`Garson çağrılamadı: ${response.status}`);
-                console.log("Garson çağrıldı");
+                const { error } = await supabase.from('calls').insert([{ restaurant_id: state.restaurant.id, table_id: state.tableId, type: 'waiter', status: 'pending' }]);
+                if (error) throw error;
                 showToast('Garson çağrınız iletilmiştir!', 'success');
             } catch (error) {
                 console.error('Garson çağırma hatası:', error);
@@ -1111,23 +1017,8 @@ header {
                 return;
             }
             try {
-                const response = await fetch(`${SUPABASE_URL}/rest/v1/calls`, {
-                    method: 'POST',
-                    headers: {
-                        'apikey': SUPABASE_KEY,
-                        'Authorization': `Bearer ${SUPABASE_KEY}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ 
-                        restaurant_id: state.restaurant.id, 
-                        table_id: state.tableId, 
-                        type: 'charcoal', 
-                        status: 'pending' 
-                    })
-                });
-                
-                if (!response.ok) throw new Error(`Köz isteği gönderilemedi: ${response.status}`);
-                console.log("Köz istendi");
+                const { error } = await supabase.from('calls').insert([{ restaurant_id: state.restaurant.id, table_id: state.tableId, type: 'charcoal', status: 'pending' }]);
+                if (error) throw error;
                 showToast('Köz isteğiniz iletilmiştir!', 'success');
             } catch (error) {
                 console.error('Köz isteme hatası:', error);
