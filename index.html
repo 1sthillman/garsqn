@@ -1869,9 +1869,12 @@
                     .select('*')
                     .eq('restaurant_id', restaurantId)
                     .eq('number', state.tableNumber)
-                    .single();
+                    .limit(1);
                 if (tblErr) throw tblErr;
-                state.tableId = tablesData.id;
+                if (!tablesData || tablesData.length === 0) {
+                    throw new Error('Masa bulunamadı');
+                }
+                state.tableId = tablesData[0].id;
 
                 renderCategories();
                 renderProducts();
@@ -2154,12 +2157,12 @@
             }
             showLoading(true);
             try {
-                const { data: order, error: orderError } = await supabase
+                const { data: orderData, error: orderError } = await supabase
                     .from('orders')
                     .insert([{ restaurant_id: state.restaurant.id, table_id: state.tableId, status: 'pending', notes: state.orderNotes }])
-                    .select()
-                    .single();
+                    .select();
                 if (orderError) throw orderError;
+                const order = orderData[0];
                 const orderItems = state.cart.map(item => ({
                     order_id: order.id,
                     product_id: item.product.id,
