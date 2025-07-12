@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Kod Üretici</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        :root {
+            /* Primary Colors */
+            --primary-gradient: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            --secondary-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            
+            /* Glass Effects */
+            --glass-bg: rgba(255, 255, 255, 0.06);
+            --glass-bg-strong: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.18);
+            --glass-border-strong: rgba(255, 255, 255, 0.25);
+            --glass-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+            --glass-shadow-strong: 0 20px 60px rgba(0, 0, 0, 0.4);
+            
+            /* Text Colors */
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.9);
+            --text-muted: rgba(255, 255, 255, 0.75);
+            
+            /* Border Radius */
+            --radius-sm: 10px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --radius-xl: 32px;
+            --radius-full: 50%;
+            
+            /* Spacing */
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+        }
+        
+        body {
+            background: linear-gradient(-45deg, #6a11cb, #2575fc, #4facfe, #00f2fe);
+            background-size: 400% 400%;
+            animation: gradientShift 20s ease infinite;
+            background-attachment: fixed;
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: var(--space-xl);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            margin: var(--space-xl) auto;
+        }
+        
+        .card {
+            background: var(--glass-bg-strong);
+            backdrop-filter: blur(30px) saturate(200%);
+            -webkit-backdrop-filter: blur(30px) saturate(200%);
+            border: 1px solid var(--glass-border-strong);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            box-shadow: var(--glass-shadow);
+            margin-bottom: var(--space-xl);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: var(--space-lg);
+            text-align: center;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 5px 15px rgba(106, 17, 203, 0.3);
+            filter: drop-shadow(0 2px 5px rgba(37, 117, 252, 0.2));
+        }
+        
+        .form-group {
+            margin-bottom: var(--space-lg);
+        }
+        
+        label {
+            display: block;
+            margin-bottom: var(--space-sm);
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        
+        input, select {
+            width: 100%;
+            padding: var(--space-md);
+            border-radius: var(--radius-md);
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: rgba(106, 17, 203, 0.6);
+            box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.15);
+        }
+        
+        button {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: var(--space-md) var(--space-lg);
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(106, 17, 203, 0.3);
+        }
+        
+        button:active {
+            transform: translateY(-1px);
+        }
+        
+        .qr-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: var(--space-xl);
+        }
+        
+        .qr-code {
+            padding: var(--space-md);
+            background: white;
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-md);
+        }
+        
+        .download-btn {
+            background: var(--secondary-gradient);
+            margin-top: var(--space-md);
+            max-width: 300px;
+        }
+        
+        .table-info {
+            text-align: center;
+            margin-bottom: var(--space-lg);
+        }
+        
+        .table-number {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: var(--space-sm);
+        }
+        
+        .url-display {
+            background: rgba(0, 0, 0, 0.2);
+            padding: var(--space-md);
+            border-radius: var(--radius-md);
+            word-break: break-all;
+            margin-bottom: var(--space-md);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>QR Kod Üretici</h1>
+        
+        <div class="card">
+            <div class="form-group">
+                <label for="tableNumber">Masa Numarası</label>
+                <input type="number" id="tableNumber" min="1" max="100" value="1">
+            </div>
+            
+            <div class="form-group">
+                <label for="baseUrl">QR Kod URL'si (Opsiyonel)</label>
+                <input type="text" id="baseUrl" placeholder="Örn: https://yoursite.com/menu" value="https://egcklzfiyxxnvyxwoowq.supabase.co/storage/v1/object/public/restaurant-qr/index.html">
+            </div>
+            
+            <button id="generateBtn">QR Kod Üret</button>
+        </div>
+        
+        <div id="qrResult" class="card" style="display: none;">
+            <div class="table-info">
+                <div class="table-number" id="displayTableNumber">1</div>
+                <div>Numaralı Masa</div>
+            </div>
+            
+            <div class="url-display" id="urlDisplay"></div>
+            
+            <div class="qr-container">
+                <div class="qr-code" id="qrCode"></div>
+                <button id="downloadBtn" class="download-btn">QR Kodu İndir</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Supabase bağlantısı
+        const SUPABASE_URL = 'https://egcklzfiyxxnvyxwoowq.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVnY2tsemZpeXh4bnZ5eHdvb3dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0NjQxMTcsImV4cCI6MjA2NDA0MDExN30.dfRQv3lYFCaI1T5ydOw4HyoEJ0I1wOSIUcG8ueEbxKQ';
+        
+        // Supabase istemcisini başlat
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const generateBtn = document.getElementById('generateBtn');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const tableNumberInput = document.getElementById('tableNumber');
+            const baseUrlInput = document.getElementById('baseUrl');
+            const qrResult = document.getElementById('qrResult');
+            const qrCodeEl = document.getElementById('qrCode');
+            const urlDisplayEl = document.getElementById('urlDisplay');
+            const displayTableNumber = document.getElementById('displayTableNumber');
+            
+            generateBtn.addEventListener('click', async function() {
+                const tableNumber = tableNumberInput.value;
+                const baseUrl = baseUrlInput.value || 'https://egcklzfiyxxnvyxwoowq.supabase.co/storage/v1/object/public/restaurant-qr/index.html';
+                
+                if (!tableNumber || tableNumber < 1) {
+                    alert('Lütfen geçerli bir masa numarası girin.');
+                    return;
+                }
+                
+                // Masa QR URL'sini oluştur
+                const url = `${baseUrl}?table=${tableNumber}`;
+                
+                // QR kodunu oluştur
+                qrCodeEl.innerHTML = '';
+                QRCode.toCanvas(qrCodeEl, url, { width: 200 }, function(error) {
+                    if (error) console.error(error);
+                });
+                
+                // Masa numarasını ve URL'yi göster
+                displayTableNumber.textContent = tableNumber;
+                urlDisplayEl.textContent = url;
+                
+                // QR sonucunu göster
+                qrResult.style.display = 'block';
+                
+                // İlgili masayı Supabase'de güncelle veya oluştur
+                try {
+                    // Önce bu masa numarası var mı diye kontrol et
+                    const { data: existingTables, error: fetchError } = await supabase
+                        .from('tables')
+                        .select('*')
+                        .eq('table_number', parseInt(tableNumber));
+                    
+                    if (fetchError) throw fetchError;
+                    
+                    if (existingTables && existingTables.length === 0) {
+                        // Masa yoksa yeni masa oluştur
+                        const { error: insertError } = await supabase
+                            .from('tables')
+                            .insert({
+                                table_number: parseInt(tableNumber),
+                                restaurant_id: '7f8d6c5e-4b3a-2c1d-0e9f-8a7b6c5d4e3f', // Varsayılan restoran ID'si
+                                status: 'available',
+                                qr_code: url
+                            });
+                        
+                        if (insertError) throw insertError;
+                    } else {
+                        // Masa varsa QR kodunu güncelle
+                        const { error: updateError } = await supabase
+                            .from('tables')
+                            .update({ qr_code: url })
+                            .eq('table_number', parseInt(tableNumber));
+                        
+                        if (updateError) throw updateError;
+                    }
+                    
+                } catch (error) {
+                    console.error('Masa güncelleme hatası:', error);
+                }
+            });
+            
+            // QR kodunu indir
+            downloadBtn.addEventListener('click', function() {
+                const canvas = qrCodeEl.querySelector('canvas');
+                if (!canvas) return;
+                
+                const tableNumber = tableNumberInput.value;
+                const link = document.createElement('a');
+                link.download = `masa-${tableNumber}-qr.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        });
+    </script>
+</body>
+</html> 
