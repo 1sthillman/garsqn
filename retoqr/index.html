@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Neon Fusion QR Menü</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="background-gradient"></div>
+  <header class="glass-header">
+    <div class="logo">🍽️ Neon Fusion</div>
+    <div class="table-number">Masa <span id="table-id">--</span></div>
+  </header>
+  <main class="main-grid">
+    <section class="menu-section">
+      <h1 class="main-title">Dijital Menü</h1>
+      <div class="menu-grid">
+        <!-- Menü kartları buraya dinamik olarak gelecek -->
+      </div>
+    </section>
+    <aside class="order-section glass">
+      <h2>Siparişlerim</h2>
+      <ul id="order-list"></ul>
+      <button class="call-waiter-btn neon-btn">Garson Çağır</button>
+    </aside>
+  </main>
+  <div id="toast-container"></div>
+  <script src="icons.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html> 
