@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <title>QR Menü Demo</title>
   <style>
     body {
@@ -49,56 +52,69 @@
       border-radius: 5px;
       margin-bottom: 20px;
     }
+    .warning {
+      background: #fff3cd;
+      border: 1px solid #ffeeba;
+      padding: 15px;
+      border-radius: 5px;
+      margin: 20px 0;
+    }
   </style>
 </head>
 <body>
   <h1>QR Menü Demo</h1>
   
+  <div class="warning">
+    <h3>⚠️ Önemli Not:</h3>
+    <p>Yeni güncellenmiş menü sayfası <strong>menu.html</strong> dosyasında bulunmaktadır. Lütfen aşağıdaki bağlantıları kullanın.</p>
+    <p>Eğer eski versiyon görünüyorsa, tarayıcı cache'inizi temizleyin (Ctrl+F5 veya Cmd+Shift+R).</p>
+  </div>
+  
   <div class="info">
     <h3>Test Bilgileri:</h3>
-    <p><strong>Restoran ID:</strong> 65b2557c-adeb-4998-8421-1013284aa08a (Demo Restoran)</p>
-    <p><strong>Masa ID'leri:</strong> 1, 2, 3, 4, 5</p>
+    <p><strong>Restoran ID:</strong> 9daabd79-d5a0-4add-91e9-66822d25674b (TR Restoran)</p>
+    <p><strong>Masa ID'leri:</strong> 1, 2, 9, 8, 10</p>
     <p>Bu linkler Supabase veritabanındaki gerçek verilerle çalışır.</p>
   </div>
 
   <div class="demo-links">
     <div class="demo-card">
       <h3>Masa 1</h3>
-      <p>Demo Restoran - Masa 1</p>
-      <a href="index.html?restaurant_id=65b2557c-adeb-4998-8421-1013284aa08a&table_id=af566d76-1c04-44fe-9c96-fae293137cec" class="demo-link">
+      <p>TR Restoran - Masa 1</p>
+      <a href="menu.html?restaurant_id=9daabd79-d5a0-4add-91e9-66822d25674b&table_id=54c02f23-2ece-4058-9b0c-b63766a85dfd" class="demo-link">
         Masa 1'i Aç
       </a>
     </div>
 
     <div class="demo-card">
       <h3>Masa 2</h3>
-      <p>Demo Restoran - Masa 2</p>
-      <a href="index.html?restaurant_id=65b2557c-adeb-4998-8421-1013284aa08a&table_id=ad0a1a31-07e9-4eb4-8874-2869edd7a677" class="demo-link">
+      <p>TR Restoran - Masa 2</p>
+      <a href="menu.html?restaurant_id=9daabd79-d5a0-4add-91e9-66822d25674b&table_id=4ca5f6ce-82c4-4dbd-abdf-ffd7c9f23626" class="demo-link">
         Masa 2'yi Aç
       </a>
     </div>
 
     <div class="demo-card">
-      <h3>Masa 3</h3>
-      <p>Demo Restoran - Masa 3</p>
-      <a href="index.html?restaurant_id=65b2557c-adeb-4998-8421-1013284aa08a&table_id=57a8ba75-4d01-475a-9763-64c1603bd932" class="demo-link">
-        Masa 3'ü Aç
+      <h3>Masa 8</h3>
+      <p>TR Restoran - Masa 8</p>
+      <a href="menu.html?restaurant_id=9daabd79-d5a0-4add-91e9-66822d25674b&table_id=f06670e0-7be1-40ea-b1da-e7e42ed656ed" class="demo-link">
+        Masa 8'i Aç
       </a>
     </div>
 
     <div class="demo-card">
-      <h3>Masa 4</h3>
-      <p>Demo Restoran - Masa 4</p>
-      <a href="index.html?restaurant_id=65b2557c-adeb-4998-8421-1013284aa08a&table_id=d92a39bd-58d6-48e9-9734-a186f881990a" class="demo-link">
-        Masa 4'ü Aç
+      <h3>Masa 9</h3>
+      <p>TR Restoran - Masa 9</p>
+      <a href="menu.html?restaurant_id=9daabd79-d5a0-4add-91e9-66822d25674b&table_id=f891c457-e06a-4b4a-a609-681f6d8be735" class="demo-link">
+        Masa 9'u Aç
       </a>
     </div>
 
     <div class="demo-card">
-      <h3>Masa 5</h3>
-      <p>Demo Restoran - Masa 5</p>
-      <a href="index.html?restaurant_id=65b2557c-adeb-4998-8421-1013284aa08a&table_id=d38fe340-af51-4e46-a1e0-b3331fc0fb54" class="demo-link">
-        Masa 5'i Aç
+      <h3>Masa 10</h3>
+      <p>TR Restoran - Masa 10</p>
+      <a href="menu.html?restaurant_id=9daabd79-d5a0-4add-91e9-66822d25674b&table_id=6d22821a-b79d-4d78-aedc-765156bb8eff" class="demo-link">
+        Masa 10'u Aç
       </a>
     </div>
   </div>
@@ -111,6 +127,7 @@
       <li>✅ Ürünler restoran bazında filtrelenir</li>
       <li>✅ Siparişler doğru masa ve restoran ID'si ile kaydedilir</li>
       <li>✅ Garson çağırma sistemi çalışır</li>
+      <li>✅ KÖZ İSTE butonu eklenmiştir</li>
       <li>✅ Masa durumu güncellenir</li>
       <li>✅ Kategoriler dinamik olarak yüklenir</li>
     </ul>
