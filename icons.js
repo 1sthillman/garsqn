@@ -1,5 +1,5 @@
 // Türk mutfağı ve restoran ürünleri için kapsamlı SVG ikon seti
-export const productIcons = {
+const productIcons = {
   // YEMEKLER - ANA YEMEKLER
   kebap: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
     <rect x="8" y="20" width="32" height="8" rx="4" fill="#8B4513" stroke="#654321" stroke-width="2"/>
@@ -99,8 +99,8 @@ export const productIcons = {
   et: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
     <ellipse cx="24" cy="24" rx="16" ry="8" fill="#8B4513" stroke="#654321" stroke-width="2"/>
     <ellipse cx="24" cy="24" rx="10" ry="4" fill="#CD853F"/>
-    <circle cx="18" cy="22" r="1" fill="#FFD700"/>
-    <circle cx="30" cy="22" r="1" fill="#FFD700"/>
+    <circle cx="20" cy="22" r="1" fill="#FFD700"/>
+    <circle cx="28" cy="22" r="1" fill="#FFD700"/>
     <circle cx="24" cy="26" r="1" fill="#FFD700"/>
   </svg>`,
   
@@ -379,52 +379,6 @@ export const productIcons = {
     <circle cx="22" cy="22" r="1" fill="#FFD700"/>
     <circle cx="26" cy="22" r="1" fill="#FFD700"/>
     <circle cx="24" cy="26" r="1" fill="#FFD700"/>
-  </svg>`,
-  
-  // ÖZEL YEMEKLER
-  mantı: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <ellipse cx="24" cy="32" rx="14" ry="6" fill="#F5DEB3" stroke="#8B4513" stroke-width="2"/>
-    <ellipse cx="24" cy="32" rx="10" ry="4" fill="#DEB887"/>
-    <circle cx="18" cy="30" r="2" fill="#FF6347"/>
-    <circle cx="24" cy="30" r="2" fill="#FF6347"/>
-    <circle cx="30" cy="30" r="2" fill="#FF6347"/>
-    <circle cx="21" cy="34" r="2" fill="#FF6347"/>
-    <circle cx="27" cy="34" r="2" fill="#FF6347"/>
-  </svg>`,
-  
-  köfte: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <ellipse cx="24" cy="24" rx="12" ry="6" fill="#8B4513" stroke="#654321" stroke-width="2"/>
-    <ellipse cx="24" cy="24" rx="8" ry="4" fill="#CD853F"/>
-    <circle cx="20" cy="22" r="1" fill="#FFD700"/>
-    <circle cx="28" cy="22" r="1" fill="#FFD700"/>
-    <circle cx="24" cy="26" r="1" fill="#FFD700"/>
-  </svg>`,
-  
-  iskender: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="8" y="20" width="32" height="8" rx="4" fill="#8B4513" stroke="#654321" stroke-width="2"/>
-    <rect x="12" y="22" width="24" height="4" rx="2" fill="#D2691E"/>
-    <circle cx="16" cy="24" r="2" fill="#FFD700"/>
-    <circle cx="24" cy="24" r="2" fill="#FFD700"/>
-    <circle cx="32" cy="24" r="2" fill="#FFD700"/>
-    <ellipse cx="24" cy="36" rx="16" ry="4" fill="#F4A460"/>
-  </svg>`,
-  
-  adana: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="10" y="20" width="28" height="8" rx="4" fill="#8B4513" stroke="#654321" stroke-width="2"/>
-    <rect x="14" y="22" width="20" height="4" rx="2" fill="#D2691E"/>
-    <circle cx="18" cy="24" r="2" fill="#FFD700"/>
-    <circle cx="24" cy="24" r="2" fill="#FFD700"/>
-    <circle cx="30" cy="24" r="2" fill="#FFD700"/>
-  </svg>`,
-  
-  urfa: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="10" y="20" width="28" height="8" rx="4" fill="#8B4513" stroke="#654321" stroke-width="2"/>
-    <rect x="14" y="22" width="20" height="4" rx="2" fill="#D2691E"/>
-    <circle cx="18" cy="24" r="2" fill="#FFD700"/>
-    <circle cx="24" cy="24" r="2" fill="#FFD700"/>
-    <circle cx="30" cy="24" r="2" fill="#FFD700"/>
-    <circle cx="21" cy="26" r="1" fill="#FF6347"/>
-    <circle cx="27" cy="26" r="1" fill="#FF6347"/>
   </svg>`,
   
   // Varsayılan ikon
