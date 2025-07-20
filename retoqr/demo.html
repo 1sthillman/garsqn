@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QR Menü Demo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .demo-links {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .demo-card {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .demo-card h3 {
+      margin-top: 0;
+      color: #333;
+    }
+    .demo-link {
+      display: block;
+      background: #007bff;
+      color: white;
+      text-decoration: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      text-align: center;
+      margin-top: 10px;
+      transition: background 0.3s;
+    }
+    .demo-link:hover {
+      background: #0056b3;
+    }
+    .info {
+      background: #e7f3ff;
+      border: 1px solid #b3d9ff;
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>QR Menü Demo</h1>
+  
+  <div class="info">
+    <h3>Test Bilgileri:</h3>
+    <p><strong>Restoran ID:</strong> 65b2557c-adeb-4998-8421-1013284aa08a (Demo Restoran)</p>
+    <p><strong>Masa ID'leri:</strong> 1, 2, 3, 4, 5</p>
+    <p>Bu linkler Supabase veritabanındaki gerçek verilerle çalışır.</p>
+  </div>
+
+  <div class="demo-links">
+    <div class="demo-card">
+      <h3>Masa 1</h3>
+      <p>Demo Restoran - Masa 1</p>
+      <a href="index.html?restaurant_id=65b2557c-adeb-4998-8421-1013284aa08a&table_id=af566d76-1c04-44fe-9c96-fae293137cec" class="demo-link">
+        Masa 1'i Aç
+      </a>
+    </div>
+
+    <div class="demo-card">
+      <h3>Masa 2</h3>
+      <p>Demo Restoran - Masa 2</p>
+      <a href="index.html?restaurant_id=65b2557c-adeb-4998-8421-1013284aa08a&table_id=ad0a1a31-07e9-4eb4-8874-2869edd7a677" class="demo-link">
+        Masa 2'yi Aç
+      </a>
+    </div>
+
+    <div class="demo-card">
+      <h3>Masa 3</h3>
+      <p>Demo Restoran - Masa 3</p>
+      <a href="index.html?restaurant_id=65b2557c-adeb-4998-8421-1013284aa08a&table_id=57a8ba75-4d01-475a-9763-64c1603bd932" class="demo-link">
+        Masa 3'ü Aç
+      </a>
+    </div>
+
+    <div class="demo-card">
+      <h3>Masa 4</h3>
+      <p>Demo Restoran - Masa 4</p>
+      <a href="index.html?restaurant_id=65b2557c-adeb-4998-8421-1013284aa08a&table_id=d92a39bd-58d6-48e9-9734-a186f881990a" class="demo-link">
+        Masa 4'ü Aç
+      </a>
+    </div>
+
+    <div class="demo-card">
+      <h3>Masa 5</h3>
+      <p>Demo Restoran - Masa 5</p>
+      <a href="index.html?restaurant_id=65b2557c-adeb-4998-8421-1013284aa08a&table_id=d38fe340-af51-4e46-a1e0-b3331fc0fb54" class="demo-link">
+        Masa 5'i Aç
+      </a>
+    </div>
+  </div>
+
+  <div class="info">
+    <h3>Özellikler:</h3>
+    <ul>
+      <li>✅ Her restoran kendi ID'si ile çalışır</li>
+      <li>✅ Her masa kendi ID'si ile çalışır</li>
+      <li>✅ Ürünler restoran bazında filtrelenir</li>
+      <li>✅ Siparişler doğru masa ve restoran ID'si ile kaydedilir</li>
+      <li>✅ Garson çağırma sistemi çalışır</li>
+      <li>✅ Masa durumu güncellenir</li>
+      <li>✅ Kategoriler dinamik olarak yüklenir</li>
+    </ul>
+  </div>
+</body>
+</html> 
