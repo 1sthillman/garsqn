@@ -107,34 +107,34 @@ html, body {
 }
 
 .main-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   max-width: 1400px;
-  margin: 16px auto;
-  padding: 0 16px;
+  margin: 0 auto;
+  padding: 0;
 }
 .menu-section {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
   width: 100%;
+  padding: 0 12px;
 }
 .main-title {
   font-family: 'Space Grotesk', Arial, sans-serif;
   font-size: 1.8rem;
   color: var(--color-primary);
-  margin-bottom: 8px;
+  margin: 12px 0 4px;
   letter-spacing: 1.5px;
   text-align: center;
   text-shadow: 0 0 20px rgba(15, 246, 246, 0.5);
 }
 .menu-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 12px;
-  margin-bottom: 32px;
+  margin-bottom: 16px;
   width: 100%;
 }
 .order-section {
@@ -150,6 +150,7 @@ html, body {
   min-height: 300px;
   border: 1px solid rgba(255,255,255,0.08);
   scroll-margin-top: 70px;
+  margin: 0 12px 16px;
 }
 .order-section h2 {
   font-family: 'Space Grotesk', Arial, sans-serif;
@@ -353,7 +354,7 @@ html, body {
   background: rgba(35, 38, 58, 0.85);
   border-radius: 16px;
   box-shadow: 0 8px 32px 0 rgba(0,255,255,0.10), 0 2px 8px 0 rgba(255,46,99,0.08);
-  padding: 12px 8px;
+  padding: 16px 12px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -368,6 +369,7 @@ html, body {
   -webkit-touch-callout: none;
   user-select: none;
   -webkit-user-select: none;
+  min-height: 220px;
 }
 .menu-card:hover, .menu-card:active {
   transform: translateY(-4px);
@@ -375,15 +377,15 @@ html, body {
   border: 1.5px solid var(--color-primary);
 }
 .menu-icon-svg {
-  width: 48px;
-  height: 48px;
+  width: 64px;
+  height: 64px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: rgba(255,255,255,0.10);
   border-radius: 50%;
   box-shadow: 0 2px 16px 0 rgba(0,255,255,0.10), 0 2px 8px 0 rgba(255,46,99,0.08);
-  margin-bottom: 4px;
+  margin-bottom: 8px;
   transition: box-shadow 0.3s cubic-bezier(0.4,0,0.2,1), background 0.3s;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
@@ -394,8 +396,8 @@ html, body {
   box-shadow: 0 8px 32px 0 rgba(0,255,255,0.18), 0 4px 16px 0 rgba(255,46,99,0.16);
 }
 .menu-icon-svg svg {
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   display: block;
 }
 .menu-info {
@@ -408,7 +410,7 @@ html, body {
 }
 .menu-info h3 {
   font-family: 'Space Grotesk', Arial, sans-serif;
-  font-size: 1rem;
+  font-size: 1.2rem;
   color: var(--color-accent);
   margin: 0 0 4px 0;
   text-shadow: 0 0 15px rgba(255, 46, 99, 0.3);
@@ -431,11 +433,12 @@ html, body {
   justify-content: center;
   width: 100%;
   gap: 8px;
+  margin-top: auto;
 }
 
 .menu-price {
   font-family: 'Space Grotesk', Arial, sans-serif;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   font-weight: 700;
   color: var(--color-primary);
   text-shadow: 0 2px 8px var(--color-primary);
@@ -444,9 +447,9 @@ html, body {
   background: var(--gradient-main);
   color: #fff;
   border: none;
-  border-radius: 16px;
-  padding: 8px 12px;
-  font-size: 0.9rem;
+  border-radius: 24px;
+  padding: 12px;
+  font-size: 1rem;
   font-family: 'Space Grotesk', Arial, sans-serif;
   font-weight: 600;
   box-shadow: 0 4px 16px 0 rgba(0,255,255,0.15);
@@ -496,22 +499,20 @@ html, body {
 .category-bar {
   display: flex;
   gap: 8px;
-  padding: 12px 0;
   overflow-x: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
   -webkit-overflow-scrolling: touch;
   scroll-snap-type: x mandatory;
   width: 100%;
-  margin: 0 -8px;
-  padding: 8px;
+  padding: 8px 4px;
 }
 .category-bar::-webkit-scrollbar { display: none; }
 .category-btn {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   padding: 10px;
   background: rgba(35, 38, 58, 0.6);
   border: 1.5px solid transparent;
@@ -560,6 +561,30 @@ html, body {
 
 /* Tablet için responsive tasarım */
 @media (min-width: 768px) {
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 32px;
+    padding: 0 24px;
+    margin: 24px auto;
+  }
+  
+  .menu-section {
+    gap: 24px;
+    padding: 0;
+  }
+  
+  .main-title {
+    font-size: 2.4rem;
+    margin: 0 0 16px;
+  }
+  
+  .menu-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+  
   .glass-header {
     height: 70px;
     padding: 0 24px;
@@ -577,36 +602,17 @@ html, body {
     border-radius: var(--radius-main);
   }
   
-  .main-title {
-    font-size: 2.4rem;
-  }
-  
-  .main-grid {
-    grid-template-columns: 1fr 320px;
-    gap: 32px;
-    padding: 0 24px;
-    margin: 24px auto;
-  }
-  
-  .menu-section {
-    gap: 24px;
-  }
-  
-  .menu-grid {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 24px;
-  }
-  
   .menu-card {
     padding: 28px 20px 20px 20px;
     gap: 16px;
     border-radius: var(--radius-main);
+    min-height: 280px;
   }
   
   .menu-icon-svg {
-    width: 64px;
-    height: 64px;
-    margin-bottom: 8px;
+    width: 80px;
+    height: 80px;
+    margin-bottom: 12px;
   }
   
   .menu-icon-svg svg {
@@ -645,12 +651,12 @@ html, body {
     border-radius: var(--radius-main);
     position: sticky;
     top: 90px;
+    margin: 0;
   }
   
   .category-bar {
     gap: 12px;
     padding: 16px 0;
-    margin: 0;
   }
   
   .category-btn {
@@ -752,5 +758,33 @@ html, body {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* Küçük ekranlar için ek düzenlemeler */
+@media (max-width: 360px) {
+  .menu-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .menu-card {
+    min-height: 200px;
+  }
+  
+  .glass-header {
+    height: 50px;
+  }
+  
+  .logo {
+    font-size: 1.4rem;
+  }
+  
+  .table-number {
+    font-size: 0.8rem;
+    padding: 4px 10px;
+  }
+  
+  .main-title {
+    font-size: 1.6rem;
   }
 } 
