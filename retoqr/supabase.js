@@ -6,6 +6,7 @@ const supabase = createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
 
 // Restoran bilgilerini getir
 export async function getRestaurantInfo() {
+  console.log('🔍 getRestaurantInfo çağrıldı, Restaurant ID:', RESTAURANT_ID);
   try {
     const { data, error } = await supabase
       .from('restaurants')
@@ -14,15 +15,17 @@ export async function getRestaurantInfo() {
       .single();
 
     if (error) throw error;
+    console.log('✅ Restoran bilgileri alındı:', data);
     return data;
   } catch (error) {
-    console.error('Restoran bilgileri alınamadı:', error);
+    console.error('❌ Restoran bilgileri alınamadı:', error);
     return null;
   }
 }
 
 // Masa bilgilerini getir
 export async function getTableInfo() {
+  console.log('🔍 getTableInfo çağrıldı, Table ID:', TABLE_ID);
   try {
     const { data, error } = await supabase
       .from('tables')
@@ -32,15 +35,17 @@ export async function getTableInfo() {
       .single();
 
     if (error) throw error;
+    console.log('✅ Masa bilgileri alındı:', data);
     return data;
   } catch (error) {
-    console.error('Masa bilgileri alınamadı:', error);
+    console.error('❌ Masa bilgileri alınamadı:', error);
     return null;
   }
 }
 
 // Restoranın ürünlerini getir
 export async function getProducts() {
+  console.log('🔍 getProducts çağrıldı, Restaurant ID:', RESTAURANT_ID);
   try {
     const { data, error } = await supabase
       .from('products')
@@ -50,9 +55,10 @@ export async function getProducts() {
       .order('sort_order', { ascending: true });
 
     if (error) throw error;
+    console.log('✅ Ürünler alındı:', data);
     return data || [];
   } catch (error) {
-    console.error('Ürünler alınamadı:', error);
+    console.error('❌ Ürünler alınamadı:', error);
     return [];
   }
 }

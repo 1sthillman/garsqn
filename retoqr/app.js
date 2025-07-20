@@ -11,6 +11,11 @@ import {
 } from './supabase.js';
 import { RESTAURANT_ID, TABLE_ID } from './config.js';
 
+// Debug için ID'leri logla
+console.log('🔍 Debug Bilgileri:');
+console.log('Restaurant ID:', RESTAURANT_ID);
+console.log('Table ID:', TABLE_ID);
+
 // Global değişkenler
 let restaurantInfo = null;
 let tableInfo = null;
@@ -38,9 +43,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // Uygulamayı başlat
 async function initializeApp() {
+  console.log('🚀 Uygulama başlatılıyor...');
+  
   // Restoran ve masa bilgilerini al
   restaurantInfo = await getRestaurantInfo();
   tableInfo = await getTableInfo();
+  
+  console.log('📋 Restoran Bilgileri:', restaurantInfo);
+  console.log('🪑 Masa Bilgileri:', tableInfo);
   
   if (!restaurantInfo || !tableInfo) {
     showToast('Restoran veya masa bilgileri bulunamadı', 'error');
@@ -50,6 +60,9 @@ async function initializeApp() {
   // Ürünler ve kategorileri al
   products = await getProducts();
   categories = await getProductCategories();
+  
+  console.log('🍽️ Ürünler:', products);
+  console.log('📂 Kategoriler:', categories);
 
   // UI'yi güncelle
   updateUI();
