@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
@@ -10,8 +10,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./style.css?v=20250121" />
+  <link rel="stylesheet" href="./style.css?v=20250122" />
   <meta name="theme-color" content="#181A20">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="format-detection" content="telephone=no">
 </head>
 <body>
   <div class="loading-overlay" id="loadingOverlay">
@@ -44,7 +47,7 @@
   </main>
   <div id="toast-container"></div>
   
-  <script src="./icons.js?v=20250121"></script>
+  <script src="./icons.js?v=20250122"></script>
   <script type="module">
     // Doğrudan import
     import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js';
@@ -139,6 +142,43 @@
       submitOrderBtn.addEventListener('click', submitOrder);
       callWaiterBtn.addEventListener('click', () => callWaiter('waiter'));
       kozIsteBtn.addEventListener('click', () => callWaiter('charcoal'));
+      
+      // Mobil cihazlar için dokunma olaylarını optimize et
+      if ('ontouchstart' in window) {
+        document.body.classList.add('touch-device');
+        setupTouchEvents();
+      }
+    }
+    
+    // Dokunma olaylarını optimize et
+    function setupTouchEvents() {
+      // Kategori barı için momentum scroll
+      const categoryBarEl = document.getElementById('categoryBar');
+      let isScrolling = false;
+      
+      categoryBarEl.addEventListener('touchstart', () => {
+        isScrolling = true;
+      }, { passive: true });
+      
+      categoryBarEl.addEventListener('touchend', () => {
+        isScrolling = false;
+      }, { passive: true });
+      
+      // Menü kartları için dokunma efekti
+      const menuCards = document.querySelectorAll('.menu-card');
+      menuCards.forEach(card => {
+        card.addEventListener('touchstart', () => {
+          card.classList.add('touch-active');
+        }, { passive: true });
+        
+        card.addEventListener('touchend', () => {
+          card.classList.remove('touch-active');
+        }, { passive: true });
+        
+        card.addEventListener('touchcancel', () => {
+          card.classList.remove('touch-active');
+        }, { passive: true });
+      });
     }
 
     // Restoran bilgilerini getir
@@ -326,7 +366,8 @@
       
       // Sipariş butonlarına tıklama olayları
       menuGrid.querySelectorAll('.neon-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation(); // Butonun tıklanmasının kart tıklanmasını tetiklemesini önle
           const productId = btn.dataset.id;
           const product = products.find(p => p.id === productId);
           if (product) {
@@ -334,6 +375,11 @@
           }
         });
       });
+      
+      // Mobil cihazlar için dokunma olaylarını tekrar ayarla
+      if ('ontouchstart' in window) {
+        setupTouchEvents();
+      }
     }
 
     // Sipariş listesi
@@ -392,6 +438,16 @@
       orders.push(product);
       renderOrders();
       showToast(`${product.name} siparişe eklendi!`, 'success');
+      
+      // Sipariş bölümüne otomatik kaydır (mobil için)
+      if (window.innerWidth < 768) {
+        const orderSection = document.querySelector('.order-section');
+        if (orderSection) {
+          setTimeout(() => {
+            orderSection.scrollIntoView({ behavior: 'smooth' });
+          }, 300);
+        }
+      }
     }
 
     // Siparişi gönder
