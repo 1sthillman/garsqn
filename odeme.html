@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adisyon - Ödeme</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --premium-gold: linear-gradient(135deg, #ffd700 0%, #ffb347 100%);
+            --premium-silver: linear-gradient(135deg, #c0c0c0 0%, #e6e6fa 100%);
+            --premium-rose: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            --premium-ocean: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            --premium-emerald: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            
+            --glass-bg: rgba(255, 255, 255, 0.06);
+            --glass-bg-strong: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.18);
+            --glass-border-strong: rgba(255, 255, 255, 0.25);
+            --glass-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+            --glass-shadow-strong: 0 20px 60px rgba(0, 0, 0, 0.4);
+            
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.9);
+            --text-muted: rgba(255, 255, 255, 0.75);
+            
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --space-2xl: 48px;
+            --space-3xl: 64px;
+            
+            --radius-sm: 10px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --radius-xl: 32px;
+            --radius-2xl: 40px;
+            --radius-full: 50%;
+            
+            --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-normal: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-elastic: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            
+            --font-size-xs: 0.75rem;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.125rem;
+            --font-size-xl: 1.25rem;
+            --font-size-2xl: 1.5rem;
+            --font-size-3xl: 1.875rem;
+            --font-size-4xl: 2.25rem;
+            
+            --font-weight-light: 300;
+            --font-weight-normal: 400;
+            --font-weight-medium: 500;
+            --font-weight-semibold: 600;
+            --font-weight-bold: 700;
+            --font-weight-extrabold: 800;
+            --font-weight-black: 900;
+        }
+        
+        body {
+            background: linear-gradient(-45deg, #6a11cb, #2575fc, #4facfe, #00f2fe, #a8edea);
+            background-size: 400% 400%;
+            animation: gradientShift 20s ease infinite;
+            background-attachment: fixed;
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-xl);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: var(--space-3xl);
+        }
+        
+        .logo {
+            font-size: var(--font-size-4xl);
+            font-weight: var(--font-weight-black);
+            background: var(--premium-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--space-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-md);
+        }
+        
+        .logo i {
+            background: var(--premium-ocean);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: var(--font-size-4xl);
+        }
+        
+        .subtitle {
+            font-size: var(--font-size-lg);
+            color: var(--text-secondary);
+            font-weight: var(--font-weight-medium);
+        }
+        
+        .packages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: var(--space-2xl);
+            margin-bottom: var(--space-3xl);
+        }
+        
+        .package-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(30px) saturate(200%);
+            -webkit-backdrop-filter: blur(30px) saturate(200%);
+            border: 2px solid var(--glass-border-strong);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-2xl);
+            transition: var(--transition-elastic);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .discount-badge {
+            position: absolute;
+            top: var(--space-md);
+            right: var(--space-md);
+            background: var(--premium-gold);
+            color: white;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-bold);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            z-index: 10;
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+        }
+        
+        .popular-badge {
+            position: absolute;
+            top: var(--space-md);
+            left: var(--space-md);
+            background: var(--premium-rose);
+            color: white;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-bold);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            z-index: 10;
+            box-shadow: 0 4px 12px rgba(255, 154, 158, 0.4);
+        }
+        
+        .package-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--premium-ocean);
+            opacity: 0;
+            transition: var(--transition-slow);
+            z-index: 0;
+        }
+        
+        .package-card:hover::before {
+            opacity: 0.1;
+        }
+        
+        .package-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .package-card.selected {
+            border-color: var(--premium-gold);
+            box-shadow: 0 20px 60px rgba(255, 215, 0, 0.3);
+        }
+        
+        .package-header {
+            text-align: center;
+            margin-bottom: var(--space-xl);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .package-name {
+            font-size: var(--font-size-2xl);
+            font-weight: var(--font-weight-bold);
+            margin-bottom: var(--space-sm);
+            background: var(--premium-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .package-price {
+            font-size: var(--font-size-4xl);
+            font-weight: var(--font-weight-black);
+            color: var(--text-primary);
+            margin-bottom: var(--space-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+        }
+        
+        .original-price {
+            font-size: var(--font-size-lg);
+            color: var(--text-muted);
+            text-decoration: line-through;
+            font-weight: var(--font-weight-normal);
+        }
+        
+        .package-period {
+            font-size: var(--font-size-sm);
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .package-features {
+            list-style: none;
+            margin-bottom: var(--space-xl);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .package-features li {
+            padding: var(--space-sm) 0;
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            color: var(--text-secondary);
+        }
+        
+        .package-features li i {
+            color: var(--success);
+            font-size: var(--font-size-lg);
+        }
+        
+        .package-btn {
+            width: 100%;
+            padding: var(--space-lg) var(--space-xl);
+            background: var(--premium-ocean);
+            color: white;
+            border: none;
+            border-radius: var(--radius-xl);
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-bold);
+            cursor: pointer;
+            transition: var(--transition-elastic);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .package-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(106, 17, 203, 0.5);
+        }
+        
+        .payment-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(30px) saturate(200%);
+            -webkit-backdrop-filter: blur(30px) saturate(200%);
+            border: 2px solid var(--glass-border-strong);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-2xl);
+            margin-top: var(--space-2xl);
+        }
+        
+        .payment-title {
+            font-size: var(--font-size-2xl);
+            font-weight: var(--font-weight-bold);
+            margin-bottom: var(--space-xl);
+            text-align: center;
+            background: var(--premium-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .payment-form {
+            display: grid;
+            gap: var(--space-lg);
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+        
+        .form-label {
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-secondary);
+        }
+        
+        .form-input {
+            padding: var(--space-lg);
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            color: var(--text-primary);
+            font-size: var(--font-size-base);
+            transition: var(--transition-normal);
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--premium-ocean);
+            box-shadow: 0 0 0 4px rgba(106, 17, 203, 0.15);
+        }
+        
+        .form-input::placeholder {
+            color: var(--text-muted);
+        }
+        
+        .card-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: var(--space-md);
+        }
+        
+        .pay-btn {
+            width: 100%;
+            padding: var(--space-xl);
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: var(--radius-xl);
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-bold);
+            cursor: pointer;
+            transition: var(--transition-elastic);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: var(--space-lg);
+        }
+        
+        .pay-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(16, 185, 129, 0.5);
+        }
+        
+        .pay-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .trial-info {
+            text-align: center;
+            margin-top: var(--space-xl);
+            padding: var(--space-lg);
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: var(--radius-lg);
+        }
+        
+        .trial-info i {
+            color: var(--success);
+            font-size: var(--font-size-2xl);
+            margin-bottom: var(--space-sm);
+        }
+        
+        .trial-text {
+            color: var(--text-secondary);
+            font-size: var(--font-size-base);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: var(--space-lg);
+            }
+            
+            .packages-grid {
+                grid-template-columns: 1fr;
+                gap: var(--space-lg);
+            }
+            
+            .package-card {
+                padding: var(--space-xl);
+            }
+            
+            .card-row {
+                grid-template-columns: 1fr;
+                gap: var(--space-md);
+            }
+            
+            .logo {
+                font-size: var(--font-size-3xl);
+            }
+            
+            .logo i {
+                font-size: var(--font-size-3xl);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <i class="fas fa-qrcode"></i>
+                <span>Adisyon</span>
+            </div>
+            <div class="subtitle">QR Menü Sistemi - Premium Paketler</div>
+        </div>
+        
+        <div class="packages-grid" id="packagesGrid">
+            <!-- Paketler dinamik olarak yüklenecek -->
+        </div>
+        
+        <div class="payment-section" id="paymentSection" style="display: none;">
+            <div class="payment-title">Ödeme Bilgileri</div>
+            <form class="payment-form" id="paymentForm">
+                <div class="form-group">
+                    <label class="form-label">Kart Üzerindeki İsim</label>
+                    <input type="text" class="form-input" id="cardName" placeholder="Kart üzerindeki ismi girin" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Kart Numarası</label>
+                    <input type="text" class="form-input" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required>
+                </div>
+                
+                <div class="card-row">
+                    <div class="form-group">
+                        <label class="form-label">Son Kullanma Tarihi</label>
+                        <input type="text" class="form-input" id="cardExpiry" placeholder="MM/YY" maxlength="5" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">CVV</label>
+                        <input type="text" class="form-input" id="cardCvv" placeholder="123" maxlength="3" required>
+                    </div>
+                </div>
+                
+                <button type="submit" class="pay-btn" id="payBtn">
+                    <i class="fas fa-lock"></i> Güvenli Ödeme Yap
+                </button>
+            </form>
+        </div>
+        
+        <div class="trial-info" id="trialInfo">
+            <i class="fas fa-gift"></i>
+            <div class="trial-text">7 günlük ücretsiz deneme süreniz başladı!</div>
+        </div>
+    </div>
+
+    <script>
+        // Supabase konfigürasyonu
+        const SUPABASE_URL = 'https://egcklzfiyxxnvyxwoowq.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVnY2tsemZpeXh4bnZ5eHdvb3dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0NjQxMTcsImV4cCI6MjA2NDA0MDExN30.dfRQv3lYFCaI1T5ydOw4HyoEJ0I1wOSIUcG8ueEbxKQ';
+        
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // URL parametrelerinden restoran ID'sini al
+        const urlParams = new URLSearchParams(window.location.search);
+        const RESTAURANT_ID = urlParams.get('restaurant_id');
+        
+        let selectedPackage = null;
+        let restaurantInfo = null;
+        
+        // Paketleri tanımla
+        const packages = [
+            {
+                id: 'starter_monthly',
+                name: 'Başlangıç Paketi',
+                price: '299₺',
+                period: 'Aylık',
+                originalPrice: '399₺',
+                discount: '25%',
+                tables: 15,
+                features: [
+                    '15 Masa QR Kodu',
+                    'Müşteri Siparişleri',
+                    'Garson Çağırma',
+                    'Köz İsteme',
+                    '7/24 Destek',
+                    'Mobil Uyumlu',
+                    'Temel Raporlar'
+                ]
+            },
+            {
+                id: 'starter_yearly',
+                name: 'Başlangıç Paketi',
+                price: '2.999₺',
+                period: 'Yıllık',
+                originalPrice: '4.788₺',
+                discount: '37%',
+                tables: 15,
+                features: [
+                    '15 Masa QR Kodu',
+                    'Müşteri Siparişleri',
+                    'Garson Çağırma',
+                    'Köz İsteme',
+                    '7/24 Destek',
+                    'Mobil Uyumlu',
+                    'Temel Raporlar',
+                    '2 Ay Bedava'
+                ]
+            },
+            {
+                id: 'professional_monthly',
+                name: 'Profesyonel Paket',
+                price: '599₺',
+                period: 'Aylık',
+                originalPrice: '799₺',
+                discount: '25%',
+                tables: 30,
+                features: [
+                    '30 Masa QR Kodu',
+                    'Müşteri Siparişleri',
+                    'Garson Çağırma',
+                    'Köz İsteme',
+                    'Garson Sipariş Paneli',
+                    'Mutfak Paneli',
+                    'Kasiyer Paneli',
+                    '7/24 Destek',
+                    'Mobil Uyumlu',
+                    'Gelişmiş Raporlar',
+                    'Özel Tasarım'
+                ]
+            },
+            {
+                id: 'professional_yearly',
+                name: 'Profesyonel Paket',
+                price: '5.999₺',
+                period: 'Yıllık',
+                originalPrice: '9.588₺',
+                discount: '37%',
+                tables: 30,
+                features: [
+                    '30 Masa QR Kodu',
+                    'Müşteri Siparişleri',
+                    'Garson Çağırma',
+                    'Köz İsteme',
+                    'Garson Sipariş Paneli',
+                    'Mutfak Paneli',
+                    'Kasiyer Paneli',
+                    '7/24 Destek',
+                    'Mobil Uyumlu',
+                    'Gelişmiş Raporlar',
+                    'Özel Tasarım',
+                    '2 Ay Bedava'
+                ]
+            },
+            {
+                id: 'enterprise_monthly',
+                name: 'Kurumsal Paket',
+                price: '999₺',
+                period: 'Aylık',
+                originalPrice: '1.299₺',
+                discount: '23%',
+                tables: 50,
+                features: [
+                    '50 Masa QR Kodu',
+                    'Müşteri Siparişleri',
+                    'Garson Çağırma',
+                    'Köz İsteme',
+                    'Garson Sipariş Paneli',
+                    'Mutfak Paneli',
+                    'Kasiyer Paneli',
+                    'Yönetici Paneli',
+                    '7/24 Destek',
+                    'Mobil Uyumlu',
+                    'Gelişmiş Raporlar',
+                    'Özel Tasarım',
+                    'API Erişimi',
+                    'Öncelikli Destek',
+                    'Eğitim Desteği'
+                ]
+            },
+            {
+                id: 'enterprise_yearly',
+                name: 'Kurumsal Paket',
+                price: '9.999₺',
+                period: 'Yıllık',
+                originalPrice: '15.588₺',
+                discount: '36%',
+                tables: 50,
+                features: [
+                    '50 Masa QR Kodu',
+                    'Müşteri Siparişleri',
+                    'Garson Çağırma',
+                    'Köz İsteme',
+                    'Garson Sipariş Paneli',
+                    'Mutfak Paneli',
+                    'Kasiyer Paneli',
+                    'Yönetici Paneli',
+                    '7/24 Destek',
+                    'Mobil Uyumlu',
+                    'Gelişmiş Raporlar',
+                    'Özel Tasarım',
+                    'API Erişimi',
+                    'Öncelikli Destek',
+                    'Eğitim Desteği',
+                    '2 Ay Bedava'
+                ]
+            }
+        ];
+        
+        // Uygulamayı başlat
+        async function initializeApp() {
+            try {
+                // Restoran bilgilerini al
+                restaurantInfo = await getRestaurantInfo();
+                
+                if (!restaurantInfo) {
+                    alert('Restoran bilgileri bulunamadı!');
+                    return;
+                }
+                
+                // Paketleri render et
+                renderPackages();
+                
+                // Event listener'ları ekle
+                setupEventListeners();
+                
+            } catch (error) {
+                console.error('Uygulama başlatılamadı:', error);
+                alert('Uygulama yüklenirken hata oluştu');
+            }
+        }
+        
+        // Restoran bilgilerini getir
+        async function getRestaurantInfo() {
+            try {
+                const { data, error } = await supabase
+                    .from('restaurants')
+                    .select('*')
+                    .eq('id', RESTAURANT_ID)
+                    .single();
+                
+                if (error) throw error;
+                return data;
+            } catch (error) {
+                console.error('Restoran bilgileri alınamadı:', error);
+                return null;
+            }
+        }
+        
+        // Paketleri render et
+        function renderPackages() {
+            const packagesGrid = document.getElementById('packagesGrid');
+            packagesGrid.innerHTML = '';
+            
+            packages.forEach((package, index) => {
+                const card = document.createElement('div');
+                card.className = 'package-card';
+                card.setAttribute('data-package-id', package.id);
+                
+                // Popüler paket işaretle (Profesyonel yıllık)
+                const isPopular = package.id === 'professional_yearly';
+                const isYearly = package.period === 'Yıllık';
+                
+                card.innerHTML = `
+                    ${package.discount ? `<div class="discount-badge">${package.discount} İndirim</div>` : ''}
+                    ${isPopular ? '<div class="popular-badge">En Popüler</div>' : ''}
+                    <div class="package-header">
+                        <div class="package-name">${package.name}</div>
+                        <div class="package-price">
+                            ${package.originalPrice ? `<span class="original-price">${package.originalPrice}</span>` : ''}
+                            ${package.price}
+                        </div>
+                        <div class="package-period">${package.period}</div>
+                    </div>
+                    <ul class="package-features">
+                        ${package.features.map(feature => `
+                            <li><i class="fas fa-check"></i> ${feature}</li>
+                        `).join('')}
+                    </ul>
+                    <button class="package-btn" onclick="selectPackage('${package.id}')">
+                        ${isYearly ? '<i class="fas fa-gift"></i> ' : ''}Bu Paketi Seç
+                    </button>
+                `;
+                
+                packagesGrid.appendChild(card);
+            });
+        }
+        
+        // Paket seç
+        window.selectPackage = function(packageId) {
+            // Önceki seçimi temizle
+            document.querySelectorAll('.package-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Yeni paketi seç
+            const selectedCard = document.querySelector(`[data-package-id="${packageId}"]`);
+            if (selectedCard) {
+                selectedCard.classList.add('selected');
+            }
+            
+            selectedPackage = packages.find(p => p.id === packageId);
+            
+            // Ödeme bölümünü göster
+            document.getElementById('paymentSection').style.display = 'block';
+            
+            // Sayfayı ödeme bölümüne kaydır
+            document.getElementById('paymentSection').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        };
+        
+        // Event listener'ları ayarla
+        function setupEventListeners() {
+            // Kart numarası formatı
+            document.getElementById('cardNumber').addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\s/g, '');
+                value = value.replace(/(\d{4})/g, '$1 ').trim();
+                e.target.value = value;
+            });
+            
+            // Son kullanma tarihi formatı
+            document.getElementById('cardExpiry').addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length >= 2) {
+                    value = value.substring(0, 2) + '/' + value.substring(2, 4);
+                }
+                e.target.value = value;
+            });
+            
+            // CVV sadece rakam
+            document.getElementById('cardCvv').addEventListener('input', function(e) {
+                e.target.value = e.target.value.replace(/\D/g, '');
+            });
+            
+            // Ödeme formu gönderimi
+            document.getElementById('paymentForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                processPayment();
+            });
+        }
+        
+        // Ödeme işlemi
+        async function processPayment() {
+            const payBtn = document.getElementById('payBtn');
+            payBtn.disabled = true;
+            payBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> İşleniyor...';
+            
+            try {
+                // Ödeme bilgilerini al
+                const cardName = document.getElementById('cardName').value;
+                const cardNumber = document.getElementById('cardNumber').value;
+                const cardExpiry = document.getElementById('cardExpiry').value;
+                const cardCvv = document.getElementById('cardCvv').value;
+                
+                // Basit doğrulama
+                if (!cardName || !cardNumber || !cardExpiry || !cardCvv) {
+                    throw new Error('Lütfen tüm alanları doldurun');
+                }
+                
+                if (cardNumber.replace(/\s/g, '').length !== 16) {
+                    throw new Error('Geçersiz kart numarası');
+                }
+                
+                if (cardCvv.length !== 3) {
+                    throw new Error('Geçersiz CVV');
+                }
+                
+                // Ödeme kaydını oluştur
+                const { data: payment, error: paymentError } = await supabase
+                    .from('payments')
+                    .insert([{
+                        restaurant_id: RESTAURANT_ID,
+                        package_id: selectedPackage.id,
+                        amount: selectedPackage.price.replace('₺', ''),
+                        status: 'pending',
+                        card_last4: cardNumber.slice(-4),
+                        created_at: new Date().toISOString()
+                    }])
+                    .select()
+                    .single();
+                
+                if (paymentError) throw paymentError;
+                
+                // Restoran aboneliğini güncelle
+                await supabase
+                    .from('restaurants')
+                    .update({
+                        subscription_package: selectedPackage.id,
+                        subscription_status: 'active',
+                        subscription_start: new Date().toISOString(),
+                        subscription_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+                        table_limit: selectedPackage.tables
+                    })
+                    .eq('id', RESTAURANT_ID);
+                
+                // Başarılı ödeme sayfasına yönlendir
+                window.location.href = `odeme-sonrasi.html?payment_id=${payment.id}&status=success&restaurant_id=${RESTAURANT_ID}`;
+                
+            } catch (error) {
+                console.error('Ödeme hatası:', error);
+                alert('Ödeme işlemi başarısız: ' + error.message);
+                
+                payBtn.disabled = false;
+                payBtn.innerHTML = '<i class="fas fa-lock"></i> Güvenli Ödeme Yap';
+            }
+        }
+        
+        // Uygulamayı başlat
+        initializeApp();
+    </script>
+</body>
+</html> 

@@ -639,6 +639,34 @@
             margin: 0 var(--space-md);
         }
         
+        .upgrade-btn {
+            background: var(--premium-gold);
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.5);
+            border-color: rgba(255, 215, 0, 0.3);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .upgrade-btn:hover {
+            transform: translateY(-6px) scale(1.03);
+            box-shadow: 0 25px 60px rgba(255, 215, 0, 0.7), 0 0 20px rgba(255, 215, 0, 0.4);
+            border-color: rgba(255, 215, 0, 0.6);
+        }
+        
+        .upgrade-btn i {
+            animation: starTwinkle 1.5s ease-in-out infinite alternate;
+        }
+        
+        @keyframes starTwinkle {
+            0% { 
+                filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.8));
+                transform: scale(1);
+            }
+            100% { 
+                filter: drop-shadow(0 0 20px rgba(255, 215, 0, 1));
+                transform: scale(1.1);
+            }
+        }
+        
         .action-bar::before {
             content: '';
             position: absolute;
@@ -1673,6 +1701,44 @@
                 padding: var(--space-xs) var(--space-sm);
             }
         }
+        
+        @media (max-width: 360px) {
+            .header-right {
+                gap: var(--space-sm);
+            }
+            
+            .table-info {
+                padding: var(--space-xs) var(--space-sm);
+                font-size: var(--font-size-sm);
+            }
+            
+            .cart-btn {
+                padding: var(--space-sm);
+            }
+            
+            .cart-btn i {
+                font-size: var(--font-size-lg);
+            }
+            
+            .action-bar {
+                padding: var(--space-sm);
+            }
+            
+            .action-btn {
+                min-height: 48px;
+                padding: var(--space-sm) var(--space-md);
+                font-size: var(--font-size-xs);
+            }
+            
+            .product-grid {
+                gap: var(--space-xs);
+            }
+            
+            .category-btn {
+                min-width: 70px;
+                padding: var(--space-xs) var(--space-sm);
+            }
+        }
     </style>
 </head>
 <body>
@@ -1725,6 +1791,10 @@
         <button class="action-btn request-charcoal glow-effect" id="requestCharcoalBtn">
             <i class="fas fa-fire"></i>
             Köz İste
+        </button>
+        <button class="action-btn upgrade-btn glow-effect" id="upgradeBtn">
+            <i class="fas fa-star"></i>
+            Premium'a Geç
         </button>
     </div>
     
@@ -1780,6 +1850,7 @@
             let products = [];
             let categories = [];
             let cart = [];
+            let isTrialExpired = false;
             
             // Uygulamayı başlat
             async function initializeApp() {
@@ -1792,6 +1863,9 @@
                         showToast('error', 'Hata', 'Restoran veya masa bilgileri bulunamadı');
                         return;
                     }
+                    
+                    // Trial durumunu kontrol et
+                    await checkTrialStatus();
                     
                     // UI'yi güncelle
                     updateUI();
@@ -1885,6 +1959,88 @@
                     console.error('Kategoriler alınamadı:', error);
                     return [];
                 }
+            }
+            
+            // Trial durumunu kontrol et
+            async function checkTrialStatus() {
+                try {
+                    if (!restaurantInfo) return;
+                    
+                    const { data, error } = await supabase
+                        .from('restaurants')
+                        .select('subscription_status, subscription_end, table_limit')
+                        .eq('id', RESTAURANT_ID)
+                        .single();
+                    
+                    if (error) throw error;
+                    
+                    if (data.subscription_status === 'trial' && new Date(data.subscription_end) < new Date()) {
+                        isTrialExpired = true;
+                        showTrialExpiredMessage();
+                    } else if (data.subscription_status === 'expired') {
+                        isTrialExpired = true;
+                        showTrialExpiredMessage();
+                    }
+                    
+                } catch (error) {
+                    console.error('Trial durumu kontrol edilemedi:', error);
+                }
+            }
+            
+            // Trial süresi dolmuş mesajı göster
+            function showTrialExpiredMessage() {
+                const overlay = document.createElement('div');
+                overlay.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.9);
+                    backdrop-filter: blur(10px);
+                    z-index: 9999;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 20px;
+                `;
+                
+                overlay.innerHTML = `
+                    <div style="
+                        background: rgba(255, 255, 255, 0.1);
+                        backdrop-filter: blur(30px);
+                        border: 2px solid rgba(255, 255, 255, 0.2);
+                        border-radius: 24px;
+                        padding: 40px;
+                        text-align: center;
+                        max-width: 500px;
+                        color: white;
+                    ">
+                        <div style="font-size: 64px; margin-bottom: 20px; color: #f59e0b;">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <h2 style="margin-bottom: 20px; font-size: 24px;">Trial Süreniz Doldu</h2>
+                        <p style="margin-bottom: 30px; line-height: 1.6; color: rgba(255, 255, 255, 0.8);">
+                            Ücretsiz deneme süreniz sona ermiştir. QR Menü sisteminizi kullanmaya devam etmek için premium paketlerimizden birini seçin.
+                        </p>
+                        <button onclick="window.location.href='odeme.html?restaurant_id=${RESTAURANT_ID}'" style="
+                            background: linear-gradient(135deg, #ffd700 0%, #ffb347 100%);
+                            color: white;
+                            border: none;
+                            padding: 15px 30px;
+                            border-radius: 12px;
+                            font-size: 16px;
+                            font-weight: bold;
+                            cursor: pointer;
+                            text-transform: uppercase;
+                            letter-spacing: 0.05em;
+                        ">
+                            <i class="fas fa-star"></i> Premium'a Geç
+                        </button>
+                    </div>
+                `;
+                
+                document.body.appendChild(overlay);
             }
             
             // UI'yi güncelle
@@ -2157,6 +2313,11 @@
                 // Köz isteme
                 document.getElementById('requestCharcoalBtn').addEventListener('click', function() {
                     callWaiter('charcoal');
+                });
+                
+                // Premium'a geç
+                document.getElementById('upgradeBtn').addEventListener('click', function() {
+                    window.location.href = `odeme.html?restaurant_id=${RESTAURANT_ID}`;
                 });
                 
                 // Siparişi tamamlama

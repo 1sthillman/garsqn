@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ödeme Sonucu - Adisyon</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --premium-gold: linear-gradient(135deg, #ffd700 0%, #ffb347 100%);
+            --premium-silver: linear-gradient(135deg, #c0c0c0 0%, #e6e6fa 100%);
+            --premium-rose: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            --premium-ocean: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            --premium-emerald: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            
+            --glass-bg: rgba(255, 255, 255, 0.06);
+            --glass-bg-strong: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.18);
+            --glass-border-strong: rgba(255, 255, 255, 0.25);
+            --glass-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+            --glass-shadow-strong: 0 20px 60px rgba(0, 0, 0, 0.4);
+            
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.9);
+            --text-muted: rgba(255, 255, 255, 0.75);
+            
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --space-2xl: 48px;
+            --space-3xl: 64px;
+            
+            --radius-sm: 10px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --radius-xl: 32px;
+            --radius-2xl: 40px;
+            --radius-full: 50%;
+            
+            --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-normal: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-elastic: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            
+            --font-size-xs: 0.75rem;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.125rem;
+            --font-size-xl: 1.25rem;
+            --font-size-2xl: 1.5rem;
+            --font-size-3xl: 1.875rem;
+            --font-size-4xl: 2.25rem;
+            
+            --font-weight-light: 300;
+            --font-weight-normal: 400;
+            --font-weight-medium: 500;
+            --font-weight-semibold: 600;
+            --font-weight-bold: 700;
+            --font-weight-extrabold: 800;
+            --font-weight-black: 900;
+        }
+        
+        body {
+            background: linear-gradient(-45deg, #6a11cb, #2575fc, #4facfe, #00f2fe, #a8edea);
+            background-size: 400% 400%;
+            animation: gradientShift 20s ease infinite;
+            background-attachment: fixed;
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: var(--space-xl);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .result-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(30px) saturate(200%);
+            -webkit-backdrop-filter: blur(30px) saturate(200%);
+            border: 2px solid var(--glass-border-strong);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-3xl);
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .result-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--premium-ocean);
+            opacity: 0.05;
+            pointer-events: none;
+        }
+        
+        .result-icon {
+            width: 120px;
+            height: 120px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--space-2xl);
+            font-size: var(--font-size-4xl);
+            position: relative;
+            z-index: 1;
+            animation: iconPulse 2s ease-in-out infinite;
+        }
+        
+        .result-icon.success {
+            background: var(--success);
+            box-shadow: 0 20px 60px rgba(16, 185, 129, 0.4);
+        }
+        
+        .result-icon.error {
+            background: var(--error);
+            box-shadow: 0 20px 60px rgba(239, 68, 68, 0.4);
+        }
+        
+        @keyframes iconPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .result-title {
+            font-size: var(--font-size-3xl);
+            font-weight: var(--font-weight-bold);
+            margin-bottom: var(--space-lg);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .result-message {
+            font-size: var(--font-size-lg);
+            color: var(--text-secondary);
+            margin-bottom: var(--space-2xl);
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .payment-details {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-2xl);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-sm) 0;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        
+        .detail-label {
+            color: var(--text-muted);
+            font-size: var(--font-size-sm);
+        }
+        
+        .detail-value {
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-primary);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: var(--space-md);
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .btn {
+            padding: var(--space-lg) var(--space-xl);
+            border: none;
+            border-radius: var(--radius-xl);
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-bold);
+            cursor: pointer;
+            transition: var(--transition-elastic);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .btn-primary {
+            background: var(--premium-ocean);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(106, 17, 203, 0.5);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            border: 2px solid var(--glass-border);
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        .countdown {
+            font-size: var(--font-size-sm);
+            color: var(--text-muted);
+            margin-top: var(--space-lg);
+            position: relative;
+            z-index: 1;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: var(--space-lg);
+            }
+            
+            .result-card {
+                padding: var(--space-2xl);
+            }
+            
+            .result-icon {
+                width: 100px;
+                height: 100px;
+                font-size: var(--font-size-3xl);
+            }
+            
+            .result-title {
+                font-size: var(--font-size-2xl);
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="result-card" id="resultCard">
+            <div class="result-icon" id="resultIcon">
+                <i class="fas fa-check"></i>
+            </div>
+            
+            <div class="result-title" id="resultTitle">
+                Ödemeniz Gerçekleşti!
+            </div>
+            
+            <div class="result-message" id="resultMessage">
+                Adisyon QR Menü sisteminiz başarıyla aktifleştirildi. Artık müşterileriniz QR kodlar ile sipariş verebilir.
+            </div>
+            
+            <div class="payment-details" id="paymentDetails">
+                <div class="detail-row">
+                    <span class="detail-label">Ödeme Durumu</span>
+                    <span class="detail-value" id="paymentStatus">Başarılı</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Paket</span>
+                    <span class="detail-value" id="packageName">Profesyonel Paket</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Tutar</span>
+                    <span class="detail-value" id="paymentAmount">199₺</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Tarih</span>
+                    <span class="detail-value" id="paymentDate">01.01.2024</span>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <a href="#" class="btn btn-primary" id="dashboardBtn">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Yönetim Paneli
+                </a>
+                <a href="#" class="btn btn-secondary" id="menuBtn">
+                    <i class="fas fa-qrcode"></i>
+                    QR Menü
+                </a>
+            </div>
+            
+            <div class="countdown" id="countdown">
+                <i class="fas fa-clock"></i> 5 saniye sonra yönetim paneline yönlendirileceksiniz...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Supabase konfigürasyonu
+        const SUPABASE_URL = 'https://egcklzfiyxxnvyxwoowq.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVnY2tsemZpeXh4bnZ5eHdvb3dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0NjQxMTcsImV4cCI6MjA2NDA0MDExN30.dfRQv3lYFCaI1T5ydOw4HyoEJ0I1wOSIUcG8ueEbxKQ';
+        
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // URL parametrelerini al
+        const urlParams = new URLSearchParams(window.location.search);
+        const paymentId = urlParams.get('payment_id');
+        const status = urlParams.get('status');
+        const restaurantId = urlParams.get('restaurant_id');
+        
+        let countdown = 5;
+        let paymentData = null;
+        let restaurantInfo = null;
+        
+        // Uygulamayı başlat
+        async function initializeApp() {
+            try {
+                // Ödeme bilgilerini al
+                if (paymentId) {
+                    paymentData = await getPaymentInfo();
+                }
+                
+                // Restoran bilgilerini al
+                if (restaurantId) {
+                    restaurantInfo = await getRestaurantInfo();
+                }
+                
+                // Sonucu göster
+                showResult();
+                
+                // Geri sayım başlat
+                startCountdown();
+                
+            } catch (error) {
+                console.error('Uygulama başlatılamadı:', error);
+                showErrorResult();
+            }
+        }
+        
+        // Ödeme bilgilerini getir
+        async function getPaymentInfo() {
+            try {
+                const { data, error } = await supabase
+                    .from('payments')
+                    .select('*')
+                    .eq('id', paymentId)
+                    .single();
+                
+                if (error) throw error;
+                return data;
+            } catch (error) {
+                console.error('Ödeme bilgileri alınamadı:', error);
+                return null;
+            }
+        }
+        
+        // Restoran bilgilerini getir
+        async function getRestaurantInfo() {
+            try {
+                const { data, error } = await supabase
+                    .from('restaurants')
+                    .select('*')
+                    .eq('id', restaurantId)
+                    .single();
+                
+                if (error) throw error;
+                return data;
+            } catch (error) {
+                console.error('Restoran bilgileri alınamadı:', error);
+                return null;
+            }
+        }
+        
+        // Sonucu göster
+        function showResult() {
+            const resultIcon = document.getElementById('resultIcon');
+            const resultTitle = document.getElementById('resultTitle');
+            const resultMessage = document.getElementById('resultMessage');
+            const paymentStatus = document.getElementById('paymentStatus');
+            const packageName = document.getElementById('packageName');
+            const paymentAmount = document.getElementById('paymentAmount');
+            const paymentDate = document.getElementById('paymentDate');
+            
+            if (status === 'success' && paymentData) {
+                // Başarılı ödeme
+                resultIcon.className = 'result-icon success';
+                resultIcon.innerHTML = '<i class="fas fa-check"></i>';
+                resultTitle.textContent = 'Ödemeniz Gerçekleşti!';
+                resultMessage.textContent = 'Adisyon QR Menü sisteminiz başarıyla aktifleştirildi. Artık müşterileriniz QR kodlar ile sipariş verebilir.';
+                paymentStatus.textContent = 'Başarılı';
+                paymentStatus.style.color = '#10b981';
+                
+                // Paket bilgilerini göster
+                const packages = {
+                    'starter_monthly': 'Başlangıç Paketi (15 Masa) - Aylık',
+                    'starter_yearly': 'Başlangıç Paketi (15 Masa) - Yıllık',
+                    'professional_monthly': 'Profesyonel Paket (30 Masa) - Aylık',
+                    'professional_yearly': 'Profesyonel Paket (30 Masa) - Yıllık',
+                    'enterprise_monthly': 'Kurumsal Paket (50 Masa) - Aylık',
+                    'enterprise_yearly': 'Kurumsal Paket (50 Masa) - Yıllık'
+                };
+                
+                packageName.textContent = packages[paymentData.package_id] || 'Bilinmeyen Paket';
+                paymentAmount.textContent = `${paymentData.amount}₺`;
+                paymentDate.textContent = new Date(paymentData.created_at).toLocaleDateString('tr-TR');
+                
+            } else {
+                // Başarısız ödeme
+                showErrorResult();
+            }
+        }
+        
+        // Hata sonucunu göster
+        function showErrorResult() {
+            const resultIcon = document.getElementById('resultIcon');
+            const resultTitle = document.getElementById('resultTitle');
+            const resultMessage = document.getElementById('resultMessage');
+            const paymentStatus = document.getElementById('paymentStatus');
+            const paymentDetails = document.getElementById('paymentDetails');
+            
+            resultIcon.className = 'result-icon error';
+            resultIcon.innerHTML = '<i class="fas fa-times"></i>';
+            resultTitle.textContent = 'Ödeme Alınamadı';
+            resultMessage.textContent = 'Ödeme işlemi sırasında bir hata oluştu. Lütfen tekrar deneyin veya destek ekibimizle iletişime geçin.';
+            paymentStatus.textContent = 'Başarısız';
+            paymentStatus.style.color = '#ef4444';
+            
+            // Ödeme detaylarını gizle
+            paymentDetails.style.display = 'none';
+            
+            // Butonları güncelle
+            document.getElementById('dashboardBtn').href = `odeme.html?restaurant_id=${restaurantId}`;
+            document.getElementById('dashboardBtn').innerHTML = '<i class="fas fa-redo"></i> Tekrar Dene';
+            document.getElementById('menuBtn').style.display = 'none';
+        }
+        
+        // Geri sayım başlat
+        function startCountdown() {
+            const countdownElement = document.getElementById('countdown');
+            
+            const timer = setInterval(() => {
+                countdown--;
+                countdownElement.innerHTML = `<i class="fas fa-clock"></i> ${countdown} saniye sonra yönetim paneline yönlendirileceksiniz...`;
+                
+                if (countdown <= 0) {
+                    clearInterval(timer);
+                    redirectToDashboard();
+                }
+            }, 1000);
+        }
+        
+        // Yönetim paneline yönlendir
+        function redirectToDashboard() {
+            if (status === 'success' && restaurantId) {
+                window.location.href = `dashboard.html?restaurant_id=${restaurantId}`;
+            } else {
+                window.location.href = `odeme.html?restaurant_id=${restaurantId}`;
+            }
+        }
+        
+        // Buton event listener'ları
+        document.getElementById('dashboardBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            redirectToDashboard();
+        });
+        
+        document.getElementById('menuBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            if (restaurantId) {
+                window.location.href = `menu.html?restaurant_id=${restaurantId}&table_id=1`;
+            }
+        });
+        
+        // Uygulamayı başlat
+        initializeApp();
+    </script>
+</body>
+</html> 
