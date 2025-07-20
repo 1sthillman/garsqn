@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>TR QR Menü</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css?v=20250120" />
+  <style>
+    /* Ek stiller */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      color: white;
+      font-size: 1.2rem;
+    }
+    
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid var(--color-primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 20px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .submit-order-btn {
+      margin-bottom: 12px;
+    }
+
+    .koz-iste-btn {
+      background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+      color: #333;
+      border: none;
+      border-radius: 32px;
+      padding: 16px 0;
+      font-size: 1.1rem;
+      font-family: 'Space Grotesk', Arial, sans-serif;
+      font-weight: 700;
+      box-shadow: 0 4px 24px 0 rgba(255,154,158,0.3);
+      cursor: pointer;
+      transition: transform 0.18s cubic-bezier(0.4,0,0.2,1), box-shadow 0.18s;
+      margin-top: 12px;
+      outline: none;
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+    }
+    
+    .koz-iste-btn:active {
+      transform: scale(0.97);
+      box-shadow: 0 2px 8px 0 rgba(255,154,158,0.18);
+    }
+  </style>
+</head>
+<body>
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+    <p>Menü yükleniyor...</p>
+  </div>
+
+  <div class="background-gradient"></div>
+  <header class="glass-header">
+    <div class="logo" id="restaurantName">Yükleniyor...</div>
+    <div class="table-number">Masa <span id="table-id">--</span></div>
+  </header>
+  <main class="main-grid">
+    <section class="menu-section">
+      <h1 class="main-title">Dijital Menü</h1>
+      <div id="categoryBar" class="category-bar glass">
+        <!-- Kategoriler buraya dinamik olarak gelecek -->
+      </div>
+      <div class="menu-grid" id="menuGrid">
+        <!-- Menü kartları buraya dinamik olarak gelecek -->
+      </div>
+    </section>
+    <aside class="order-section glass">
+      <h2>Siparişlerim</h2>
+      <ul id="order-list"></ul>
+      <button id="submitOrderBtn" class="submit-order-btn neon-btn">Siparişi Gönder</button>
+      <button id="callWaiterBtn" class="call-waiter-btn neon-btn">Garson Çağır</button>
+      <button id="kozIsteBtn" class="koz-iste-btn">KÖZ İSTE</button>
+    </aside>
+  </main>
+  <div id="toast-container"></div>
+  
+  <script src="./icons.js?v=20250120"></script>
+  <script type="module">
+    // Doğrudan import
+    import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js';
+    import { productIcons } from './icons.js';
+
+    // URL parametrelerinden restoran ve masa bilgilerini al
+    const urlParams = new URLSearchParams(window.location.search);
+    const RESTAURANT_ID = urlParams.get('restaurant_id');
+    const TABLE_ID = urlParams.get('table_id');
+
+    console.log('🔍 Debug Bilgileri:');
+    console.log('Restaurant ID:', RESTAURANT_ID);
+    console.log('Table ID:', TABLE_ID);
+
+    // Supabase Konfigürasyonu
+    const SUPABASE_CONFIG = {
+      url: 'https://egcklzfiyxxnvyxwoowq.supabase.co',
+      anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVnY2tsemZpeXh4bnZ5eHdvb3dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0NjQxMTcsImV4cCI6MjA2NDA0MDExN30.dfRQv3lYFCaI1T5ydOw4HyoEJ0I1wOSIUcG8ueEbxKQ'
+    };
+
+    // Supabase client oluştur
+    const supabase = createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+
+    // Global değişkenler
+    let restaurantInfo = null;
+    let tableInfo = null;
+    let products = [];
+    let categories = [];
+    let orders = [];
+    let currentOrder = null;
+
+    // DOM elementleri
+    const menuGrid = document.getElementById('menuGrid');
+    const categoryBar = document.getElementById('categoryBar');
+    const orderList = document.getElementById('order-list');
+    const toastContainer = document.getElementById('toast-container');
+    const tableIdElement = document.getElementById('table-id');
+    const restaurantNameElement = document.getElementById('restaurantName');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const submitOrderBtn = document.getElementById('submitOrderBtn');
+    const callWaiterBtn = document.getElementById('callWaiterBtn');
+    const kozIsteBtn = document.getElementById('kozIsteBtn');
+
+    // Sayfa yüklendiğinde başlat
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        console.log('🚀 Uygulama başlatılıyor...');
+        await initializeApp();
+      } catch (error) {
+        console.error('❌ Uygulama başlatılamadı:', error);
+        showToast('Uygulama yüklenirken hata oluştu', 'error');
+      } finally {
+        // Yükleme ekranını kaldır
+        loadingOverlay.style.display = 'none';
+      }
+    });
+
+    // Uygulamayı başlat
+    async function initializeApp() {
+      // Restoran ve masa bilgilerini al
+      restaurantInfo = await getRestaurantInfo();
+      tableInfo = await getTableInfo();
+      
+      console.log('📋 Restoran Bilgileri:', restaurantInfo);
+      console.log('🪑 Masa Bilgileri:', tableInfo);
+      
+      if (!restaurantInfo || !tableInfo) {
+        showToast('Restoran veya masa bilgileri bulunamadı', 'error');
+        return;
+      }
+
+      // Ürünler ve kategorileri al
+      products = await getProducts();
+      categories = await getProductCategories();
+      
+      console.log('🍽️ Ürünler:', products);
+      console.log('📂 Kategoriler:', categories);
+
+      // UI'yi güncelle
+      updateUI();
+      
+      // Kategori barını oluştur
+      createCategoryBar();
+      
+      // Menüyü render et
+      renderMenu();
+      
+      // Siparişleri render et
+      renderOrders();
+      
+      // Event listener'ları ekle
+      submitOrderBtn.addEventListener('click', submitOrder);
+      callWaiterBtn.addEventListener('click', () => callWaiter('waiter'));
+      kozIsteBtn.addEventListener('click', () => callWaiter('charcoal'));
+    }
+
+    // Restoran bilgilerini getir
+    async function getRestaurantInfo() {
+      console.log('🔍 getRestaurantInfo çağrıldı, Restaurant ID:', RESTAURANT_ID);
+      try {
+        const { data, error } = await supabase
+          .from('restaurants')
+          .select('*')
+          .eq('id', RESTAURANT_ID)
+          .single();
+
+        if (error) throw error;
+        console.log('✅ Restoran bilgileri alındı:', data);
+        return data;
+      } catch (error) {
+        console.error('❌ Restoran bilgileri alınamadı:', error);
+        return null;
+      }
+    }
+
+    // Masa bilgilerini getir
+    async function getTableInfo() {
+      console.log('🔍 getTableInfo çağrıldı, Table ID:', TABLE_ID);
+      try {
+        const { data, error } = await supabase
+          .from('tables')
+          .select('*')
+          .eq('id', TABLE_ID)
+          .eq('restaurant_id', RESTAURANT_ID)
+          .single();
+
+        if (error) throw error;
+        console.log('✅ Masa bilgileri alındı:', data);
+        return data;
+      } catch (error) {
+        console.error('❌ Masa bilgileri alınamadı:', error);
+        return null;
+      }
+    }
+
+    // Restoranın ürünlerini getir
+    async function getProducts() {
+      console.log('🔍 getProducts çağrıldı, Restaurant ID:', RESTAURANT_ID);
+      try {
+        const { data, error } = await supabase
+          .from('products')
+          .select('*')
+          .eq('restaurant_id', RESTAURANT_ID)
+          .eq('is_active', true)
+          .order('sort_order', { ascending: true });
+
+        if (error) throw error;
+        console.log('✅ Ürünler alındı:', data);
+        return data || [];
+      } catch (error) {
+        console.error('❌ Ürünler alınamadı:', error);
+        return [];
+      }
+    }
+
+    // Ürün kategorilerini getir
+    async function getProductCategories() {
+      console.log('🔍 getProductCategories çağrıldı, Restaurant ID:', RESTAURANT_ID);
+      try {
+        const { data, error } = await supabase
+          .from('product_categories')
+          .select('*')
+          .eq('restaurant_id', RESTAURANT_ID)
+          .order('sort_order', { ascending: true });
+
+        if (error) throw error;
+        console.log('✅ Ürün kategorileri alındı:', data);
+        return data || [];
+      } catch (error) {
+        console.error('❌ Ürün kategorileri alınamadı:', error);
+        return [];
+      }
+    }
+
+    // UI'yi güncelle
+    function updateUI() {
+      // Logo ve restoran adı
+      if (restaurantInfo) {
+        restaurantNameElement.textContent = restaurantInfo.name || 'QR Menü';
+      }
+      
+      // Masa numarası
+      if (tableInfo) {
+        tableIdElement.textContent = tableInfo.number || '--';
+      }
+    }
+
+    // Kategori barını oluştur
+    function createCategoryBar() {
+      // Tümü kategorisi
+      const allCategoriesBtn = `
+        <button class="category-btn active" data-key="all">
+          <span class="cat-icon">${productIcons.default}</span>
+          <span class="cat-name">Tümü</span>
+        </button>
+      `;
+      
+      // Kategorileri oluştur
+      const categoryButtons = categories.map(cat => `
+        <button class="category-btn" data-key="${cat.id}">
+          <span class="cat-icon">${productIcons.default}</span>
+          <span class="cat-name">${cat.name}</span>
+        </button>
+      `).join('');
+      
+      categoryBar.innerHTML = allCategoriesBtn + categoryButtons;
+      
+      // Kategori tıklama olayları
+      categoryBar.addEventListener('click', e => {
+        const btn = e.target.closest('.category-btn');
+        if (!btn) return;
+        
+        const categoryId = btn.dataset.key;
+        filterByCategory(categoryId);
+        updateCategoryBar(categoryId);
+      });
+    }
+
+    // Kategori barını güncelle
+    function updateCategoryBar(activeCategoryId = 'all') {
+      document.querySelectorAll('.category-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.key === activeCategoryId);
+      });
+    }
+
+    // Kategoriye göre filtrele
+    function filterByCategory(categoryId) {
+      let filteredProducts = products;
+      
+      if (categoryId !== 'all') {
+        filteredProducts = products.filter(product => product.category_id === categoryId || product.category === categoryId);
+      }
+      
+      renderMenu(filteredProducts);
+    }
+
+    // Ürün adına göre SVG döndüren fonksiyon
+    function getProductIcon(name) {
+      if (!name) return productIcons.default;
+      const key = name.toLowerCase()
+        .replace(/ı/g, 'i')
+        .replace(/ü/g, 'u')
+        .replace(/ö/g, 'o')
+        .replace(/ş/g, 's')
+        .replace(/ç/g, 'c')
+        .replace(/ğ/g, 'g');
+      return productIcons[key] || productIcons.default;
+    }
+
+    // Menü kartlarını oluştur
+    function renderMenu(productsToRender = products) {
+      menuGrid.innerHTML = '';
+      
+      if (productsToRender.length === 0) {
+        menuGrid.innerHTML = '<div class="no-products">Bu kategoride ürün bulunamadı.</div>';
+        return;
+      }
+      
+      productsToRender.forEach(product => {
+        const card = document.createElement('div');
+        card.className = 'menu-card glass';
+        card.innerHTML = `
+          <div class="menu-icon-svg">${getProductIcon(product.name)}</div>
+          <div class="menu-info">
+            <h3>${product.name}</h3>
+            <p>${product.description || ''}</p>
+            <div class="menu-bottom">
+              <span class="menu-price">${product.price}${restaurantInfo?.currency || '₺'}</span>
+              <button class="neon-btn" data-id="${product.id}" data-price="${product.price}">
+                Sipariş Ver
+              </button>
+            </div>
+          </div>
+        `;
+        menuGrid.appendChild(card);
+      });
+      
+      // Sipariş butonlarına tıklama olayları
+      menuGrid.querySelectorAll('.neon-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const productId = btn.dataset.id;
+          const product = products.find(p => p.id === productId);
+          if (product) {
+            addToOrder(product);
+          }
+        });
+      });
+    }
+
+    // Sipariş listesi
+    function renderOrders() {
+      orderList.innerHTML = '';
+      
+      if (orders.length === 0) {
+        orderList.innerHTML = '<li>Henüz sipariş yok.</li>';
+        return;
+      }
+      
+      // Ürünleri grupla ve miktarları hesapla
+      const groupedOrders = {};
+      orders.forEach(item => {
+        if (groupedOrders[item.id]) {
+          groupedOrders[item.id].quantity += 1;
+        } else {
+          groupedOrders[item.id] = { ...item, quantity: 1 };
+        }
+      });
+      
+      // Toplam fiyatı hesapla
+      let totalPrice = 0;
+      
+      Object.values(groupedOrders).forEach(item => {
+        const li = document.createElement('li');
+        const itemTotal = parseFloat(item.price) * item.quantity;
+        totalPrice += itemTotal;
+        
+        li.innerHTML = `
+          <div class="order-item">
+            <span class="item-name">${item.name}</span>
+            <span class="item-quantity">x${item.quantity}</span>
+            <span class="item-price">${itemTotal}${restaurantInfo?.currency || '₺'}</span>
+          </div>
+        `;
+        orderList.appendChild(li);
+      });
+      
+      // Toplam fiyatı göster
+      if (totalPrice > 0) {
+        const totalLi = document.createElement('li');
+        totalLi.className = 'order-total';
+        totalLi.innerHTML = `
+          <div class="total-line">
+            <span>Toplam:</span>
+            <span class="total-price">${totalPrice}${restaurantInfo?.currency || '₺'}</span>
+          </div>
+        `;
+        orderList.appendChild(totalLi);
+      }
+    }
+
+    // Siparişe ürün ekle
+    function addToOrder(product) {
+      orders.push(product);
+      renderOrders();
+      showToast(`${product.name} siparişe eklendi!`, 'success');
+    }
+
+    // Siparişi gönder
+    async function submitOrder() {
+      if (orders.length === 0) {
+        showToast('Sipariş listesi boş!', 'error');
+        return;
+      }
+      
+      try {
+        // Toplam fiyatı hesapla
+        const totalPrice = orders.reduce((sum, item) => sum + parseFloat(item.price), 0);
+        
+        // Sipariş oluştur
+        const { data, error } = await supabase
+          .from('orders')
+          .insert([{
+            restaurant_id: RESTAURANT_ID,
+            table_id: TABLE_ID,
+            status: 'pending',
+            total_price: totalPrice,
+            note: 'QR menüden sipariş'
+          }])
+          .select()
+          .single();
+        
+        if (error) throw error;
+        
+        // Sipariş kalemlerini ekle
+        const groupedOrders = {};
+        orders.forEach(item => {
+          if (groupedOrders[item.id]) {
+            groupedOrders[item.id].quantity += 1;
+          } else {
+            groupedOrders[item.id] = { ...item, quantity: 1 };
+          }
+        });
+        
+        for (const [productId, item] of Object.entries(groupedOrders)) {
+          await supabase
+            .from('order_items')
+            .insert([{
+              order_id: data.id,
+              product_id: productId,
+              quantity: item.quantity,
+              unit_price: parseFloat(item.price),
+              note: null
+            }]);
+        }
+        
+        // Masa durumunu güncelle
+        await supabase
+          .from('tables')
+          .update({ status: 'active' })
+          .eq('id', TABLE_ID)
+          .eq('restaurant_id', RESTAURANT_ID);
+        
+        // Sipariş listesini temizle
+        orders = [];
+        renderOrders();
+        
+        showToast('Siparişiniz başarıyla gönderildi!', 'success');
+        
+      } catch (error) {
+        console.error('❌ Sipariş gönderilemedi:', error);
+        showToast('Sipariş gönderilirken hata oluştu', 'error');
+      }
+    }
+
+    // Garson çağır
+    async function callWaiter(callType = 'waiter') {
+      try {
+        const { data, error } = await supabase
+          .from('calls')
+          .insert([{
+            restaurant_id: RESTAURANT_ID,
+            table_id: TABLE_ID,
+            type: callType,
+            status: 'pending'
+          }])
+          .select()
+          .single();
+
+        if (error) throw error;
+        
+        if (callType === 'waiter') {
+          showToast('Garson çağrıldı! Lütfen bekleyiniz.', 'info');
+        } else if (callType === 'charcoal') {
+          showToast('Köz isteğiniz iletildi! Lütfen bekleyiniz.', 'info');
+        }
+        
+        return data;
+      } catch (error) {
+        console.error('❌ Çağrı oluşturulamadı:', error);
+        showToast('Çağrı oluşturulamadı', 'error');
+        throw error;
+      }
+    }
+
+    // Toast bildirim fonksiyonu
+    function showToast(message, type = 'info') {
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      toast.innerHTML = `<span>${message}</span>`;
+      toastContainer.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 600);
+      }, 2500);
+    }
+  </script>
+</body>
+</html> 
