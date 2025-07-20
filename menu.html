@@ -1,564 +1,2124 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
-  <title>TR QR Menü</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./style.css?v=20250122" />
-  <meta name="theme-color" content="#181A20">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="format-detection" content="telephone=no">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restoran Menü</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-weight: 400;
+            letter-spacing: -0.01em;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        :root {
+            /* Primary Colors */
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --accent-gradient: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            --dark-gradient: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 100%);
+            
+            /* Premium Gradients - Enhanced */
+            --premium-gold: linear-gradient(135deg, #ffd700 0%, #ffb347 100%);
+            --premium-silver: linear-gradient(135deg, #c0c0c0 0%, #e6e6fa 100%);
+            --premium-rose: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            --premium-ocean: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            --premium-sunset: linear-gradient(135deg, #ff6a00 0%, #ee0979 100%);
+            --premium-emerald: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            
+            /* Glass Effects - Enhanced */
+            --glass-bg: rgba(255, 255, 255, 0.06);
+            --glass-bg-strong: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.18);
+            --glass-border-strong: rgba(255, 255, 255, 0.25);
+            --glass-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+            --glass-shadow-strong: 0 20px 60px rgba(0, 0, 0, 0.4);
+            
+            /* Text Colors */
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.9);
+            --text-muted: rgba(255, 255, 255, 0.75);
+            --text-disabled: rgba(255, 255, 255, 0.5);
+            
+            /* Status Colors - Enhanced */
+            --success: #10b981;
+            --success-light: rgba(16, 185, 129, 0.15);
+            --error: #ef4444;
+            --error-light: rgba(239, 68, 68, 0.15);
+            --warning: #f59e0b;
+            --warning-light: rgba(245, 158, 11, 0.15);
+            --info: #3b82f6;
+            --info-light: rgba(59, 130, 246, 0.15);
+            
+            /* Spacing System */
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --space-2xl: 48px;
+            --space-3xl: 64px;
+            
+            /* Border Radius - Enhanced */
+            --radius-sm: 10px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --radius-xl: 32px;
+            --radius-2xl: 40px;
+            --radius-full: 50%;
+            
+            /* Transitions - Enhanced */
+            --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-normal: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            --transition-elastic: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            
+            /* Typography */
+            --font-size-xs: 0.75rem;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.125rem;
+            --font-size-xl: 1.25rem;
+            --font-size-2xl: 1.5rem;
+            --font-size-3xl: 1.875rem;
+            --font-size-4xl: 2.25rem;
+            
+            --font-weight-light: 300;
+            --font-weight-normal: 400;
+            --font-weight-medium: 500;
+            --font-weight-semibold: 600;
+            --font-weight-bold: 700;
+            --font-weight-extrabold: 800;
+            --font-weight-black: 900;
+            
+            /* Z-Index Scale */
+            --z-dropdown: 1000;
+            --z-sticky: 1020;
+            --z-fixed: 1030;
+            --z-modal-backdrop: 1040;
+            --z-modal: 1050;
+            --z-popover: 1060;
+            --z-tooltip: 1070;
+            --z-toast: 1080;
+        }
+        
+        body {
+            background: linear-gradient(-45deg, #6a11cb, #2575fc, #4facfe, #00f2fe, #a8edea);
+            background-size: 400% 400%;
+            animation: gradientShift 20s ease infinite;
+            background-attachment: fixed;
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding-bottom: 100px;
+            overflow-x: hidden;
+        }
+        
+        /* Header Styles - Enhanced */
+        header {
+            background: var(--glass-bg-strong);
+            backdrop-filter: blur(30px) saturate(200%);
+            -webkit-backdrop-filter: blur(30px) saturate(200%);
+            border-bottom: 1px solid var(--glass-border-strong);
+            padding: var(--space-lg);
+            position: sticky;
+            top: 0;
+            z-index: var(--z-sticky);
+            box-shadow: var(--glass-shadow-strong);
+            border-radius: 0 0 var(--radius-2xl) var(--radius-2xl);
+            margin: 0 var(--space-md) var(--space-lg);
+            transition: var(--transition-normal);
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            border-radius: inherit;
+            pointer-events: none;
+        }
+        
+        header:hover {
+            transform: translateY(5px);
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: var(--space-lg);
+        }
+        
+        .logo {
+            font-size: var(--font-size-3xl);
+            font-weight: var(--font-weight-black);
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            background: var(--premium-ocean);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            z-index: 1;
+            letter-spacing: -0.02em;
+            text-shadow: 0 5px 15px rgba(106, 17, 203, 0.3);
+            filter: drop-shadow(0 2px 5px rgba(37, 117, 252, 0.2));
+        }
+        
+        .logo::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: var(--premium-gold);
+            border-radius: var(--radius-lg);
+            opacity: 0;
+            z-index: -1;
+            transition: var(--transition-normal);
+        }
+        
+        .logo:hover::before {
+            opacity: 0.15;
+        }
+        
+        .logo i {
+            background: var(--premium-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: var(--font-size-4xl);
+            filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.6));
+            animation: logoGlow 3s ease-in-out infinite alternate;
+        }
+        
+        @keyframes logoGlow {
+            0% { filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.5)); }
+            100% { filter: drop-shadow(0 0 35px rgba(255, 215, 0, 0.8)); }
+        }
+        
+        .table-info {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: var(--text-primary);
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-semibold);
+            padding: var(--space-md) var(--space-lg);
+            border-radius: var(--radius-2xl);
+            transition: var(--transition-elastic);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+        }
+        
+        .table-info:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .cart-btn {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: var(--text-primary);
+            font-size: var(--font-size-2xl);
+            position: relative;
+            cursor: pointer;
+            padding: var(--space-lg);
+            border-radius: var(--radius-full);
+            transition: var(--transition-elastic);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+            overflow: hidden;
+        }
+        
+        .cart-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s;
+        }
+        
+        .cart-btn:hover::before {
+            left: 100%;
+        }
+        
+        .cart-btn i {
+            font-size: var(--font-size-3xl);
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.9));
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+        }
+        
+        .cart-btn:hover {
+            transform: translateY(-6px) scale(1.15);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .cart-btn:active {
+            transform: translateY(-3px) scale(1.1);
+        }
+        
+        .cart-badge {
+            position: absolute;
+            top: -var(--space-xs);
+            right: -var(--space-xs);
+            background: linear-gradient(135deg, #ff4757 0%, #ff0844 100%);
+            color: white;
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-extrabold);
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 20px rgba(255, 71, 87, 0.7);
+            animation: badgePulse 2s infinite;
+            border: 3px solid rgba(255, 255, 255, 0.9);
+            z-index: 10;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        
+        @keyframes badgePulse {
+            0%, 100% { 
+                transform: scale(1);
+                box-shadow: 0 8px 25px rgba(255, 154, 158, 0.6);
+            }
+            50% { 
+                transform: scale(1.2);
+                box-shadow: 0 12px 30px rgba(255, 154, 158, 0.8);
+            }
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(106, 17, 203, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(79, 172, 254, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(168, 237, 234, 0.3) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+            animation: floatingBubbles 25s ease-in-out infinite;
+        }
+        
+        @keyframes floatingBubbles {
+            0%, 100% { 
+                transform: translateY(0px) rotate(0deg);
+                opacity: 0.3;
+            }
+            50% { 
+                transform: translateY(-30px) rotate(180deg);
+                opacity: 0.6;
+            }
+        }
+        
+        /* Category Bar - Enhanced */
+        .category-bar {
+            display: flex;
+            overflow-x: auto;
+            gap: var(--space-md);
+            padding: var(--space-xl) var(--space-lg);
+            margin: 0 0 var(--space-xl);
+            scrollbar-width: none;
+            scroll-behavior: smooth;
+        }
+        
+        .category-bar::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .category-btn {
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            border: 2px solid var(--glass-border);
+            color: var(--text-secondary);
+            padding: var(--space-md) var(--space-xl);
+            border-radius: var(--radius-2xl);
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-semibold);
+            white-space: nowrap;
+            cursor: pointer;
+            transition: var(--transition-elastic);
+            box-shadow: var(--glass-shadow), 0 5px 15px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+            min-width: 120px;
+            text-align: center;
+            letter-spacing: 0.02em;
+        }
+        
+        .category-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .category-btn:hover::before {
+            left: 100%;
+        }
+        
+        .category-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: var(--glass-shadow-strong), 0 10px 25px rgba(0,0,0,0.15);
+            border-color: var(--glass-border-strong);
+        }
+        
+        .category-btn.active {
+            background: var(--premium-ocean);
+            color: white;
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(106, 17, 203, 0.4);
+            border-color: rgba(106, 17, 203, 0.4);
+        }
+        
+        .category-btn.active::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.15) 100%);
+            border-radius: inherit;
+            pointer-events: none;
+        }
+        
+        /* Product Grid - Enhanced */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-xl);
+            padding: 0 var(--space-lg);
+            max-width: 1200px;
+            margin: 0 auto var(--space-3xl);
+        }
+        
+        .product-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(30px) saturate(200%);
+            -webkit-backdrop-filter: blur(30px) saturate(200%);
+            border: 2px solid var(--glass-border-strong);
+            border-radius: var(--radius-2xl);
+            overflow: hidden;
+            transition: var(--transition-elastic);
+            cursor: pointer;
+            box-shadow: var(--glass-shadow-strong), 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            transform-origin: center;
+        }
+        
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--premium-ocean);
+            opacity: 0;
+            transition: var(--transition-slow);
+            z-index: 0;
+            border-radius: inherit;
+        }
+        
+        .product-card::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: var(--premium-gold);
+            opacity: 0;
+            z-index: -1;
+            border-radius: var(--radius-2xl);
+            transition: var(--transition-normal);
+            filter: blur(8px);
+        }
+        
+        .product-card:hover {
+            transform: translateY(-16px) scale(1.05) rotateX(5deg);
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .product-card:hover::before {
+            opacity: 0.1;
+        }
+        
+        .product-card:hover::after {
+            opacity: 0.4;
+        }
+        
+        .product-card:active {
+            transform: translateY(-10px) scale(1.02);
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 220px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .product-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--premium-silver);
+            opacity: 0.08;
+            transition: var(--transition-normal);
+        }
+        
+        .product-card:hover .product-image::before {
+            opacity: 0.15;
+            transform: scale(1.1);
+        }
+        
+        .product-image i {
+            font-size: 64px;
+            z-index: 2;
+            filter: drop-shadow(0 0 30px rgba(168, 237, 234, 0.7));
+            transition: var(--transition-elastic);
+            background: var(--premium-silver);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .product-card:hover .product-image i {
+            transform: scale(1.15) rotateY(15deg);
+            filter: drop-shadow(0 0 40px rgba(168, 237, 234, 0.9));
+        }
+        
+        .product-info {
+            padding: var(--space-xl);
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+        }
+        
+        .product-name {
+            font-weight: var(--font-weight-bold);
+            font-size: var(--font-size-lg);
+            margin-bottom: var(--space-sm);
+            color: var(--text-primary);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.4;
+            letter-spacing: -0.01em;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        }
+        
+        .product-price {
+            background: var(--premium-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: var(--font-weight-extrabold);
+            font-size: var(--font-size-xl);
+            letter-spacing: -0.02em;
+            position: relative;
+            text-shadow: 0 2px 5px rgba(255, 215, 0, 0.3);
+        }
+        
+        .product-price::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--premium-gold);
+            opacity: 0.4;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: var(--transition-normal);
+        }
+        
+        .product-card:hover .product-price::after {
+            transform: scaleX(1);
+        }
+        
+        /* Action Bar - Enhanced */
+        .action-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(30px) saturate(200%);
+            -webkit-backdrop-filter: blur(30px) saturate(200%);
+            border-top: 2px solid var(--glass-border-strong);
+            padding: var(--space-xl);
+            display: flex;
+            gap: var(--space-lg);
+            box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.25), 0 -1px 10px rgba(255, 255, 255, 0.1);
+            z-index: var(--z-fixed);
+            border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+            margin: 0 var(--space-md);
+        }
+        
+        .action-bar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%);
+            border-radius: inherit;
+            pointer-events: none;
+        }
+        
+        .action-btn {
+            flex: 1;
+            padding: var(--space-lg) var(--space-xl);
+            border: 2px solid transparent;
+            border-radius: var(--radius-2xl);
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-bold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-md);
+            cursor: pointer;
+            transition: var(--transition-elastic);
+            position: relative;
+            overflow: hidden;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            min-height: 60px;
+        }
+        
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.8s ease-out;
+        }
+        
+        .action-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .action-btn:hover::before {
+            left: 100%;
+        }
+        
+        .action-btn:active::after {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .call-waiter {
+            background: var(--premium-ocean);
+            box-shadow: 0 15px 40px rgba(106, 17, 203, 0.5);
+            border-color: rgba(106, 17, 203, 0.3);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .call-waiter:hover {
+            transform: translateY(-6px) scale(1.03);
+            box-shadow: 0 25px 60px rgba(106, 17, 203, 0.7), 0 0 20px rgba(106, 17, 203, 0.4);
+            border-color: rgba(106, 17, 203, 0.6);
+        }
+        
+        .call-waiter i {
+            animation: bellRing 2s ease-in-out infinite;
+            filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.3));
+        }
+        
+        @keyframes bellRing {
+            0%, 50%, 100% { transform: rotate(0deg); }
+            10%, 30% { transform: rotate(15deg); }
+            20% { transform: rotate(-15deg); }
+        }
+        
+        .request-charcoal {
+            background: var(--premium-rose);
+            box-shadow: 0 15px 40px rgba(255, 154, 158, 0.5);
+            border-color: rgba(255, 154, 158, 0.3);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .request-charcoal:hover {
+            transform: translateY(-6px) scale(1.03);
+            box-shadow: 0 25px 60px rgba(255, 154, 158, 0.7), 0 0 20px rgba(255, 154, 158, 0.4);
+            border-color: rgba(255, 154, 158, 0.6);
+        }
+        
+        .request-charcoal i {
+            animation: fireFlicker 1.5s ease-in-out infinite alternate;
+        }
+        
+        @keyframes fireFlicker {
+            0% { 
+                filter: drop-shadow(0 0 8px rgba(255, 154, 158, 0.8));
+                transform: scale(1);
+            }
+            100% { 
+                filter: drop-shadow(0 0 20px rgba(255, 154, 158, 1));
+                transform: scale(1.1);
+            }
+        }
+        
+        .action-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none !important;
+            filter: grayscale(1);
+        }
+        
+        .action-btn:disabled::before,
+        .action-btn:disabled::after {
+            display: none;
+        }
+        
+        /* Modal Styles - Enhanced */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(25px) saturate(150%);
+            -webkit-backdrop-filter: blur(25px) saturate(150%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: var(--z-modal);
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition-slow);
+            padding: var(--space-lg);
+        }
+        
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-content {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(30px) saturate(180%);
+            -webkit-backdrop-filter: blur(30px) saturate(180%);
+            width: 90%;
+            max-width: 550px;
+            max-height: 90vh;
+            border-radius: var(--radius-2xl);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transform: translateY(30px);
+            transition: var(--transition-elastic);
+            border: 2px solid var(--glass-border-strong);
+            box-shadow: var(--glass-shadow-strong), 0 20px 80px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        
+        .modal-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.03) 100%);
+            pointer-events: none;
+            border-radius: inherit;
+            z-index: -1;
+        }
+        
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+        
+        .modal-header {
+            padding: var(--space-lg) var(--space-xl);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .modal-title {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .close-btn {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-2xl);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-primary);
+            transition: var(--transition-elastic);
+        }
+        
+        .close-btn:hover {
+            transform: scale(1.1) rotate(90deg);
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .modal-body {
+            padding: var(--space-xl);
+            overflow-y: auto;
+            flex: 1;
+        }
+        
+        /* Cart Styles */
+        .cart-items {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xl);
+            margin-bottom: var(--space-2xl);
+        }
+        
+        .cart-item {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            padding: var(--space-lg);
+            display: flex;
+            gap: var(--space-lg);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            transition: var(--transition-normal);
+        }
+        
+        .cart-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            border-color: var(--glass-border-strong);
+        }
+        
+        .cart-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+            pointer-events: none;
+        }
+        
+        .cart-item-image {
+            width: 90px;
+            height: 90px;
+            border-radius: var(--radius-lg);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .cart-item-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--accent-gradient);
+            opacity: 0.15;
+        }
+        
+        .cart-item-image i {
+            z-index: 1;
+            font-size: var(--font-size-2xl);
+            filter: drop-shadow(0 0 10px rgba(168, 237, 234, 0.6));
+        }
+        
+        .cart-item-info {
+            flex: 1;
+        }
+        
+        .cart-item-name {
+            font-weight: var(--font-weight-bold);
+            font-size: var(--font-size-base);
+            margin-bottom: var(--space-xs);
+            color: var(--text-primary);
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .cart-item-price {
+            font-weight: var(--font-weight-bold);
+            background: var(--secondary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: var(--font-size-lg);
+            margin-bottom: var(--space-md);
+            display: inline-block;
+        }
+        
+        .cart-quantity {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            margin-bottom: var(--space-sm);
+        }
+        
+        .quantity-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-full);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-bold);
+            cursor: pointer;
+            transition: var(--transition-normal);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .quantity-btn:hover {
+            transform: scale(1.1);
+            background: var(--primary-gradient);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .quantity-value {
+            min-width: 30px;
+            text-align: center;
+            font-weight: var(--font-weight-bold);
+            font-size: var(--font-size-lg);
+            color: var(--text-primary);
+        }
+        
+        .remove-btn {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+            cursor: pointer;
+            padding: var(--space-xs) var(--space-sm);
+            margin-top: var(--space-xs);
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            transition: var(--transition-normal);
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+        
+        .remove-btn:hover {
+            background: rgba(239, 68, 68, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+        
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--space-lg) 0;
+            border-top: 2px solid var(--glass-border-strong);
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--text-primary);
+            margin-bottom: var(--space-lg);
+        }
+        
+        .total-amount {
+            background: var(--premium-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: var(--font-size-2xl);
+            font-weight: var(--font-weight-extrabold);
+            filter: drop-shadow(0 2px 4px rgba(255, 215, 0, 0.3));
+        }
+        
+        .checkout-btn {
+            width: 100%;
+            padding: var(--space-lg) var(--space-xl);
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: var(--radius-2xl);
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-bold);
+            margin-top: var(--space-xl);
+            cursor: pointer;
+            transition: var(--transition-elastic);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(16, 185, 129, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .checkout-btn i {
+            font-size: var(--font-size-xl);
+            animation: arrowMove 1.5s infinite;
+        }
+        
+        @keyframes arrowMove {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(5px); }
+        }
+        
+        .checkout-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.8s ease-out;
+        }
+        
+        .checkout-btn:hover::before {
+            left: 100%;
+        }
+        
+        .checkout-btn:hover {
+            transform: translateY(-6px) scale(1.03);
+            box-shadow: 0 25px 60px rgba(16, 185, 129, 0.7), 0 0 20px rgba(16, 185, 129, 0.4);
+        }
+        
+        /* Empty Cart */
+        .empty-cart {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .empty-cart i {
+            font-size: 80px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.1));
+        }
+        
+        .empty-cart p {
+            color: var(--text-secondary);
+            font-size: 18px;
+            font-weight: 500;
+        }
+        
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: var(--z-toast);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 350px;
+            pointer-events: none;
+        }
+        
+        .toast {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(30px) saturate(180%);
+            -webkit-backdrop-filter: blur(30px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            box-shadow: var(--glass-shadow-strong), 0 10px 25px rgba(0, 0, 0, 0.2);
+            transform: translateX(100%);
+            opacity: 0;
+            animation: toastIn 0.4s forwards, toastOut 0.4s 2.6s forwards;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+            pointer-events: auto;
+        }
+        
+        .toast::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+        }
+        
+        .toast::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            background: inherit;
+            animation: toastProgress 3s linear forwards;
+        }
+        
+        @keyframes toastProgress {
+            0% { width: 100%; }
+            100% { width: 0%; }
+        }
+        
+        @keyframes toastIn {
+            0% { transform: translateX(100%); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes toastOut {
+            0% { transform: translateX(0); opacity: 1; }
+            100% { transform: translateX(100%); opacity: 0; }
+        }
+        
+        .toast.success::before, .toast.success::after {
+            background: var(--success);
+        }
+        
+        .toast.error::before, .toast.error::after {
+            background: var(--error);
+        }
+        
+        .toast.warning::before, .toast.warning::after {
+            background: var(--warning);
+        }
+        
+        .toast.info::before, .toast.info::after {
+            background: var(--info);
+        }
+        
+        .toast-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-lg);
+            flex-shrink: 0;
+        }
+        
+        .toast.success .toast-icon {
+            background: var(--success-light);
+            color: var(--success);
+        }
+        
+        .toast.error .toast-icon {
+            background: var(--error-light);
+            color: var(--error);
+        }
+        
+        .toast.warning .toast-icon {
+            background: var(--warning-light);
+            color: var(--warning);
+        }
+        
+        .toast.info .toast-icon {
+            background: var(--info-light);
+            color: var(--info);
+        }
+        
+        .toast-content {
+            flex: 1;
+        }
+        
+        .toast-title {
+            font-weight: var(--font-weight-bold);
+            margin-bottom: 3px;
+            font-size: var(--font-size-base);
+        }
+        
+        .toast-message {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+        
+        .toast-close {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: var(--font-size-lg);
+            cursor: pointer;
+            padding: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-normal);
+        }
+        
+        .toast-close:hover {
+            color: var(--text-primary);
+            transform: scale(1.1);
+        }
+        
+        /* Loading Effects */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: var(--z-modal);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .loading-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .spinner {
+            width: 70px;
+            height: 70px;
+            position: relative;
+        }
+        
+        .spinner:before, .spinner:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 4px solid transparent;
+            border-top-color: var(--premium-gold);
+            animation: spin 1.5s linear infinite;
+        }
+        
+        .spinner:after {
+            border-top-color: var(--premium-ocean);
+            animation-duration: 1s;
+            animation-direction: reverse;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            header {
+                margin: 0 var(--space-sm) var(--space-lg);
+                padding: var(--space-lg);
+            }
+            
+            .category-bar {
+                padding: var(--space-lg) var(--space-md);
+            }
+            
+            .product-grid {
+                gap: var(--space-lg);
+                padding: 0 var(--space-md);
+            }
+            
+            .action-bar {
+                margin: 0 var(--space-sm);
+                padding: var(--space-lg);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            :root {
+                --font-size-4xl: 2rem;
+                --font-size-3xl: 1.625rem;
+                --font-size-2xl: 1.375rem;
+                --space-3xl: 48px;
+                --space-2xl: 36px;
+            }
+            
+            header {
+                margin: 0 var(--space-xs) var(--space-md);
+                padding: var(--space-lg);
+                border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+            }
+            
+            .modal-content {
+                width: 95%;
+                max-width: none;
+                margin: var(--space-md);
+                max-height: 85vh;
+            }
+            
+            .modal-header {
+                padding: var(--space-lg);
+            }
+            
+            .modal-body {
+                padding: var(--space-lg);
+            }
+            
+            .category-bar {
+                padding: var(--space-lg) var(--space-sm);
+                gap: var(--space-sm);
+            }
+            
+            .category-btn {
+                min-width: 100px;
+                padding: var(--space-sm) var(--space-lg);
+            }
+            
+            .product-grid {
+                gap: var(--space-md);
+                padding: 0 var(--space-sm);
+                margin-bottom: var(--space-2xl);
+            }
+            
+            .product-card {
+                border-radius: var(--radius-xl);
+            }
+            
+            .product-image {
+                height: 180px;
+            }
+            
+            .product-image i {
+                font-size: 48px;
+            }
+            
+            .product-info {
+                padding: var(--space-lg);
+            }
+            
+            .action-bar {
+                margin: 0 var(--space-xs);
+                padding: var(--space-lg);
+                gap: var(--space-md);
+                border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+            }
+            
+            .action-btn {
+                min-height: 56px;
+                font-size: var(--font-size-sm);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            :root {
+                --font-size-4xl: 1.75rem;
+                --font-size-3xl: 1.5rem;
+                --font-size-2xl: 1.25rem;
+                --space-3xl: 40px;
+                --space-2xl: 28px;
+                --space-xl: 24px;
+            }
+            
+            header {
+                margin: 0 0 var(--space-md);
+                border-radius: 0;
+            }
+            
+            .header-content {
+                padding: 0 var(--space-md);
+            }
+            
+            .logo {
+                font-size: var(--font-size-2xl);
+                gap: var(--space-sm);
+            }
+            
+            .logo i {
+                font-size: var(--font-size-3xl);
+            }
+            
+            .cart-btn {
+                padding: var(--space-md);
+                font-size: var(--font-size-lg);
+            }
+            
+            .cart-btn i {
+                font-size: var(--font-size-2xl);
+            }
+            
+            .header-right {
+                gap: var(--space-md);
+            }
+            
+            .table-info {
+                padding: var(--space-sm) var(--space-md);
+                font-size: var(--font-size-base);
+            }
+            
+            .category-bar {
+                padding: var(--space-md) var(--space-xs);
+                gap: var(--space-xs);
+            }
+            
+            .category-btn {
+                min-width: 80px;
+                padding: var(--space-sm) var(--space-md);
+                font-size: var(--font-size-xs);
+            }
+            
+            .product-grid {
+                gap: var(--space-sm);
+                padding: 0 var(--space-xs);
+            }
+            
+            .product-image {
+                height: 160px;
+            }
+            
+            .product-image i {
+                font-size: 40px;
+            }
+            
+            .product-info {
+                padding: var(--space-md);
+            }
+            
+            .product-name {
+                font-size: var(--font-size-base);
+                margin-bottom: var(--space-xs);
+            }
+            
+            .product-price {
+                font-size: var(--font-size-lg);
+            }
+            
+            .action-bar {
+                margin: 0;
+                padding: var(--space-md);
+                gap: var(--space-sm);
+                border-radius: 0;
+                flex-direction: column;
+            }
+            
+            .action-btn {
+                flex-direction: row;
+                min-height: 52px;
+                padding: var(--space-md) var(--space-lg);
+                font-size: var(--font-size-sm);
+                gap: var(--space-sm);
+            }
+            
+            .modal-content {
+                margin: var(--space-sm);
+                border-radius: var(--radius-lg);
+            }
+            
+            .modal-header {
+                padding: var(--space-md);
+            }
+            
+            .modal-body {
+                padding: var(--space-md);
+            }
+            
+            .modal-title {
+                font-size: var(--font-size-xl);
+            }
+            
+            .close-btn {
+                width: 40px;
+                height: 40px;
+                font-size: var(--font-size-lg);
+            }
+            
+            .cart-item {
+                flex-direction: column;
+                gap: var(--space-md);
+            }
+            
+            .cart-item-image {
+                width: 100%;
+                height: 120px;
+            }
+            
+            .cart-quantity {
+                justify-content: center;
+            }
+            
+            .remove-btn {
+                align-self: center;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .header-right {
+                gap: var(--space-sm);
+            }
+            
+            .table-info {
+                padding: var(--space-xs) var(--space-sm);
+                font-size: var(--font-size-sm);
+            }
+            
+            .cart-btn {
+                padding: var(--space-sm);
+            }
+            
+            .cart-btn i {
+                font-size: var(--font-size-lg);
+            }
+            
+            .action-bar {
+                padding: var(--space-sm);
+            }
+            
+            .action-btn {
+                min-height: 48px;
+                padding: var(--space-sm) var(--space-md);
+                font-size: var(--font-size-xs);
+            }
+            
+            .product-grid {
+                gap: var(--space-xs);
+            }
+            
+            .category-btn {
+                min-width: 70px;
+                padding: var(--space-xs) var(--space-sm);
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="loading-overlay" id="loadingOverlay">
-    <div class="loading-spinner"></div>
-    <p>Menü yükleniyor...</p>
-  </div>
-
-  <div class="background-gradient"></div>
-  <header class="glass-header">
-    <div class="logo" id="restaurantName">Yükleniyor...</div>
-    <div class="table-number">Masa <span id="table-id">--</span></div>
-  </header>
-  <main class="main-grid">
-    <section class="menu-section">
-      <h1 class="main-title">Dijital Menü</h1>
-      <div id="categoryBar" class="category-bar glass">
-        <!-- Kategoriler buraya dinamik olarak gelecek -->
-      </div>
-      <div class="menu-grid" id="menuGrid">
-        <!-- Menü kartları buraya dinamik olarak gelecek -->
-      </div>
-    </section>
-    <aside class="order-section glass">
-      <h2>Siparişlerim</h2>
-      <ul id="order-list"></ul>
-      <button id="submitOrderBtn" class="submit-order-btn neon-btn">Siparişi Gönder</button>
-      <button id="callWaiterBtn" class="call-waiter-btn neon-btn">Garson Çağır</button>
-      <button id="kozIsteBtn" class="koz-iste-btn">KÖZ İSTE</button>
-    </aside>
-  </main>
-  <div id="toast-container"></div>
-  
-  <script src="./icons.js?v=20250122"></script>
-  <script type="module">
-    // Doğrudan import
-    import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js';
-    import { productIcons } from './icons.js';
-
-    // URL parametrelerinden restoran ve masa bilgilerini al
-    const urlParams = new URLSearchParams(window.location.search);
-    const RESTAURANT_ID = urlParams.get('restaurant_id');
-    const TABLE_ID = urlParams.get('table_id');
-
-    console.log('🔍 Debug Bilgileri:');
-    console.log('Restaurant ID:', RESTAURANT_ID);
-    console.log('Table ID:', TABLE_ID);
-
-    // Supabase Konfigürasyonu
-    const SUPABASE_CONFIG = {
-      url: 'https://egcklzfiyxxnvyxwoowq.supabase.co',
-      anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVnY2tsemZpeXh4bnZ5eHdvb3dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0NjQxMTcsImV4cCI6MjA2NDA0MDExN30.dfRQv3lYFCaI1T5ydOw4HyoEJ0I1wOSIUcG8ueEbxKQ'
-    };
-
-    // Supabase client oluştur
-    const supabase = createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
-
-    // Global değişkenler
-    let restaurantInfo = null;
-    let tableInfo = null;
-    let products = [];
-    let categories = [];
-    let orders = [];
-    let currentOrder = null;
-
-    // DOM elementleri
-    const menuGrid = document.getElementById('menuGrid');
-    const categoryBar = document.getElementById('categoryBar');
-    const orderList = document.getElementById('order-list');
-    const toastContainer = document.getElementById('toast-container');
-    const tableIdElement = document.getElementById('table-id');
-    const restaurantNameElement = document.getElementById('restaurantName');
-    const loadingOverlay = document.getElementById('loadingOverlay');
-    const submitOrderBtn = document.getElementById('submitOrderBtn');
-    const callWaiterBtn = document.getElementById('callWaiterBtn');
-    const kozIsteBtn = document.getElementById('kozIsteBtn');
-
-    // Sayfa yüklendiğinde başlat
-    document.addEventListener('DOMContentLoaded', async () => {
-      try {
-        console.log('🚀 Uygulama başlatılıyor...');
-        await initializeApp();
-      } catch (error) {
-        console.error('❌ Uygulama başlatılamadı:', error);
-        showToast('Uygulama yüklenirken hata oluştu', 'error');
-      } finally {
-        // Yükleme ekranını kaldır
-        loadingOverlay.style.display = 'none';
-      }
-    });
-
-    // Uygulamayı başlat
-    async function initializeApp() {
-      // Restoran ve masa bilgilerini al
-      restaurantInfo = await getRestaurantInfo();
-      tableInfo = await getTableInfo();
-      
-      console.log('📋 Restoran Bilgileri:', restaurantInfo);
-      console.log('🪑 Masa Bilgileri:', tableInfo);
-      
-      if (!restaurantInfo || !tableInfo) {
-        showToast('Restoran veya masa bilgileri bulunamadı', 'error');
-        return;
-      }
-
-      // Ürünler ve kategorileri al
-      products = await getProducts();
-      categories = await getProductCategories();
-      
-      console.log('🍽️ Ürünler:', products);
-      console.log('📂 Kategoriler:', categories);
-
-      // UI'yi güncelle
-      updateUI();
-      
-      // Kategori barını oluştur
-      createCategoryBar();
-      
-      // Menüyü render et
-      renderMenu();
-      
-      // Siparişleri render et
-      renderOrders();
-      
-      // Event listener'ları ekle
-      submitOrderBtn.addEventListener('click', submitOrder);
-      callWaiterBtn.addEventListener('click', () => callWaiter('waiter'));
-      kozIsteBtn.addEventListener('click', () => callWaiter('charcoal'));
-      
-      // Mobil cihazlar için dokunma olaylarını optimize et
-      if ('ontouchstart' in window) {
-        document.body.classList.add('touch-device');
-        setupTouchEvents();
-      }
-    }
+    <div class="toast-container" id="toastContainer">
+        <!-- Dinamik olarak oluşturulacak bildirimler -->
+    </div>
     
-    // Dokunma olaylarını optimize et
-    function setupTouchEvents() {
-      // Kategori barı için momentum scroll
-      const categoryBarEl = document.getElementById('categoryBar');
-      let isScrolling = false;
-      
-      categoryBarEl.addEventListener('touchstart', () => {
-        isScrolling = true;
-      }, { passive: true });
-      
-      categoryBarEl.addEventListener('touchend', () => {
-        isScrolling = false;
-      }, { passive: true });
-      
-      // Menü kartları için dokunma efekti
-      const menuCards = document.querySelectorAll('.menu-card');
-      menuCards.forEach(card => {
-        card.addEventListener('touchstart', () => {
-          card.classList.add('touch-active');
-        }, { passive: true });
-        
-        card.addEventListener('touchend', () => {
-          card.classList.remove('touch-active');
-        }, { passive: true });
-        
-        card.addEventListener('touchcancel', () => {
-          card.classList.remove('touch-active');
-        }, { passive: true });
-      });
-    }
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+    </div>
 
-    // Restoran bilgilerini getir
-    async function getRestaurantInfo() {
-      console.log('🔍 getRestaurantInfo çağrıldı, Restaurant ID:', RESTAURANT_ID);
-      try {
-        const { data, error } = await supabase
-          .from('restaurants')
-          .select('*')
-          .eq('id', RESTAURANT_ID)
-          .single();
-
-        if (error) throw error;
-        console.log('✅ Restoran bilgileri alındı:', data);
-        return data;
-      } catch (error) {
-        console.error('❌ Restoran bilgileri alınamadı:', error);
-        return null;
-      }
-    }
-
-    // Masa bilgilerini getir
-    async function getTableInfo() {
-      console.log('🔍 getTableInfo çağrıldı, Table ID:', TABLE_ID);
-      try {
-        const { data, error } = await supabase
-          .from('tables')
-          .select('*')
-          .eq('id', TABLE_ID)
-          .eq('restaurant_id', RESTAURANT_ID)
-          .single();
-
-        if (error) throw error;
-        console.log('✅ Masa bilgileri alındı:', data);
-        return data;
-      } catch (error) {
-        console.error('❌ Masa bilgileri alınamadı:', error);
-        return null;
-      }
-    }
-
-    // Restoranın ürünlerini getir
-    async function getProducts() {
-      console.log('🔍 getProducts çağrıldı, Restaurant ID:', RESTAURANT_ID);
-      try {
-        const { data, error } = await supabase
-          .from('products')
-          .select('*')
-          .eq('restaurant_id', RESTAURANT_ID)
-          .eq('is_active', true)
-          .order('sort_order', { ascending: true });
-
-        if (error) throw error;
-        console.log('✅ Ürünler alındı:', data);
-        return data || [];
-      } catch (error) {
-        console.error('❌ Ürünler alınamadı:', error);
-        return [];
-      }
-    }
-
-    // Ürün kategorilerini getir
-    async function getProductCategories() {
-      console.log('🔍 getProductCategories çağrıldı, Restaurant ID:', RESTAURANT_ID);
-      try {
-        const { data, error } = await supabase
-          .from('product_categories')
-          .select('*')
-          .eq('restaurant_id', RESTAURANT_ID)
-          .order('sort_order', { ascending: true });
-
-        if (error) throw error;
-        console.log('✅ Ürün kategorileri alındı:', data);
-        return data || [];
-      } catch (error) {
-        console.error('❌ Ürün kategorileri alınamadı:', error);
-        return [];
-      }
-    }
-
-    // UI'yi güncelle
-    function updateUI() {
-      // Logo ve restoran adı
-      if (restaurantInfo) {
-        restaurantNameElement.textContent = restaurantInfo.name || 'QR Menü';
-        // Favicon ve title güncellemesi
-        document.title = restaurantInfo.name || 'QR Menü';
-      }
-      
-      // Masa numarası
-      if (tableInfo) {
-        tableIdElement.textContent = tableInfo.number || '--';
-      }
-    }
-
-    // Kategori barını oluştur
-    function createCategoryBar() {
-      // Tümü kategorisi
-      const allCategoriesBtn = `
-        <button class="category-btn active" data-key="all">
-          <span class="cat-icon">${productIcons.default}</span>
-          <span class="cat-name">Tümü</span>
-        </button>
-      `;
-      
-      // Kategorileri oluştur
-      const categoryButtons = categories.map(cat => `
-        <button class="category-btn" data-key="${cat.id}">
-          <span class="cat-icon">${productIcons.default}</span>
-          <span class="cat-name">${cat.name}</span>
-        </button>
-      `).join('');
-      
-      categoryBar.innerHTML = allCategoriesBtn + categoryButtons;
-      
-      // Kategori tıklama olayları
-      categoryBar.addEventListener('click', e => {
-        const btn = e.target.closest('.category-btn');
-        if (!btn) return;
-        
-        const categoryId = btn.dataset.key;
-        filterByCategory(categoryId);
-        updateCategoryBar(categoryId);
-      });
-    }
-
-    // Kategori barını güncelle
-    function updateCategoryBar(activeCategoryId = 'all') {
-      document.querySelectorAll('.category-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.key === activeCategoryId);
-      });
-    }
-
-    // Kategoriye göre filtrele
-    function filterByCategory(categoryId) {
-      let filteredProducts = products;
-      
-      if (categoryId !== 'all') {
-        filteredProducts = products.filter(product => product.category_id === categoryId || product.category === categoryId);
-      }
-      
-      renderMenu(filteredProducts);
-    }
-
-    // Ürün adına göre SVG döndüren fonksiyon
-    function getProductIcon(name) {
-      if (!name) return productIcons.default;
-      const key = name.toLowerCase()
-        .replace(/ı/g, 'i')
-        .replace(/ü/g, 'u')
-        .replace(/ö/g, 'o')
-        .replace(/ş/g, 's')
-        .replace(/ç/g, 'c')
-        .replace(/ğ/g, 'g');
-      return productIcons[key] || productIcons.default;
-    }
-
-    // Menü kartlarını oluştur
-    function renderMenu(productsToRender = products) {
-      menuGrid.innerHTML = '';
-      
-      if (productsToRender.length === 0) {
-        menuGrid.innerHTML = '<div class="no-products">Bu kategoride ürün bulunamadı.</div>';
-        return;
-      }
-      
-      productsToRender.forEach(product => {
-        const card = document.createElement('div');
-        card.className = 'menu-card glass';
-        card.innerHTML = `
-          <div class="menu-icon-svg">${getProductIcon(product.name)}</div>
-          <div class="menu-info">
-            <h3>${product.name}</h3>
-            <p>${product.description || ''}</p>
-            <div class="menu-bottom">
-              <span class="menu-price">${product.price}${restaurantInfo?.currency || '₺'}</span>
-              <button class="neon-btn" data-id="${product.id}" data-price="${product.price}">
-                Sipariş Ver
-              </button>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-utensils"></i>
+                <span id="restaurantName">QR Menü</span>
             </div>
-          </div>
-        `;
-        menuGrid.appendChild(card);
-      });
-      
-      // Sipariş butonlarına tıklama olayları
-      menuGrid.querySelectorAll('.neon-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.stopPropagation(); // Butonun tıklanmasının kart tıklanmasını tetiklemesini önle
-          const productId = btn.dataset.id;
-          const product = products.find(p => p.id === productId);
-          if (product) {
-            addToOrder(product);
-          }
+            <div class="header-right">
+                <div class="table-info">
+                    <span>Masa <span id="tableId">--</span></span>
+                </div>
+                <button class="cart-btn glow-effect" id="cartBtn">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-badge" id="cartBadge">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    
+    </header>
+
+    <div class="category-bar" id="categoryBar">
+        <button class="category-btn active" data-category="all">Tüm Ürünler</button>
+        <button class="category-btn" data-category="food">Yemekler</button>
+        <button class="category-btn" data-category="drink">İçecekler</button>
+        <button class="category-btn" data-category="dessert">Tatlılar</button>
+        <button class="category-btn" data-category="appetizer">Başlangıçlar</button>
+    </div>
+
+    <div class="product-grid" id="productGrid">
+        <!-- Dinamik olarak oluşturulacak ürün kartları -->
+    </div>
+
+    <div class="action-bar">
+        <button class="action-btn call-waiter glow-effect" id="callWaiterBtn">
+            <i class="fas fa-bell"></i>
+            Garson Çağır
+        </button>
+        <button class="action-btn request-charcoal glow-effect" id="requestCharcoalBtn">
+            <i class="fas fa-fire"></i>
+            Köz İste
+        </button>
+    </div>
+    
+    <!-- Sepet Modalı -->
+    <div class="modal" id="cartModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Siparişlerim</div>
+                <button class="close-btn" id="closeCartBtn"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="cart-items" id="cartItems">
+                    <!-- Dinamik olarak oluşturulacak sepet öğeleri -->
+                </div>
+                
+                <div class="cart-total">
+                    <span>Toplam</span>
+                    <span class="total-amount" id="totalAmount">0₺</span>
+                </div>
+                
+                <button class="checkout-btn glow-effect" id="checkoutBtn">
+                    Siparişi Tamamla
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript kodları buraya gelecek
+        document.addEventListener('DOMContentLoaded', function() {
+            // Supabase konfigürasyonu
+            const SUPABASE_URL = 'https://egcklzfiyxxnvyxwoowq.supabase.co';
+            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVnY2tsemZpeXh4bnZ5eHdvb3dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0NjQxMTcsImV4cCI6MjA2NDA0MDExN30.dfRQv3lYFCaI1T5ydOw4HyoEJ0I1wOSIUcG8ueEbxKQ';
+            
+            const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            
+            // URL parametrelerinden restoran ve masa bilgilerini al
+            const urlParams = new URLSearchParams(window.location.search);
+            const RESTAURANT_ID = urlParams.get('restaurant_id');
+            const TABLE_ID = urlParams.get('table_id');
+            
+            let restaurantInfo = null;
+            let tableInfo = null;
+            let products = [];
+            let categories = [];
+            let cart = [];
+            
+            // Uygulamayı başlat
+            async function initializeApp() {
+                try {
+                    // Restoran ve masa bilgilerini al
+                    restaurantInfo = await getRestaurantInfo();
+                    tableInfo = await getTableInfo();
+                    
+                    if (!restaurantInfo || !tableInfo) {
+                        showToast('error', 'Hata', 'Restoran veya masa bilgileri bulunamadı');
+                        return;
+                    }
+                    
+                    // UI'yi güncelle
+                    updateUI();
+                    
+                    // Ürünler ve kategorileri al
+                    products = await getProducts();
+                    categories = await getCategories();
+                    
+                    // Kategori barını oluştur
+                    createCategoryBar();
+                    
+                    // Ürünleri render et
+                    renderProducts();
+                    
+                    // Event listener'ları ekle
+                    setupEventListeners();
+                    
+                } catch (error) {
+                    console.error('Uygulama başlatılamadı:', error);
+                    showToast('error', 'Hata', 'Uygulama yüklenirken hata oluştu');
+                } finally {
+                    document.getElementById('loadingOverlay').style.display = 'none';
+                }
+            }
+            
+            // Restoran bilgilerini getir
+            async function getRestaurantInfo() {
+                try {
+                    const { data, error } = await supabase
+                        .from('restaurants')
+                        .select('*')
+                        .eq('id', RESTAURANT_ID)
+                        .single();
+                    
+                    if (error) throw error;
+                    return data;
+                } catch (error) {
+                    console.error('Restoran bilgileri alınamadı:', error);
+                    return null;
+                }
+            }
+            
+            // Masa bilgilerini getir
+            async function getTableInfo() {
+                try {
+                    const { data, error } = await supabase
+                        .from('tables')
+                        .select('*')
+                        .eq('id', TABLE_ID)
+                        .eq('restaurant_id', RESTAURANT_ID)
+                        .single();
+                    
+                    if (error) throw error;
+                    return data;
+                } catch (error) {
+                    console.error('Masa bilgileri alınamadı:', error);
+                    return null;
+                }
+            }
+            
+            // Ürünleri getir
+            async function getProducts() {
+                try {
+                    const { data, error } = await supabase
+                        .from('products')
+                        .select('*')
+                        .eq('restaurant_id', RESTAURANT_ID)
+                        .eq('is_active', true)
+                        .order('sort_order', { ascending: true });
+                    
+                    if (error) throw error;
+                    return data || [];
+                } catch (error) {
+                    console.error('Ürünler alınamadı:', error);
+                    return [];
+                }
+            }
+            
+            // Kategorileri getir
+            async function getCategories() {
+                try {
+                    const { data, error } = await supabase
+                        .from('product_categories')
+                        .select('*')
+                        .eq('restaurant_id', RESTAURANT_ID)
+                        .order('sort_order', { ascending: true });
+                    
+                    if (error) throw error;
+                    return data || [];
+                } catch (error) {
+                    console.error('Kategoriler alınamadı:', error);
+                    return [];
+                }
+            }
+            
+            // UI'yi güncelle
+            function updateUI() {
+                if (restaurantInfo) {
+                    document.getElementById('restaurantName').textContent = restaurantInfo.name || 'QR Menü';
+                    document.title = restaurantInfo.name || 'QR Menü';
+                }
+                
+                if (tableInfo) {
+                    document.getElementById('tableId').textContent = tableInfo.number || '--';
+                }
+            }
+            
+            // Kategori barını oluştur
+            function createCategoryBar() {
+                const categoryBar = document.getElementById('categoryBar');
+                categoryBar.innerHTML = '';
+                
+                // Tümü kategorisi
+                const allBtn = document.createElement('button');
+                allBtn.className = 'category-btn active';
+                allBtn.setAttribute('data-category', 'all');
+                allBtn.textContent = 'Tüm Ürünler';
+                categoryBar.appendChild(allBtn);
+                
+                // Diğer kategoriler
+                categories.forEach(category => {
+                    const btn = document.createElement('button');
+                    btn.className = 'category-btn';
+                    btn.setAttribute('data-category', category.id);
+                    btn.textContent = category.name;
+                    categoryBar.appendChild(btn);
+                });
+            }
+            
+            // Ürünleri render et
+            function renderProducts(filteredProducts = products) {
+                const productGrid = document.getElementById('productGrid');
+                productGrid.innerHTML = '';
+                
+                if (filteredProducts.length === 0) {
+                    productGrid.innerHTML = '<div class="no-products">Bu kategoride ürün bulunamadı.</div>';
+                    return;
+                }
+                
+                filteredProducts.forEach(product => {
+                    const card = document.createElement('div');
+                    card.className = 'product-card card-3d';
+                    card.innerHTML = `
+                        <div class="card-3d-inner">
+                            <div class="product-image card-3d-content">
+                                <i class="fas fa-utensils"></i>
+                            </div>
+                            <div class="product-info card-3d-content">
+                                <div class="product-name">${product.name}</div>
+                                <div class="product-price">${product.price}₺</div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    card.addEventListener('click', () => addToCart(product));
+                    productGrid.appendChild(card);
+                });
+            }
+            
+            // Sepete ürün ekle
+            function addToCart(product) {
+                const existingItem = cart.find(item => item.id === product.id);
+                
+                if (existingItem) {
+                    existingItem.quantity += 1;
+                } else {
+                    cart.push({ ...product, quantity: 1 });
+                }
+                
+                updateCartDisplay();
+                showToast('success', 'Ürün Eklendi', `${product.name} sepetinize eklendi.`);
+            }
+            
+            // Sepet görünümünü güncelle
+            function updateCartDisplay() {
+                const cartItems = document.getElementById('cartItems');
+                const totalAmount = document.getElementById('totalAmount');
+                const cartBadge = document.getElementById('cartBadge');
+                
+                cartItems.innerHTML = '';
+                
+                if (cart.length === 0) {
+                    cartItems.innerHTML = '<div class="empty-cart"><i class="fas fa-shopping-cart"></i><p>Henüz ürün seçmediniz.</p></div>';
+                    totalAmount.textContent = '0₺';
+                    cartBadge.textContent = '0';
+                    return;
+                }
+                
+                let total = 0;
+                let totalQuantity = 0;
+                
+                cart.forEach(item => {
+                    const itemTotal = item.price * item.quantity;
+                    total += itemTotal;
+                    totalQuantity += item.quantity;
+                    
+                    const cartItem = document.createElement('div');
+                    cartItem.className = 'cart-item';
+                    cartItem.innerHTML = `
+                        <div class="cart-item-image">
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                        <div class="cart-item-info">
+                            <div class="cart-item-name">${item.name}</div>
+                            <div class="cart-item-price">${itemTotal}₺</div>
+                            <div class="cart-quantity">
+                                <button class="quantity-btn" onclick="updateQuantity(${item.id}, -1)">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <div class="quantity-value">${item.quantity}</div>
+                                <button class="quantity-btn" onclick="updateQuantity(${item.id}, 1)">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                            <button class="remove-btn" onclick="removeFromCart(${item.id})">
+                                <i class="fas fa-trash-alt"></i> Kaldır
+                            </button>
+                        </div>
+                    `;
+                    cartItems.appendChild(cartItem);
+                });
+                
+                totalAmount.textContent = `${total}₺`;
+                cartBadge.textContent = totalQuantity;
+            }
+            
+            // Miktar güncelle
+            window.updateQuantity = function(productId, change) {
+                const item = cart.find(item => item.id === productId);
+                if (item) {
+                    item.quantity += change;
+                    if (item.quantity <= 0) {
+                        removeFromCart(productId);
+                    } else {
+                        updateCartDisplay();
+                    }
+                }
+            };
+            
+            // Sepetten kaldır
+            window.removeFromCart = function(productId) {
+                cart = cart.filter(item => item.id !== productId);
+                updateCartDisplay();
+            };
+            
+            // Event listener'ları ayarla
+            function setupEventListeners() {
+                // Kategori değiştirme
+                document.querySelectorAll('.category-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                        this.classList.add('active');
+                        
+                        const category = this.getAttribute('data-category');
+                        if (category === 'all') {
+                            renderProducts();
+                        } else {
+                            const filteredProducts = products.filter(product => 
+                                product.category_id === category || product.category === category
+                            );
+                            renderProducts(filteredProducts);
+                        }
+                    });
+                });
+                
+                // Sepet modalını açma
+                document.getElementById('cartBtn').addEventListener('click', function() {
+                    document.getElementById('cartModal').classList.add('active');
+                });
+                
+                // Sepet modalını kapatma
+                document.getElementById('closeCartBtn').addEventListener('click', function() {
+                    document.getElementById('cartModal').classList.remove('active');
+                });
+                
+                // Modal dışına tıklayınca kapatma
+                document.getElementById('cartModal').addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        this.classList.remove('active');
+                    }
+                });
+                
+                // Garson çağırma
+                document.getElementById('callWaiterBtn').addEventListener('click', function() {
+                    callWaiter('waiter');
+                });
+                
+                // Köz isteme
+                document.getElementById('requestCharcoalBtn').addEventListener('click', function() {
+                    callWaiter('charcoal');
+                });
+                
+                // Siparişi tamamlama
+                document.getElementById('checkoutBtn').addEventListener('click', function() {
+                    submitOrder();
+                });
+            }
+            
+            // Garson çağır
+            async function callWaiter(type) {
+                try {
+                    const { data, error } = await supabase
+                        .from('calls')
+                        .insert([{
+                            restaurant_id: RESTAURANT_ID,
+                            table_id: TABLE_ID,
+                            type: type,
+                            status: 'pending'
+                        }])
+                        .select()
+                        .single();
+                    
+                    if (error) throw error;
+                    
+                    const message = type === 'waiter' ? 'Garson çağrıldı!' : 'Köz isteğiniz iletildi!';
+                    showToast('info', 'Bilgi', message);
+                    
+                } catch (error) {
+                    console.error('Çağrı oluşturulamadı:', error);
+                    showToast('error', 'Hata', 'Çağrı oluşturulamadı');
+                }
+            }
+            
+            // Siparişi gönder
+            async function submitOrder() {
+                if (cart.length === 0) {
+                    showToast('error', 'Hata', 'Sepetiniz boş!');
+                    return;
+                }
+                
+                try {
+                    const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                    
+                    // Sipariş oluştur
+                    const { data: order, error: orderError } = await supabase
+                        .from('orders')
+                        .insert([{
+                            restaurant_id: RESTAURANT_ID,
+                            table_id: TABLE_ID,
+                            status: 'pending',
+                            total_price: totalPrice,
+                            note: 'QR menüden sipariş'
+                        }])
+                        .select()
+                        .single();
+                    
+                    if (orderError) throw orderError;
+                    
+                    // Sipariş kalemlerini ekle
+                    for (const item of cart) {
+                        await supabase
+                            .from('order_items')
+                            .insert([{
+                                order_id: order.id,
+                                product_id: item.id,
+                                quantity: item.quantity,
+                                unit_price: item.price,
+                                note: null
+                            }]);
+                    }
+                    
+                    // Masa durumunu güncelle
+                    await supabase
+                        .from('tables')
+                        .update({ status: 'active' })
+                        .eq('id', TABLE_ID)
+                        .eq('restaurant_id', RESTAURANT_ID);
+                    
+                    // Sepeti temizle
+                    cart = [];
+                    updateCartDisplay();
+                    document.getElementById('cartModal').classList.remove('active');
+                    
+                    showToast('success', 'Başarılı', 'Siparişiniz başarıyla gönderildi!');
+                    
+                } catch (error) {
+                    console.error('Sipariş gönderilemedi:', error);
+                    showToast('error', 'Hata', 'Sipariş gönderilirken hata oluştu');
+                }
+            }
+            
+            // Toast bildirimi gösterme fonksiyonu
+            function showToast(type, title, message) {
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                
+                toast.innerHTML = `
+                    <div class="toast-icon">
+                        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
+                    </div>
+                    <div class="toast-content">
+                        <div class="toast-title">${title}</div>
+                        <div class="toast-message">${message}</div>
+                    </div>
+                    <button class="toast-close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                
+                document.getElementById('toastContainer').appendChild(toast);
+                
+                toast.querySelector('.toast-close').addEventListener('click', function() {
+                    toast.remove();
+                });
+                
+                // 3 saniye sonra otomatik kaldır
+                setTimeout(() => {
+                    toast.remove();
+                }, 3000);
+            }
+            
+            // Uygulamayı başlat
+            initializeApp();
         });
-      });
-      
-      // Mobil cihazlar için dokunma olaylarını tekrar ayarla
-      if ('ontouchstart' in window) {
-        setupTouchEvents();
-      }
-    }
-
-    // Sipariş listesi
-    function renderOrders() {
-      orderList.innerHTML = '';
-      
-      if (orders.length === 0) {
-        orderList.innerHTML = '<li>Henüz sipariş yok.</li>';
-        return;
-      }
-      
-      // Ürünleri grupla ve miktarları hesapla
-      const groupedOrders = {};
-      orders.forEach(item => {
-        if (groupedOrders[item.id]) {
-          groupedOrders[item.id].quantity += 1;
-        } else {
-          groupedOrders[item.id] = { ...item, quantity: 1 };
-        }
-      });
-      
-      // Toplam fiyatı hesapla
-      let totalPrice = 0;
-      
-      Object.values(groupedOrders).forEach(item => {
-        const li = document.createElement('li');
-        const itemTotal = parseFloat(item.price) * item.quantity;
-        totalPrice += itemTotal;
-        
-        li.innerHTML = `
-          <div class="order-item">
-            <span class="item-name">${item.name}</span>
-            <span class="item-quantity">x${item.quantity}</span>
-            <span class="item-price">${itemTotal}${restaurantInfo?.currency || '₺'}</span>
-          </div>
-        `;
-        orderList.appendChild(li);
-      });
-      
-      // Toplam fiyatı göster
-      if (totalPrice > 0) {
-        const totalLi = document.createElement('li');
-        totalLi.className = 'order-total';
-        totalLi.innerHTML = `
-          <div class="total-line">
-            <span>Toplam:</span>
-            <span class="total-price">${totalPrice}${restaurantInfo?.currency || '₺'}</span>
-          </div>
-        `;
-        orderList.appendChild(totalLi);
-      }
-    }
-
-    // Siparişe ürün ekle
-    function addToOrder(product) {
-      orders.push(product);
-      renderOrders();
-      showToast(`${product.name} siparişe eklendi!`, 'success');
-      
-      // Sipariş bölümüne otomatik kaydır (mobil için)
-      if (window.innerWidth < 768) {
-        const orderSection = document.querySelector('.order-section');
-        if (orderSection) {
-          setTimeout(() => {
-            orderSection.scrollIntoView({ behavior: 'smooth' });
-          }, 300);
-        }
-      }
-    }
-
-    // Siparişi gönder
-    async function submitOrder() {
-      if (orders.length === 0) {
-        showToast('Sipariş listesi boş!', 'error');
-        return;
-      }
-      
-      try {
-        // Toplam fiyatı hesapla
-        const totalPrice = orders.reduce((sum, item) => sum + parseFloat(item.price), 0);
-        
-        // Sipariş oluştur
-        const { data, error } = await supabase
-          .from('orders')
-          .insert([{
-            restaurant_id: RESTAURANT_ID,
-            table_id: TABLE_ID,
-            status: 'pending',
-            total_price: totalPrice,
-            note: 'QR menüden sipariş'
-          }])
-          .select()
-          .single();
-        
-        if (error) throw error;
-        
-        // Sipariş kalemlerini ekle
-        const groupedOrders = {};
-        orders.forEach(item => {
-          if (groupedOrders[item.id]) {
-            groupedOrders[item.id].quantity += 1;
-          } else {
-            groupedOrders[item.id] = { ...item, quantity: 1 };
-          }
-        });
-        
-        for (const [productId, item] of Object.entries(groupedOrders)) {
-          await supabase
-            .from('order_items')
-            .insert([{
-              order_id: data.id,
-              product_id: productId,
-              quantity: item.quantity,
-              unit_price: parseFloat(item.price),
-              note: null
-            }]);
-        }
-        
-        // Masa durumunu güncelle
-        await supabase
-          .from('tables')
-          .update({ status: 'active' })
-          .eq('id', TABLE_ID)
-          .eq('restaurant_id', RESTAURANT_ID);
-        
-        // Sipariş listesini temizle
-        orders = [];
-        renderOrders();
-        
-        showToast('Siparişiniz başarıyla gönderildi!', 'success');
-        
-      } catch (error) {
-        console.error('❌ Sipariş gönderilemedi:', error);
-        showToast('Sipariş gönderilirken hata oluştu', 'error');
-      }
-    }
-
-    // Garson çağır
-    async function callWaiter(callType = 'waiter') {
-      try {
-        const { data, error } = await supabase
-          .from('calls')
-          .insert([{
-            restaurant_id: RESTAURANT_ID,
-            table_id: TABLE_ID,
-            type: callType,
-            status: 'pending'
-          }])
-          .select()
-          .single();
-
-        if (error) throw error;
-        
-        if (callType === 'waiter') {
-          showToast('Garson çağrıldı! Lütfen bekleyiniz.', 'info');
-        } else if (callType === 'charcoal') {
-          showToast('Köz isteğiniz iletildi! Lütfen bekleyiniz.', 'info');
-        }
-        
-        return data;
-      } catch (error) {
-        console.error('❌ Çağrı oluşturulamadı:', error);
-        showToast('Çağrı oluşturulamadı', 'error');
-        throw error;
-      }
-    }
-
-    // Toast bildirim fonksiyonu
-    function showToast(message, type = 'info') {
-      const toast = document.createElement('div');
-      toast.className = `toast toast-${type}`;
-      toast.innerHTML = `<span>${message}</span>`;
-      toastContainer.appendChild(toast);
-      
-      setTimeout(() => {
-        toast.style.opacity = '0';
-        setTimeout(() => toast.remove(), 600);
-      }, 2500);
-    }
-  </script>
+    </script>
 </body>
-</html>
+</html> 
