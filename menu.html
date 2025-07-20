@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="icons.js"></script>
     <style>
         * {
             margin: 0;
@@ -555,6 +556,19 @@
             filter: drop-shadow(0 0 40px rgba(168, 237, 234, 0.9));
         }
         
+        .product-image svg {
+            width: 64px;
+            height: 64px;
+            z-index: 2;
+            filter: drop-shadow(0 0 30px rgba(168, 237, 234, 0.7));
+            transition: var(--transition-elastic);
+        }
+        
+        .product-card:hover .product-image svg {
+            transform: scale(1.15) rotateY(15deg);
+            filter: drop-shadow(0 0 40px rgba(168, 237, 234, 0.9));
+        }
+        
         .product-info {
             padding: var(--space-xl);
             position: relative;
@@ -934,6 +948,13 @@
             filter: drop-shadow(0 0 10px rgba(168, 237, 234, 0.6));
         }
         
+        .cart-item-image svg {
+            width: 32px;
+            height: 32px;
+            z-index: 1;
+            filter: drop-shadow(0 0 10px rgba(168, 237, 234, 0.6));
+        }
+        
         .cart-item-info {
             flex: 1;
         }
@@ -1095,6 +1116,64 @@
         .checkout-btn:hover {
             transform: translateY(-6px) scale(1.03);
             box-shadow: 0 25px 60px rgba(16, 185, 129, 0.7), 0 0 20px rgba(16, 185, 129, 0.4);
+        }
+        
+        /* Order Notes Styles */
+        .order-notes-section {
+            margin: var(--space-xl) 0;
+            position: relative;
+        }
+        
+        .notes-title {
+            font-weight: var(--font-weight-bold);
+            margin-bottom: var(--space-md);
+            color: var(--text-secondary);
+            font-size: var(--font-size-lg);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+        
+        .notes-title i {
+            color: var(--info);
+            font-size: var(--font-size-base);
+            background: rgba(59, 130, 246, 0.2);
+            width: 28px;
+            height: 28px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .order-notes-input {
+            width: 100%;
+            padding: var(--space-lg);
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            border: 2px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            font-size: var(--font-size-sm);
+            font-family: inherit;
+            color: var(--text-primary);
+            resize: vertical;
+            min-height: 100px;
+            transition: var(--transition-normal);
+            line-height: 1.5;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .order-notes-input:focus {
+            outline: none;
+            border-color: rgba(106, 17, 203, 0.6);
+            box-shadow: 0 0 0 4px rgba(106, 17, 203, 0.15), inset 0 2px 5px rgba(0, 0, 0, 0.05);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .order-notes-input::placeholder {
+            color: var(--text-muted);
+            font-style: italic;
         }
         
         /* Empty Cart */
@@ -1666,6 +1745,14 @@
                     <span class="total-amount" id="totalAmount">0₺</span>
                 </div>
                 
+                <div class="order-notes-section">
+                    <div class="notes-title">
+                        <i class="fas fa-comment-alt"></i>
+                        Sipariş Notu
+                    </div>
+                    <textarea class="order-notes-input" id="orderNotes" placeholder="Özel istekleriniz varsa buraya yazabilirsiniz..."></textarea>
+                </div>
+                
                 <button class="checkout-btn glow-effect" id="checkoutBtn">
                     Siparişi Tamamla
                     <i class="fas fa-arrow-right"></i>
@@ -1834,6 +1921,81 @@
                 });
             }
             
+            // Ürün adına göre SVG döndüren fonksiyon
+            function getProductIcon(name) {
+                if (!name) return productIcons.default;
+                
+                // Türkçe karakterleri düzelt
+                const normalizedName = name.toLowerCase()
+                    .replace(/ı/g, 'i')
+                    .replace(/ü/g, 'u')
+                    .replace(/ö/g, 'o')
+                    .replace(/ş/g, 's')
+                    .replace(/ç/g, 'c')
+                    .replace(/ğ/g, 'g')
+                    .replace(/\s+/g, '') // Boşlukları kaldır
+                    .replace(/[^a-z0-9]/g, ''); // Sadece harf ve rakam bırak
+                
+                // Özel eşleştirmeler
+                const specialMatches = {
+                    'turk': 'türk',
+                    'nescafe': 'nescafe',
+                    'fanta': 'fanta',
+                    'sprite': 'sprite',
+                    'kola': 'kola',
+                    'ayran': 'ayran',
+                    'salgam': 'şalgam',
+                    'boza': 'boza',
+                    'salep': 'salep',
+                    'baklava': 'baklava',
+                    'sutlac': 'sütlaç',
+                    'dondurma': 'dondurma',
+                    'kunefe': 'künefe',
+                    'kadayif': 'kadayıf',
+                    'revani': 'revani',
+                    'sekerpare': 'şekerpare',
+                    'lokum': 'lokum',
+                    'elma': 'elma',
+                    'portakal': 'portakal',
+                    'muz': 'muz',
+                    'cilek': 'çilek',
+                    'kuruyemis': 'kuruyemiş',
+                    'findik': 'fındık',
+                    'mantı': 'mantı',
+                    'kofte': 'köfte',
+                    'iskender': 'iskender',
+                    'adana': 'adana',
+                    'urfa': 'urfa',
+                    'doner': 'döner',
+                    'pide': 'pide',
+                    'lahmacun': 'lahmacun',
+                    'hamburger': 'hamburger',
+                    'pizza': 'pizza',
+                    'makarna': 'makarna',
+                    'pilav': 'pilav',
+                    'corba': 'çorba',
+                    'balik': 'balık',
+                    'tavuk': 'tavuk',
+                    'et': 'et',
+                    'borek': 'börek',
+                    'salata': 'salata',
+                    'cay': 'çay',
+                    'kahve': 'kahve',
+                    'su': 'su',
+                    'meyve': 'meyve'
+                };
+                
+                // Özel eşleştirmeleri kontrol et
+                for (const [key, value] of Object.entries(specialMatches)) {
+                    if (normalizedName.includes(key)) {
+                        return productIcons[value] || productIcons.default;
+                    }
+                }
+                
+                // Doğrudan eşleştirme
+                return productIcons[normalizedName] || productIcons.default;
+            }
+            
             // Ürünleri render et
             function renderProducts(filteredProducts = products) {
                 const productGrid = document.getElementById('productGrid');
@@ -1850,7 +2012,7 @@
                     card.innerHTML = `
                         <div class="card-3d-inner">
                             <div class="product-image card-3d-content">
-                                <i class="fas fa-utensils"></i>
+                                ${getProductIcon(product.name)}
                             </div>
                             <div class="product-info card-3d-content">
                                 <div class="product-name">${product.name}</div>
@@ -1905,7 +2067,7 @@
                     cartItem.className = 'cart-item';
                     cartItem.innerHTML = `
                         <div class="cart-item-image">
-                            <i class="fas fa-utensils"></i>
+                            ${getProductIcon(item.name)}
                         </div>
                         <div class="cart-item-info">
                             <div class="cart-item-name">${item.name}</div>
@@ -2037,6 +2199,7 @@
                 
                 try {
                     const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                    const orderNotes = document.getElementById('orderNotes').value.trim();
                     
                     // Sipariş oluştur
                     const { data: order, error: orderError } = await supabase
@@ -2046,7 +2209,7 @@
                             table_id: TABLE_ID,
                             status: 'pending',
                             total_price: totalPrice,
-                            note: 'QR menüden sipariş'
+                            note: orderNotes || 'QR menüden sipariş'
                         }])
                         .select()
                         .single();
@@ -2076,6 +2239,10 @@
                     // Sepeti temizle
                     cart = [];
                     updateCartDisplay();
+                    
+                    // Sipariş notunu temizle
+                    document.getElementById('orderNotes').value = '';
+                    
                     document.getElementById('cartModal').classList.remove('active');
                     
                     showToast('success', 'Başarılı', 'Siparişiniz başarıyla gönderildi!');
