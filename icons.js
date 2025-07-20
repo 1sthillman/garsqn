@@ -389,4 +389,7 @@ const productIcons = {
     <circle cx="28" cy="22" r="2" fill="#FFD700"/>
     <circle cx="24" cy="26" r="2" fill="#FFD700"/>
   </svg>`
-}; 
+};
+
+// Debug: productIcons yüklendiğini kontrol et
+console.log('productIcons loaded:', Object.keys(productIcons).length, 'icons available'); 
