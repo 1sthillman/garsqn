@@ -733,7 +733,7 @@
         const SHOPIER_CONFIG = {
             api_key: 'ba946ce45c717d982cc6decbcb616bb2',
             secret: '8a186b6f15655c57c65ec415ae121e69',
-            payment_endpoint_url: 'https://www.shopier.com/ShowProduct/api_pay.php',
+            payment_endpoint_url: 'https://www.shopier.com/ShowProduct/api_pay4.php',
             website_index: '1',
             return_url: 'https://1sthillman.github.io/garsqn/odeme-sonrasi.html',
             test_mode: false, // Gerçek mod aktif
@@ -894,6 +894,18 @@
                     // Debug için logla - Sadece geliştirme sırasında
                     console.log('Shopier signature:', signature);
                     console.log('Shopier data:', randomNr.toString() + orderId + amount + currency);
+                    
+                    // 403/404 hataları için debug bilgileri
+                    console.log('------------------------------------------------');
+                    console.log('⚠️ Shopier Debug Bilgileri - Hata Durumunda');
+                    console.log('------------------------------------------------');
+                    console.log('Domain:', window.location.origin);
+                    console.log('API Key:', SHOPIER_CONFIG.api_key);
+                    console.log('API Endpoint:', SHOPIER_CONFIG.payment_endpoint_url);
+                    console.log('Shop ID:', SHOPIER_CONFIG.shop_id);
+                    console.log('Tarayıcı:', navigator.userAgent);
+                    console.log('Protokol:', window.location.protocol);
+                    console.log('------------------------------------------------');
                     
                     // Form alanlarını ekle
                     Object.keys(shopierData).forEach(key => {
