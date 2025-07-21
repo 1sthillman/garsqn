@@ -743,12 +743,17 @@
         // Shopier signature oluştur - Resmi Shopier dokümanına göre
         function generateShopierSignature(randomNr, orderId, amount, currency) {
             // Shopier'in beklediği formatta signature oluşturma
-            const data = SHOPIER_CONFIG.api_key + randomNr + SHOPIER_CONFIG.secret;
+            const data = SHOPIER_CONFIG.api_key + randomNr + orderId + amount + currency + SHOPIER_CONFIG.secret;
             
-            // Base64 encoding
-            const base64Data = btoa(data);
+            // MD5 hash (Shopier'in beklediği format)
+            let hash = 0;
+            for (let i = 0; i < data.length; i++) {
+                const char = data.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash; // Convert to 32bit integer
+            }
             
-            return base64Data;
+            return Math.abs(hash).toString(16);
         }
         
         // Ödeme işlemi
@@ -789,12 +794,11 @@
                     API_key: SHOPIER_CONFIG.api_key,
                     website_index: SHOPIER_CONFIG.website_index,
                     platform: '0', // Web sitesi
-                    domain_id: SHOPIER_CONFIG.domain_id,
                     
                     // Sipariş Bilgileri
                     platform_order_id: `${SHOPIER_CONFIG.order_id_prefix}${orderId}`,
                     product_name: selectedPackage.name,
-                    product_type: '0', // Fiziksel ürün (Shopier'in istediği format)
+                    product_type: '0', // Fiziksel ürün
                     total_order_value: amount,
                     currency: currency,
                     
@@ -824,8 +828,7 @@
                     signature: signature,
                     
                     // Dönüş URL'leri
-                    return_url: `${SHOPIER_CONFIG.return_url}?payment_id=${orderId}&restaurant_id=${RESTAURANT_ID}&status=success`,
-                    notification_url: `${SHOPIER_CONFIG.return_url}?payment_id=${orderId}&restaurant_id=${RESTAURANT_ID}&status=notification`
+                    return_url: `${SHOPIER_CONFIG.return_url}?payment_id=${orderId}&restaurant_id=${RESTAURANT_ID}&status=success`
                 };
                 
                 // Test modu kontrolü
