@@ -1792,10 +1792,7 @@
             <i class="fas fa-fire"></i>
             Köz İste
         </button>
-        <button class="action-btn upgrade-btn glow-effect" id="upgradeBtn">
-            <i class="fas fa-star"></i>
-            Premium'a Geç
-        </button>
+
     </div>
     
     <!-- Sepet Modalı -->
@@ -2023,20 +2020,7 @@
                         <p style="margin-bottom: 30px; line-height: 1.6; color: rgba(255, 255, 255, 0.8);">
                             Ücretsiz deneme süreniz sona ermiştir. QR Menü sisteminizi kullanmaya devam etmek için premium paketlerimizden birini seçin.
                         </p>
-                        <button onclick="window.location.href='odeme.html?restaurant_id=${RESTAURANT_ID}'" style="
-                            background: linear-gradient(135deg, #ffd700 0%, #ffb347 100%);
-                            color: white;
-                            border: none;
-                            padding: 15px 30px;
-                            border-radius: 12px;
-                            font-size: 16px;
-                            font-weight: bold;
-                            cursor: pointer;
-                            text-transform: uppercase;
-                            letter-spacing: 0.05em;
-                        ">
-                            <i class="fas fa-star"></i> Premium'a Geç
-                        </button>
+
                     </div>
                 `;
                 
@@ -2315,10 +2299,7 @@
                     callWaiter('charcoal');
                 });
                 
-                // Premium'a geç
-                document.getElementById('upgradeBtn').addEventListener('click', function() {
-                    window.location.href = `odeme.html?restaurant_id=${RESTAURANT_ID}`;
-                });
+
                 
                 // Siparişi tamamlama
                 document.getElementById('checkoutBtn').addEventListener('click', function() {
