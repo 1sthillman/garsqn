@@ -2,7 +2,7 @@
 // test-shopier.php
 $api_key   = 'ba946ce45c717d982cc6decbcb616bb2';
 $secret    = '8a186b6f15655c57c65ec415ae121e69';
-$endpoint  = 'https://www.shopier.com/ShowProduct/api_pay.php';
+$endpoint  = 'https://www.shopier.com/ShowProduct/api_pay4.php';
 
 $payload = [
     'API_key' => $api_key,

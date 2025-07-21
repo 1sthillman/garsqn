@@ -733,7 +733,7 @@
         const SHOPIER_CONFIG = {
             api_key: 'ba946ce45c717d982cc6decbcb616bb2',
             secret: '8a186b6f15655c57c65ec415ae121e69',
-            payment_endpoint_url: 'https://www.shopier.com/ShowProduct/api_pay.php', // api_pay.php kullanılıyor
+            payment_endpoint_url: 'https://www.shopier.com/ShowProduct/api_pay4.php', // api_pay4.php kullanılıyor
             website_index: '1',
             return_url: 'https://1sthillman.github.io/garsqn/odeme-sonrasi.html',
             test_mode: false, // Gerçek mod aktif
@@ -746,8 +746,7 @@
         
         // Alternatif endpoint'ler (504 hatası durumunda)
         const SHOPIER_ENDPOINTS = [
-            'https://www.shopier.com/ShowProduct/api_pay.php', // Birincil endpoint
-            'https://www.shopier.com/ShowProduct/api_pay4.php',
+            'https://www.shopier.com/ShowProduct/api_pay4.php', // Birincil endpoint
             'https://www.shopier.com/ShowProduct/api_pay2.php'
         ];
         
