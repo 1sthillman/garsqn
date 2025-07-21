@@ -733,14 +733,23 @@
         const SHOPIER_CONFIG = {
             api_key: 'ba946ce45c717d982cc6decbcb616bb2',
             secret: '8a186b6f15655c57c65ec415ae121e69',
-            payment_endpoint_url: 'https://www.shopier.com/ShowProduct/api_pay4.php',
+            payment_endpoint_url: 'https://www.shopier.com/ShowProduct/api_pay.php', // api_pay4.php yerine api_pay.php'ye geri dön
             website_index: '1',
             return_url: 'https://1sthillman.github.io/garsqn/odeme-sonrasi.html',
             test_mode: false, // Gerçek mod aktif
             domain_id: '1', // Shopier domain ID
             order_id_prefix: 'ADISYON', // Sipariş ID prefix
-            shop_id: '1234567' // Shopier panel'den alınan Shop ID
+            shop_id: '1234567', // Shopier panel'den alınan Shop ID
+            timeout: 30000, // 30 saniye timeout
+            retry_count: 3 // 3 kez deneme
         };
+        
+        // Alternatif endpoint'ler (504 hatası durumunda)
+        const SHOPIER_ENDPOINTS = [
+            'https://www.shopier.com/ShowProduct/api_pay.php',
+            'https://www.shopier.com/ShowProduct/api_pay4.php',
+            'https://www.shopier.com/ShowProduct/api_pay2.php'
+        ];
         
         console.log('Shopier Entegrasyonu - Domain Kontrolü:', window.location.origin);
         console.log('Shopier Entegrasyonu - API Endpoint:', SHOPIER_CONFIG.payment_endpoint_url);
@@ -757,6 +766,60 @@
             const signature = CryptoJS.enc.Base64.stringify(hmacData);
             
             return signature;
+        }
+        
+        // Timeout ve retry ile Shopier'e gönder
+        async function submitToShopier(shopierData, endpointIndex = 0) {
+            return new Promise((resolve, reject) => {
+                const currentEndpoint = SHOPIER_ENDPOINTS[endpointIndex] || SHOPIER_CONFIG.payment_endpoint_url;
+                
+                console.log(`🔄 Shopier'e gönderiliyor (Deneme ${endpointIndex + 1}/${SHOPIER_CONFIG.retry_count + 1}):`, currentEndpoint);
+                
+                // Form oluştur
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = currentEndpoint;
+                form.target = '_self';
+                form.style.display = 'none';
+                form.acceptCharset = 'UTF-8';
+                
+                // Form alanlarını ekle
+                Object.keys(shopierData).forEach(key => {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = key;
+                    input.value = shopierData[key];
+                    form.appendChild(input);
+                });
+                
+                // Timeout kontrolü
+                const timeoutId = setTimeout(() => {
+                    console.log(`⏰ Timeout (${SHOPIER_CONFIG.timeout}ms) - Endpoint: ${currentEndpoint}`);
+                    
+                    // Sonraki endpoint'i dene
+                    if (endpointIndex < SHOPIER_ENDPOINTS.length - 1) {
+                        console.log('🔄 Alternatif endpoint deneniyor...');
+                        submitToShopier(shopierData, endpointIndex + 1)
+                            .then(resolve)
+                            .catch(reject);
+                    } else {
+                        reject(new Error('Tüm Shopier endpoint\'leri timeout hatası verdi. Lütfen daha sonra tekrar deneyin.'));
+                    }
+                }, SHOPIER_CONFIG.timeout);
+                
+                // Form gönder
+                document.body.appendChild(form);
+                
+                // Başarılı gönderim durumunda timeout'u temizle
+                const originalSubmit = form.submit;
+                form.submit = function() {
+                    clearTimeout(timeoutId);
+                    originalSubmit.call(this);
+                    resolve();
+                };
+                
+                form.submit();
+            });
         }
         
         // Ödeme işlemi
@@ -880,48 +943,43 @@
                         }
                     }, 2000);
                 } else {
-                    // Gerçek Shopier entegrasyonu - Form ile gönder
+                    // Gerçek Shopier entegrasyonu - Timeout ve retry ile
                     console.log('Shopier ödeme sayfasına yönlendiriliyor...');
                     
-                    // Form oluştur
-                    const form = document.createElement('form');
-                    form.method = 'POST';
-                    form.action = SHOPIER_CONFIG.payment_endpoint_url;
-                    form.target = '_self'; // Aynı pencerede aç
-                    form.style.display = 'none';
-                    form.acceptCharset = 'UTF-8';
-                    
-                    // Debug için logla - Sadece geliştirme sırasında
+                    // Debug için logla
                     console.log('Shopier signature:', signature);
                     console.log('Shopier data:', randomNr.toString() + orderId + amount + currency);
                     
-                    // 403/404 hataları için debug bilgileri
+                    // 504 timeout hataları için debug bilgileri
                     console.log('------------------------------------------------');
-                    console.log('⚠️ Shopier Debug Bilgileri - Hata Durumunda');
+                    console.log('⚠️ Shopier Debug Bilgileri - 504 Timeout Durumunda');
                     console.log('------------------------------------------------');
                     console.log('Domain:', window.location.origin);
                     console.log('API Key:', SHOPIER_CONFIG.api_key);
                     console.log('API Endpoint:', SHOPIER_CONFIG.payment_endpoint_url);
                     console.log('Shop ID:', SHOPIER_CONFIG.shop_id);
+                    console.log('Timeout:', SHOPIER_CONFIG.timeout + 'ms');
+                    console.log('Retry Count:', SHOPIER_CONFIG.retry_count);
                     console.log('Tarayıcı:', navigator.userAgent);
                     console.log('Protokol:', window.location.protocol);
                     console.log('------------------------------------------------');
                     
-                    // Form alanlarını ekle
-                    Object.keys(shopierData).forEach(key => {
-                        const input = document.createElement('input');
-                        input.type = 'hidden';
-                        input.name = key;
-                        input.value = shopierData[key];
-                        form.appendChild(input);
-                    });
-                    
                     // Debug için form verilerini konsola yazdır
                     console.log('Form verileri:', shopierData);
                     
-                    // Shopier'e gönder
-                    document.body.appendChild(form);
-                    form.submit();
+                    // Timeout ve retry ile Shopier'e gönder
+                    try {
+                        await submitToShopier(shopierData);
+                        console.log('✅ Shopier\'e başarıyla gönderildi');
+                    } catch (error) {
+                        console.error('❌ Shopier gönderim hatası:', error);
+                        
+                        // Kullanıcıya hata mesajı göster
+                        alert('Ödeme sistemi geçici olarak meşgul. Lütfen birkaç dakika sonra tekrar deneyin.\n\nHata: ' + error.message);
+                        
+                        payBtn.disabled = false;
+                        payBtn.innerHTML = '<i class="fas fa-lock"></i> Shopier ile Güvenli Ödeme';
+                    }
                 }
                 
             } catch (error) {

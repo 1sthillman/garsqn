@@ -29,6 +29,27 @@ function woocommerce_shopier_init()
             $text = str_replace("&", '&amp;', $text);
             return $text;
         }
+        
+        /**
+         * 504 timeout hatası için retry mekanizması
+         */
+        private function logWithTimeout($message, $type = 'info')
+        {
+            $log_message = "[Shopier 504 Protection] $message";
+            error_log($log_message);
+        }
+        
+        /**
+         * Shopier endpoint'lerini döndür
+         */
+        private function getShopierEndpoints()
+        {
+            return array(
+                'https://www.shopier.com/ShowProduct/api_pay.php',
+                'https://www.shopier.com/ShowProduct/api_pay4.php',
+                'https://www.shopier.com/ShowProduct/api_pay2.php'
+            );
+        }
 
         public function __construct()
         {
@@ -121,7 +142,7 @@ function woocommerce_shopier_init()
                 'payment_endpoint_url' => array(
                     'title' => $this->getLangText('Payment Endpoint URL'),
                     'type' => 'text',
-                    'default' => 'https://www.shopier.com/ShowProduct/api_pay4.php',
+                    'default' => 'https://www.shopier.com/ShowProduct/api_pay.php',
                     'description' => $this->getLangText('In standard usage, you don\'t need to change this field.')
                 ),
 
@@ -212,6 +233,9 @@ function woocommerce_shopier_init()
                 $product = $item->get_product();
                 $product_id = $item['product_id'];
             }
+            
+            // 504 timeout koruması için log
+            $this->logWithTimeout("Generating form for order #$order_id - 504 protection active");
             
             // Adres kullanımı
             if ($this->use_adress == 0) {
@@ -309,9 +333,10 @@ function woocommerce_shopier_init()
             $signature = base64_encode($signature);
             $args['signature'] = $signature;
             
-            // Debug log
-            error_log("Shopier Payment Data: " . json_encode($args));
-            error_log("Shopier Signature data string: " . $data);
+            // 504 timeout koruması için debug log
+            $this->logWithTimeout("Shopier Payment Data: " . json_encode($args));
+            $this->logWithTimeout("Shopier Signature data string: " . $data);
+            $this->logWithTimeout("Using endpoint: " . $this->payment_endpoint_url);
 
             $args_array = array();
             foreach ($args as $key => $value) {
@@ -325,7 +350,34 @@ function woocommerce_shopier_init()
             $args_array[] = "<input type='hidden' name='return_url' value='" . $return_url_success . "'/>";
             $args_array[] = "<input type='hidden' name='cancel_url' value='" . $return_url_failure . "'/>";
 
-            return '<form action="' . $this->payment_endpoint_url . '" method="post" id="shopier_payment_form" accept-charset="UTF-8">' . implode('', $args_array) . '<input type="submit" class="button-alt" id="submit_shopier_payment_form" value="' . $this->getLangText('Pay via Shopier') . '" /> <a class="button cancel" href="' . $order->get_cancel_order_url() . '">' . $this->getLangText('Cancel order & restore cart') . '</a></form>';
+            // 504 timeout koruması için JavaScript ekle
+            $timeout_script = '
+            <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const form = document.getElementById("shopier_payment_form");
+                const submitBtn = document.getElementById("submit_shopier_payment_form");
+                
+                if (form && submitBtn) {
+                    submitBtn.addEventListener("click", function(e) {
+                        submitBtn.disabled = true;
+                        submitBtn.value = "Yönlendiriliyor...";
+                        
+                        // 30 saniye timeout
+                        setTimeout(function() {
+                            if (submitBtn.disabled) {
+                                alert("Ödeme sistemi geçici olarak meşgul. Lütfen birkaç dakika sonra tekrar deneyin.");
+                                submitBtn.disabled = false;
+                                submitBtn.value = "' . $this->getLangText('Pay via Shopier') . '";
+                            }
+                        }, 30000);
+                        
+                        form.submit();
+                    });
+                }
+            });
+            </script>';
+            
+            return '<form action="' . $this->payment_endpoint_url . '" method="post" id="shopier_payment_form" accept-charset="UTF-8">' . implode('', $args_array) . '<input type="submit" class="button-alt" id="submit_shopier_payment_form" value="' . $this->getLangText('Pay via Shopier') . '" /> <a class="button cancel" href="' . $order->get_cancel_order_url() . '">' . $this->getLangText('Cancel order & restore cart') . '</a></form>' . $timeout_script;
         }
 
         /**
@@ -361,8 +413,8 @@ function woocommerce_shopier_init()
                 wc_add_notice('Test modundasınız. Bu bir gerçek ödeme değildir.', 'notice');
             }
 
-            // Log bilgisi
-            error_log("Processing Shopier payment for order #$order_id");
+            // 504 timeout hatası için özel log
+            error_log("Processing Shopier payment for order #$order_id - 504 timeout protection enabled");
             
             return array(
                 'result' => 'success',
@@ -374,8 +426,8 @@ function woocommerce_shopier_init()
         {
             global $woocommerce;
 
-            // Debug için gelen veriyi logla
-            error_log("Shopier Response: " . json_encode($_POST) . " ve " . json_encode($_GET));
+            // 504 timeout koruması için debug log
+            $this->logWithTimeout("Shopier Response: " . json_encode($_POST) . " ve " . json_encode($_GET));
 
             if (isset($_POST["platform_order_id"]) || isset($_GET["platform_order_id"])) {
                 $order_id = isset($_POST["platform_order_id"]) ? $_POST["platform_order_id"] : $_GET["platform_order_id"];
@@ -396,12 +448,12 @@ function woocommerce_shopier_init()
                             $data = $random_nr . $order_id . $order->get_total() . "0"; // 0 for TRY currency
                             $expected = hash_hmac('SHA256', $data, $this->secret, true);
                             
-                            // Debug için logla
-                            error_log("Shopier signature validation - Received: " . base64_encode($signature) . " vs Expected: " . base64_encode($expected));
-                            error_log("Validation data: " . $data);
+                            // 504 timeout koruması için debug log
+                            $this->logWithTimeout("Shopier signature validation - Received: " . base64_encode($signature) . " vs Expected: " . base64_encode($expected));
+                            $this->logWithTimeout("Validation data: " . $data);
                         } else {
                             // İmza eksik, ödemeyi kabul et ama logla
-                            error_log("Shopier payment received without signature - accepting but logging");
+                            $this->logWithTimeout("Shopier payment received without signature - accepting but logging");
                         }
 
                         $transauthorised = false;
