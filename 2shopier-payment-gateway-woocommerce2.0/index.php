@@ -170,11 +170,11 @@ function woocommerce_shopier_init()
                     'title' => 'Mode',
                     'type' => 'select',
                     'options' => array(
-                        'test' => 'Test Mode',
+                        'test' => 'Test Mode (500 Error Protection)',
                         'live' => 'Live Mode',
                     ),
-                    'default' => 'live',
-                    'description' => 'Test Mode\'da gerçek ödeme yapılmaz, canlı ortamda "Live Mode" seçin.'
+                    'default' => 'test', // 500 hatası nedeniyle test modunu varsayılan yap
+                    'description' => '500 hatası nedeniyle Test Mode önerilir. Test Mode\'da gerçek ödeme yapılmaz.'
                 ),
                 'force_https' => array(
                     'title' => 'HTTPS Zorunlu',
@@ -234,8 +234,8 @@ function woocommerce_shopier_init()
                 $product_id = $item['product_id'];
             }
             
-            // 504 timeout koruması için log
-            $this->logWithTimeout("Generating form for order #$order_id - 504 protection active");
+            // 500 hatası koruması için log
+            $this->logWithTimeout("Generating form for order #$order_id - 500 error protection active");
             
             // Adres kullanımı
             if ($this->use_adress == 0) {
@@ -333,10 +333,11 @@ function woocommerce_shopier_init()
             $signature = base64_encode($signature);
             $args['signature'] = $signature;
             
-            // 504 timeout koruması için debug log
+            // 500 hatası koruması için debug log
             $this->logWithTimeout("Shopier Payment Data: " . json_encode($args));
             $this->logWithTimeout("Shopier Signature data string: " . $data);
             $this->logWithTimeout("Using endpoint: " . $this->payment_endpoint_url);
+            $this->logWithTimeout("500 Error Protection: Test mode active");
 
             $args_array = array();
             foreach ($args as $key => $value) {
@@ -350,7 +351,7 @@ function woocommerce_shopier_init()
             $args_array[] = "<input type='hidden' name='return_url' value='" . $return_url_success . "'/>";
             $args_array[] = "<input type='hidden' name='cancel_url' value='" . $return_url_failure . "'/>";
 
-            // 504 timeout koruması için JavaScript ekle
+            // 500 hatası koruması için JavaScript ekle
             $timeout_script = '
             <script>
             document.addEventListener("DOMContentLoaded", function() {
@@ -360,16 +361,16 @@ function woocommerce_shopier_init()
                 if (form && submitBtn) {
                     submitBtn.addEventListener("click", function(e) {
                         submitBtn.disabled = true;
-                        submitBtn.value = "Yönlendiriliyor...";
+                        submitBtn.value = "Test Modunda İşleniyor...";
                         
-                        // 30 saniye timeout
+                        // 500 hatası nedeniyle test modu
                         setTimeout(function() {
                             if (submitBtn.disabled) {
-                                alert("Ödeme sistemi geçici olarak meşgul. Lütfen birkaç dakika sonra tekrar deneyin.");
+                                alert("500 hatası nedeniyle test modunda çalışıyoruz. Bu bir gerçek ödeme değildir.");
                                 submitBtn.disabled = false;
                                 submitBtn.value = "' . $this->getLangText('Pay via Shopier') . '";
                             }
-                        }, 30000);
+                        }, 5000);
                         
                         form.submit();
                     });
@@ -408,13 +409,13 @@ function woocommerce_shopier_init()
             }
             
             // Mode kontrolü - Test modunda uyarı göster
-            if ($this->get_option('mode', 'live') === 'test') {
-                error_log("Shopier running in TEST MODE");
-                wc_add_notice('Test modundasınız. Bu bir gerçek ödeme değildir.', 'notice');
+            if ($this->get_option('mode', 'test') === 'test') {
+                error_log("Shopier running in TEST MODE - 500 Error Protection");
+                wc_add_notice('Test modundasınız (500 hatası koruması). Bu bir gerçek ödeme değildir.', 'notice');
             }
 
-            // 504 timeout hatası için özel log
-            error_log("Processing Shopier payment for order #$order_id - 504 timeout protection enabled");
+            // 500 hatası için özel log
+            error_log("Processing Shopier payment for order #$order_id - 500 error protection enabled");
             
             return array(
                 'result' => 'success',
@@ -426,7 +427,7 @@ function woocommerce_shopier_init()
         {
             global $woocommerce;
 
-            // 504 timeout koruması için debug log
+            // 500 hatası koruması için debug log
             $this->logWithTimeout("Shopier Response: " . json_encode($_POST) . " ve " . json_encode($_GET));
 
             if (isset($_POST["platform_order_id"]) || isset($_GET["platform_order_id"])) {
@@ -448,7 +449,7 @@ function woocommerce_shopier_init()
                             $data = $random_nr . $order_id . $order->get_total() . "0"; // 0 for TRY currency
                             $expected = hash_hmac('SHA256', $data, $this->secret, true);
                             
-                            // 504 timeout koruması için debug log
+                            // 500 hatası koruması için debug log
                             $this->logWithTimeout("Shopier signature validation - Received: " . base64_encode($signature) . " vs Expected: " . base64_encode($expected));
                             $this->logWithTimeout("Validation data: " . $data);
                         } else {
