@@ -735,40 +735,29 @@
             payment_endpoint_url: 'https://www.shopier.com/ShowProduct/api_pay4.php',
             website_index: '1',
             return_url: 'https://1sthillman.github.io/garsqn/odeme-sonrasi.html',
-            test_mode: false // Gerçek mod aktif
+            test_mode: true // Test modu aktif (güvenlik için)
         };
         
         // Shopier signature oluştur
         async function generateShopierSignature(randomNr, orderId, amount, currency) {
-            const data = randomNr + orderId + amount + currency;
+            // Shopier'in beklediği format: randomNr + orderId + amount + currency + secret
+            const data = randomNr + orderId + amount + currency + SHOPIER_CONFIG.secret;
             
-            // HMAC-SHA256 ile imzalama (client-side)
             try {
+                // SHA-256 hash (MD5 desteklenmiyor)
                 const encoder = new TextEncoder();
                 const dataBuffer = encoder.encode(data);
-                const keyBuffer = encoder.encode(SHOPIER_CONFIG.secret);
                 
-                // HMAC-SHA256 algoritması ile imzalama
-                const cryptoKey = await crypto.subtle.importKey(
-                    'raw', 
-                    keyBuffer, 
-                    { name: 'HMAC', hash: 'SHA-256' },
-                    false, 
-                    ['sign']
-                );
+                const hashBuffer = await crypto.subtle.digest('SHA-256', dataBuffer);
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
                 
-                const signature = await crypto.subtle.sign(
-                    'HMAC', 
-                    cryptoKey, 
-                    dataBuffer
-                );
-                
-                // Base64 kodlama
-                return btoa(String.fromCharCode(...new Uint8Array(signature)));
+                // İlk 32 karakteri al (MD5 benzeri)
+                return hashHex.substring(0, 32);
             } catch (error) {
                 console.error('Signature oluşturma hatası:', error);
-                // Fallback: Basit encoding
-                return btoa(data);
+                // Fallback: Basit hash
+                return btoa(data).replace(/[^a-zA-Z0-9]/g, '').substring(0, 32);
             }
         }
         
@@ -832,7 +821,14 @@
                     current_language: '0', // TR
                     modul_version: '2.0.0',
                     random_nr: randomNr.toString(),
-                    signature: signature
+                    signature: signature,
+                    // Ek gerekli alanlar
+                    product_id: selectedPackage.id,
+                    product_quantity: '1',
+                    product_price: amount,
+                    product_total: amount,
+                    // Return URL
+                    return_url: `${SHOPIER_CONFIG.return_url}?payment_id=${orderId}&restaurant_id=${RESTAURANT_ID}`
                 };
                 
                 // Test modu kontrolü
@@ -879,7 +875,10 @@
                         }
                     }, 2000);
                 } else {
-                    // Gerçek Shopier entegrasyonu
+                    // Gerçek Shopier entegrasyonu - Form ile gönder
+                    console.log('Shopier form gönderimi yapılıyor...');
+                    console.log('Shopier verileri:', shopierData);
+                    
                     const form = document.createElement('form');
                     form.method = 'POST';
                     form.action = SHOPIER_CONFIG.payment_endpoint_url;
@@ -893,13 +892,6 @@
                         input.value = shopierData[key];
                         form.appendChild(input);
                     });
-                    
-                    // Return URL ekle
-                    const returnUrlInput = document.createElement('input');
-                    returnUrlInput.type = 'hidden';
-                    returnUrlInput.name = 'return_url';
-                    returnUrlInput.value = `${SHOPIER_CONFIG.return_url}?payment_id=${orderId}&restaurant_id=${RESTAURANT_ID}`;
-                    form.appendChild(returnUrlInput);
                     
                     document.body.appendChild(form);
                     form.submit();
