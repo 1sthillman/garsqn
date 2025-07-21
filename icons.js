@@ -1,6 +1,6 @@
 // Modern Glassmorphism ve Gerçekçi SVG İkon Seti
 // Profesyonel, şeffaf ve modern tasarım
-export const productIcons = {
+const productIcons = {
   // YEMEKLER - ANA YEMEKLER
   kebap: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
     <defs>
@@ -1678,4 +1678,7 @@ const iconCategories = {
   'Uluslararası': ['sushi', 'pasta', 'steak', 'lasagna', 'risotto', 'paella', 'ramen', 'curry', 'padthai', 'hummus', 'falafel', 'shawarma', 'taco', 'burrito', 'schnitzel', 'goulash', 'dumpling', 'gnocchi', 'ratatouille', 'cheesecake', 'tiramisu']
 };
 
-console.log('Icon categories:', iconCategories); 
+console.log('Icon categories:', iconCategories);
+
+// Global erişim için
+window.productIcons = productIcons; 
