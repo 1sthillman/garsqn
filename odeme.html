@@ -520,7 +520,7 @@
             </div>
             
             <button type="button" class="pay-btn" id="payBtn">
-                <i class="fas fa-lock"></i> Shopier ile Güvenli Ödeme
+                <i class="fas fa-lock"></i> Güvenli Ödeme Yap
             </button>
         </div>
         
@@ -728,13 +728,14 @@
             });
         }
         
-        // Shopier API bilgileri (gerçek)
+        // Shopier API bilgileri (test modu)
         const SHOPIER_CONFIG = {
             api_key: 'ba946ce45c717d982cc6decbcb616bb2',
             secret: '8a186b6f15655c57c65ec415ae121e69',
             payment_endpoint_url: 'https://www.shopier.com/ShowProduct/api_pay4.php',
             website_index: '1',
-            return_url: 'https://1sthillman.github.io/garsqn/odeme-sonrasi.html'
+            return_url: 'https://1sthillman.github.io/garsqn/odeme-sonrasi.html',
+            test_mode: true // Test modu aktif
         };
         
         // Shopier signature oluştur
@@ -804,30 +805,75 @@
                     signature: generateShopierSignature(randomNr.toString(), orderId, amount, currency)
                 };
                 
-                // Shopier form oluştur ve gönder
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = SHOPIER_CONFIG.payment_endpoint_url;
-                form.style.display = 'none';
-                
-                // Form alanlarını ekle
-                Object.keys(shopierData).forEach(key => {
-                    const input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = key;
-                    input.value = shopierData[key];
-                    form.appendChild(input);
-                });
-                
-                // Return URL ekle
-                const returnUrlInput = document.createElement('input');
-                returnUrlInput.type = 'hidden';
-                returnUrlInput.name = 'return_url';
-                returnUrlInput.value = `${SHOPIER_CONFIG.return_url}?payment_id=${orderId}&restaurant_id=${RESTAURANT_ID}`;
-                form.appendChild(returnUrlInput);
-                
-                document.body.appendChild(form);
-                form.submit();
+                // Test modu kontrolü
+                if (SHOPIER_CONFIG.test_mode) {
+                    console.log('Test modu aktif - Shopier API çağrısı simüle ediliyor');
+                    console.log('Shopier verileri:', shopierData);
+                    
+                    // Yükleniyor göster
+                    payBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Ödeme İşleniyor...';
+                    
+                    // 2 saniye sonra başarılı ödeme simülasyonu
+                    setTimeout(async () => {
+                        try {
+                            // Ödeme durumunu güncelle
+                            await supabase
+                                .from('payments')
+                                .update({ 
+                                    status: 'success',
+                                    shopier_payment_id: 'test_' + Date.now(),
+                                    updated_at: new Date().toISOString()
+                                })
+                                .eq('id', orderId);
+                            
+                            // Restoran aboneliğini güncelle
+                            await supabase
+                                .from('restaurants')
+                                .update({
+                                    subscription_package: selectedPackage.id,
+                                    subscription_status: 'active',
+                                    subscription_start: new Date().toISOString(),
+                                    subscription_end: new Date(Date.now() + (selectedPackage.id.includes('yearly') ? 365 : 30) * 24 * 60 * 60 * 1000).toISOString(),
+                                    table_limit: selectedPackage.id.includes('starter') ? 10 : 25
+                                })
+                                .eq('id', RESTAURANT_ID);
+                            
+                            // Başarılı ödeme sayfasına yönlendir
+                            window.location.href = `${SHOPIER_CONFIG.return_url}?payment_id=${orderId}&restaurant_id=${RESTAURANT_ID}&status=success`;
+                        } catch (error) {
+                            console.error('Test ödeme simülasyonu hatası:', error);
+                            alert('Ödeme işlemi başarısız: ' + error.message);
+                            
+                            payBtn.disabled = false;
+                            payBtn.innerHTML = '<i class="fas fa-lock"></i> Shopier ile Güvenli Ödeme';
+                        }
+                    }, 2000);
+                } else {
+                    // Gerçek Shopier entegrasyonu
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = SHOPIER_CONFIG.payment_endpoint_url;
+                    form.style.display = 'none';
+                    
+                    // Form alanlarını ekle
+                    Object.keys(shopierData).forEach(key => {
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = key;
+                        input.value = shopierData[key];
+                        form.appendChild(input);
+                    });
+                    
+                    // Return URL ekle
+                    const returnUrlInput = document.createElement('input');
+                    returnUrlInput.type = 'hidden';
+                    returnUrlInput.name = 'return_url';
+                    returnUrlInput.value = `${SHOPIER_CONFIG.return_url}?payment_id=${orderId}&restaurant_id=${RESTAURANT_ID}`;
+                    form.appendChild(returnUrlInput);
+                    
+                    document.body.appendChild(form);
+                    form.submit();
+                }
                 
             } catch (error) {
                 console.error('Ödeme hatası:', error);
