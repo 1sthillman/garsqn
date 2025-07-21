@@ -520,7 +520,7 @@
             </div>
             
             <button type="button" class="pay-btn" id="payBtn">
-                <i class="fas fa-lock"></i> Güvenli Ödeme Yap
+                <i class="fas fa-lock"></i> Shopier ile Güvenli Ödeme
             </button>
         </div>
         
@@ -728,21 +728,48 @@
             });
         }
         
-        // Shopier API bilgileri (test modu)
+        // Shopier API bilgileri (gerçek)
         const SHOPIER_CONFIG = {
             api_key: 'ba946ce45c717d982cc6decbcb616bb2',
             secret: '8a186b6f15655c57c65ec415ae121e69',
             payment_endpoint_url: 'https://www.shopier.com/ShowProduct/api_pay4.php',
             website_index: '1',
             return_url: 'https://1sthillman.github.io/garsqn/odeme-sonrasi.html',
-            test_mode: true // Test modu aktif
+            test_mode: false // Gerçek mod aktif
         };
         
         // Shopier signature oluştur
-        function generateShopierSignature(randomNr, orderId, amount, currency) {
+        async function generateShopierSignature(randomNr, orderId, amount, currency) {
             const data = randomNr + orderId + amount + currency;
-            // Bu fonksiyon client-side'da güvenli değil, gerçek uygulamada server-side yapılmalı
-            return btoa(data); // Basit encoding, gerçek uygulamada HMAC-SHA256 kullanılmalı
+            
+            // HMAC-SHA256 ile imzalama (client-side)
+            try {
+                const encoder = new TextEncoder();
+                const dataBuffer = encoder.encode(data);
+                const keyBuffer = encoder.encode(SHOPIER_CONFIG.secret);
+                
+                // HMAC-SHA256 algoritması ile imzalama
+                const cryptoKey = await crypto.subtle.importKey(
+                    'raw', 
+                    keyBuffer, 
+                    { name: 'HMAC', hash: 'SHA-256' },
+                    false, 
+                    ['sign']
+                );
+                
+                const signature = await crypto.subtle.sign(
+                    'HMAC', 
+                    cryptoKey, 
+                    dataBuffer
+                );
+                
+                // Base64 kodlama
+                return btoa(String.fromCharCode(...new Uint8Array(signature)));
+            } catch (error) {
+                console.error('Signature oluşturma hatası:', error);
+                // Fallback: Basit encoding
+                return btoa(data);
+            }
         }
         
         // Ödeme işlemi
@@ -774,6 +801,9 @@
                 const amount = selectedPackage.price.replace('₺', '');
                 const currency = '0'; // TRY
                 
+                // HMAC-SHA256 signature oluştur
+                const signature = await generateShopierSignature(randomNr.toString(), orderId, amount, currency);
+                
                 const shopierData = {
                     API_key: SHOPIER_CONFIG.api_key,
                     website_index: SHOPIER_CONFIG.website_index,
@@ -802,7 +832,7 @@
                     current_language: '0', // TR
                     modul_version: '2.0.0',
                     random_nr: randomNr.toString(),
-                    signature: generateShopierSignature(randomNr.toString(), orderId, amount, currency)
+                    signature: signature
                 };
                 
                 // Test modu kontrolü
