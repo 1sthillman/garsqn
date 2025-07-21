@@ -1,56 +1,126 @@
-// Türk mutfağı ve uluslararası restoran ürünleri için profesyonel SVG ikon seti
-const productIcons = {
+// Modern Glassmorphism ve Gerçekçi SVG İkon Seti
+// Profesyonel, şeffaf ve modern tasarım
+export const productIcons = {
   // YEMEKLER - ANA YEMEKLER
   kebap: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <linearGradient id="kebapGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color:#8B4513;stop-opacity:1" />
-        <stop offset="100%" style="stop-color:#654321;stop-opacity:1" />
+        <stop offset="0%" style="stop-color:#8B4513;stop-opacity:0.9" />
+        <stop offset="50%" style="stop-color:#A0522D;stop-opacity:0.8" />
+        <stop offset="100%" style="stop-color:#654321;stop-opacity:0.9" />
       </linearGradient>
-      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-        <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+      <linearGradient id="kebapHighlight" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#FFD700;stop-opacity:0.6" />
+        <stop offset="100%" style="stop-color:#FFA500;stop-opacity:0.4" />
+      </linearGradient>
+      <filter id="glassShadow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+        <feOffset dx="0" dy="4" result="offset"/>
+        <feComposite in2="offset" operator="over"/>
+        <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.3 0"/>
+      </filter>
+      <filter id="glassEffect">
+        <feGaussianBlur stdDeviation="1"/>
+        <feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.1 0"/>
       </filter>
     </defs>
-    <rect x="8" y="20" width="32" height="8" rx="4" fill="url(#kebapGradient)" filter="url(#shadow)"/>
-    <rect x="12" y="22" width="24" height="4" rx="2" fill="#D2691E"/>
-    <circle cx="16" cy="24" r="2" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
-    <circle cx="24" cy="24" r="2" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
-    <circle cx="32" cy="24" r="2" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
+    <!-- Ana kebap şekli -->
+    <rect x="6" y="18" width="36" height="12" rx="6" fill="url(#kebapGradient)" filter="url(#glassShadow)"/>
+    <!-- İç katman -->
+    <rect x="10" y="20" width="28" height="8" rx="4" fill="url(#kebapHighlight)" opacity="0.7"/>
+    <!-- Et parçaları -->
+    <ellipse cx="14" cy="24" rx="3" ry="2" fill="#8B4513" opacity="0.8"/>
+    <ellipse cx="22" cy="24" rx="3" ry="2" fill="#8B4513" opacity="0.8"/>
+    <ellipse cx="30" cy="24" rx="3" ry="2" fill="#8B4513" opacity="0.8"/>
+    <!-- Baharatlar -->
+    <circle cx="18" cy="22" r="1" fill="#FF6347" opacity="0.9"/>
+    <circle cx="26" cy="22" r="1" fill="#FF6347" opacity="0.9"/>
+    <circle cx="34" cy="22" r="1" fill="#FF6347" opacity="0.9"/>
+    <!-- Glassmorphism efekti -->
+    <rect x="6" y="18" width="36" height="12" rx="6" fill="url(#kebapHighlight)" opacity="0.2" filter="url(#glassEffect)"/>
   </svg>`,
   
   döner: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <linearGradient id="donerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color:#8B4513;stop-opacity:1" />
-        <stop offset="100%" style="stop-color:#654321;stop-opacity:1" />
+        <stop offset="0%" style="stop-color:#8B4513;stop-opacity:0.9" />
+        <stop offset="50%" style="stop-color:#A0522D;stop-opacity:0.8" />
+        <stop offset="100%" style="stop-color:#654321;stop-opacity:0.9" />
       </linearGradient>
-      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-        <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+      <linearGradient id="donerHighlight" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#FFD700;stop-opacity:0.6" />
+        <stop offset="100%" style="stop-color:#FFA500;stop-opacity:0.4" />
+      </linearGradient>
+      <filter id="glassShadow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+        <feOffset dx="0" dy="4" result="offset"/>
+        <feComposite in2="offset" operator="over"/>
+        <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.3 0"/>
+      </filter>
+      <filter id="glassEffect">
+        <feGaussianBlur stdDeviation="1"/>
+        <feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.1 0"/>
       </filter>
     </defs>
-    <rect x="16" y="6" width="16" height="36" rx="8" fill="url(#donerGradient)" filter="url(#shadow)"/>
-    <rect x="18" y="10" width="12" height="28" rx="6" fill="#D2691E"/>
-    <ellipse cx="24" cy="24" rx="6" ry="12" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
-    <circle cx="24" cy="18" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
-    <circle cx="24" cy="30" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <!-- Ana döner şekli -->
+    <rect x="14" y="4" width="20" height="40" rx="10" fill="url(#donerGradient)" filter="url(#glassShadow)"/>
+    <!-- İç katman -->
+    <rect x="16" y="8" width="16" height="32" rx="8" fill="url(#donerHighlight)" opacity="0.7"/>
+    <!-- Et katmanları -->
+    <ellipse cx="24" cy="20" rx="8" ry="14" fill="#8B4513" opacity="0.8"/>
+    <ellipse cx="24" cy="28" rx="6" ry="10" fill="#A0522D" opacity="0.7"/>
+    <ellipse cx="24" cy="36" rx="4" ry="6" fill="#CD853F" opacity="0.6"/>
+    <!-- Baharatlar ve soslar -->
+    <circle cx="20" cy="16" r="1.5" fill="#FF6347" opacity="0.9"/>
+    <circle cx="28" cy="16" r="1.5" fill="#FF6347" opacity="0.9"/>
+    <circle cx="24" cy="24" r="1.5" fill="#FFD700" opacity="0.8"/>
+    <circle cx="20" cy="32" r="1.5" fill="#32CD32" opacity="0.8"/>
+    <circle cx="28" cy="32" r="1.5" fill="#32CD32" opacity="0.8"/>
+    <!-- Glassmorphism efekti -->
+    <rect x="14" y="4" width="20" height="40" rx="10" fill="url(#donerHighlight)" opacity="0.2" filter="url(#glassEffect)"/>
   </svg>`,
   
   pide: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <linearGradient id="pideGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color:#F4A460;stop-opacity:1" />
-        <stop offset="100%" style="stop-color:#DEB887;stop-opacity:1" />
+        <stop offset="0%" style="stop-color:#F4A460;stop-opacity:0.9" />
+        <stop offset="50%" style="stop-color:#DEB887;stop-opacity:0.8" />
+        <stop offset="100%" style="stop-color:#D2B48C;stop-opacity:0.9" />
       </linearGradient>
-      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-        <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+      <linearGradient id="pideHighlight" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#FFD700;stop-opacity:0.6" />
+        <stop offset="100%" style="stop-color:#FFA500;stop-opacity:0.4" />
+      </linearGradient>
+      <filter id="glassShadow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+        <feOffset dx="0" dy="4" result="offset"/>
+        <feComposite in2="offset" operator="over"/>
+        <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.3 0"/>
+      </filter>
+      <filter id="glassEffect">
+        <feGaussianBlur stdDeviation="1"/>
+        <feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.1 0"/>
       </filter>
     </defs>
-    <ellipse cx="24" cy="24" rx="20" ry="10" fill="url(#pideGradient)" stroke="#8B4513" stroke-width="2" filter="url(#shadow)"/>
-    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#DEB887"/>
-    <ellipse cx="24" cy="24" rx="12" ry="6" fill="#D2B48C"/>
-    <circle cx="18" cy="20" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
-    <circle cx="30" cy="20" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
-    <circle cx="24" cy="28" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <!-- Ana pide şekli -->
+    <ellipse cx="24" cy="24" rx="22" ry="12" fill="url(#pideGradient)" filter="url(#glassShadow)"/>
+    <!-- İç katman -->
+    <ellipse cx="24" cy="24" rx="18" ry="10" fill="url(#pideHighlight)" opacity="0.7"/>
+    <!-- Hamur katmanı -->
+    <ellipse cx="24" cy="24" rx="14" ry="8" fill="#DEB887" opacity="0.8"/>
+    <!-- İç malzemeler -->
+    <ellipse cx="18" cy="20" rx="4" ry="2" fill="#8B4513" opacity="0.9"/>
+    <ellipse cx="30" cy="20" rx="4" ry="2" fill="#8B4513" opacity="0.9"/>
+    <ellipse cx="24" cy="28" rx="4" ry="2" fill="#8B4513" opacity="0.9"/>
+    <!-- Peynir -->
+    <circle cx="16" cy="18" r="2" fill="#FFD700" opacity="0.9"/>
+    <circle cx="32" cy="18" r="2" fill="#FFD700" opacity="0.9"/>
+    <circle cx="24" cy="26" r="2" fill="#FFD700" opacity="0.9"/>
+    <!-- Et parçaları -->
+    <ellipse cx="20" cy="22" rx="3" ry="1.5" fill="#A0522D" opacity="0.8"/>
+    <ellipse cx="28" cy="22" rx="3" ry="1.5" fill="#A0522D" opacity="0.8"/>
+    <!-- Glassmorphism efekti -->
+    <ellipse cx="24" cy="24" rx="22" ry="12" fill="url(#pideHighlight)" opacity="0.2" filter="url(#glassEffect)"/>
   </svg>`,
   
   lahmacun: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -74,37 +144,107 @@ const productIcons = {
   hamburger: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <linearGradient id="burgerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color:#F4A460;stop-opacity:1" />
-        <stop offset="100%" style="stop-color:#DEB887;stop-opacity:1" />
+        <stop offset="0%" style="stop-color:#F4A460;stop-opacity:0.9" />
+        <stop offset="50%" style="stop-color:#DEB887;stop-opacity:0.8" />
+        <stop offset="100%" style="stop-color:#D2B48C;stop-opacity:0.9" />
       </linearGradient>
-      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-        <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+      <linearGradient id="burgerHighlight" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#FFD700;stop-opacity:0.6" />
+        <stop offset="100%" style="stop-color:#FFA500;stop-opacity:0.4" />
+      </linearGradient>
+      <linearGradient id="meatGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#8B4513;stop-opacity:0.9" />
+        <stop offset="50%" style="stop-color:#A0522D;stop-opacity:0.8" />
+        <stop offset="100%" style="stop-color:#654321;stop-opacity:0.9" />
+      </linearGradient>
+      <filter id="glassShadow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+        <feOffset dx="0" dy="4" result="offset"/>
+        <feComposite in2="offset" operator="over"/>
+        <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.3 0"/>
+      </filter>
+      <filter id="glassEffect">
+        <feGaussianBlur stdDeviation="1"/>
+        <feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.1 0"/>
       </filter>
     </defs>
-    <ellipse cx="24" cy="20" rx="16" ry="6" fill="url(#burgerGradient)" stroke="#8B4513" stroke-width="2" filter="url(#shadow)"/>
-    <ellipse cx="24" cy="28" rx="16" ry="6" fill="url(#burgerGradient)" stroke="#8B4513" stroke-width="2"/>
-    <rect x="12" y="24" width="24" height="4" rx="2" fill="#8B4513"/>
-    <circle cx="18" cy="26" r="1" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
-    <circle cx="30" cy="26" r="1" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <!-- Üst ekmek -->
+    <ellipse cx="24" cy="18" rx="18" ry="8" fill="url(#burgerGradient)" filter="url(#glassShadow)"/>
+    <!-- Alt ekmek -->
+    <ellipse cx="24" cy="30" rx="18" ry="8" fill="url(#burgerGradient)" filter="url(#glassShadow)"/>
+    <!-- Et -->
+    <rect x="10" y="24" width="28" height="6" rx="3" fill="url(#meatGradient)" opacity="0.9"/>
+    <!-- Marul -->
+    <ellipse cx="24" cy="22" rx="16" ry="3" fill="#32CD32" opacity="0.8"/>
+    <ellipse cx="24" cy="26" rx="16" ry="3" fill="#32CD32" opacity="0.8"/>
+    <!-- Peynir -->
+    <ellipse cx="24" cy="24" rx="14" ry="2" fill="#FFD700" opacity="0.9"/>
+    <!-- Domates -->
+    <circle cx="16" cy="24" r="2" fill="#FF6347" opacity="0.9"/>
+    <circle cx="32" cy="24" r="2" fill="#FF6347" opacity="0.9"/>
+    <!-- Soğan -->
+    <circle cx="24" cy="22" r="1.5" fill="#F5F5DC" opacity="0.8"/>
+    <circle cx="20" cy="26" r="1.5" fill="#F5F5DC" opacity="0.8"/>
+    <circle cx="28" cy="26" r="1.5" fill="#F5F5DC" opacity="0.8"/>
+    <!-- Glassmorphism efekti -->
+    <ellipse cx="24" cy="18" rx="18" ry="8" fill="url(#burgerHighlight)" opacity="0.2" filter="url(#glassEffect)"/>
+    <ellipse cx="24" cy="30" rx="18" ry="8" fill="url(#burgerHighlight)" opacity="0.2" filter="url(#glassEffect)"/>
   </svg>`,
   
   pizza: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <linearGradient id="pizzaGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color:#F4A460;stop-opacity:1" />
-        <stop offset="100%" style="stop-color:#DEB887;stop-opacity:1" />
+        <stop offset="0%" style="stop-color:#F4A460;stop-opacity:0.9" />
+        <stop offset="50%" style="stop-color:#DEB887;stop-opacity:0.8" />
+        <stop offset="100%" style="stop-color:#D2B48C;stop-opacity:0.9" />
       </linearGradient>
-      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-        <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+      <linearGradient id="pizzaHighlight" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#FFD700;stop-opacity:0.6" />
+        <stop offset="100%" style="stop-color:#FFA500;stop-opacity:0.4" />
+      </linearGradient>
+      <linearGradient id="sauceGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#FF6347;stop-opacity:0.9" />
+        <stop offset="50%" style="stop-color:#DC143C;stop-opacity:0.8" />
+        <stop offset="100%" style="stop-color:#B22222;stop-opacity:0.9" />
+      </linearGradient>
+      <filter id="glassShadow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+        <feOffset dx="0" dy="4" result="offset"/>
+        <feComposite in2="offset" operator="over"/>
+        <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.3 0"/>
+      </filter>
+      <filter id="glassEffect">
+        <feGaussianBlur stdDeviation="1"/>
+        <feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.1 0"/>
       </filter>
     </defs>
-    <circle cx="24" cy="24" r="18" fill="url(#pizzaGradient)" stroke="#8B4513" stroke-width="2" filter="url(#shadow)"/>
-    <circle cx="24" cy="24" r="14" fill="#DEB887"/>
-    <circle cx="18" cy="18" r="3" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
-    <circle cx="30" cy="18" r="3" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
-    <circle cx="24" cy="30" r="3" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
-    <circle cx="12" cy="24" r="2" fill="#32CD32" stroke="#228B22" stroke-width="0.5"/>
-    <circle cx="36" cy="24" r="2" fill="#32CD32" stroke="#228B22" stroke-width="0.5"/>
+    <!-- Ana pizza hamuru -->
+    <circle cx="24" cy="24" r="20" fill="url(#pizzaGradient)" filter="url(#glassShadow)"/>
+    <!-- İç katman -->
+    <circle cx="24" cy="24" r="16" fill="url(#pizzaHighlight)" opacity="0.7"/>
+    <!-- Hamur katmanı -->
+    <circle cx="24" cy="24" r="14" fill="#DEB887" opacity="0.8"/>
+    <!-- Domates sosu -->
+    <circle cx="24" cy="24" r="12" fill="url(#sauceGradient)" opacity="0.9"/>
+    <!-- Peynir -->
+    <circle cx="24" cy="24" r="10" fill="#FFD700" opacity="0.9"/>
+    <!-- Sucuk -->
+    <ellipse cx="16" cy="16" rx="3" ry="2" fill="#8B4513" opacity="0.9"/>
+    <ellipse cx="32" cy="16" rx="3" ry="2" fill="#8B4513" opacity="0.9"/>
+    <ellipse cx="24" cy="32" rx="3" ry="2" fill="#8B4513" opacity="0.9"/>
+    <!-- Mantar -->
+    <ellipse cx="12" cy="24" rx="2" ry="3" fill="#8B4513" opacity="0.8"/>
+    <ellipse cx="36" cy="24" rx="2" ry="3" fill="#8B4513" opacity="0.8"/>
+    <!-- Zeytin -->
+    <circle cx="20" cy="20" r="1.5" fill="#000" opacity="0.9"/>
+    <circle cx="28" cy="20" r="1.5" fill="#000" opacity="0.9"/>
+    <circle cx="24" cy="28" r="1.5" fill="#000" opacity="0.9"/>
+    <!-- Fesleğen -->
+    <circle cx="18" cy="12" r="1" fill="#32CD32" opacity="0.9"/>
+    <circle cx="30" cy="12" r="1" fill="#32CD32" opacity="0.9"/>
+    <circle cx="24" cy="36" r="1" fill="#32CD32" opacity="0.9"/>
+    <!-- Glassmorphism efekti -->
+    <circle cx="24" cy="24" r="20" fill="url(#pizzaHighlight)" opacity="0.2" filter="url(#glassEffect)"/>
   </svg>`,
   
   makarna: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -341,33 +481,98 @@ const productIcons = {
   çay: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <linearGradient id="çayGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color:#8B4513;stop-opacity:1" />
-        <stop offset="100%" style="stop-color:#654321;stop-opacity:1" />
+        <stop offset="0%" style="stop-color:#8B4513;stop-opacity:0.9" />
+        <stop offset="50%" style="stop-color:#A0522D;stop-opacity:0.8" />
+        <stop offset="100%" style="stop-color:#654321;stop-opacity:0.9" />
       </linearGradient>
-      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-        <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+      <linearGradient id="çayHighlight" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#FFD700;stop-opacity:0.6" />
+        <stop offset="100%" style="stop-color:#FFA500;stop-opacity:0.4" />
+      </linearGradient>
+      <linearGradient id="teaGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#D2691E;stop-opacity:0.9" />
+        <stop offset="50%" style="stop-color:#CD853F;stop-opacity:0.8" />
+        <stop offset="100%" style="stop-color:#8B4513;stop-opacity:0.9" />
+      </linearGradient>
+      <filter id="glassShadow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+        <feOffset dx="0" dy="4" result="offset"/>
+        <feComposite in2="offset" operator="over"/>
+        <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.3 0"/>
+      </filter>
+      <filter id="glassEffect">
+        <feGaussianBlur stdDeviation="1"/>
+        <feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.1 0"/>
       </filter>
     </defs>
-    <rect x="16" y="20" width="16" height="12" rx="6" fill="url(#çayGradient)" stroke="#654321" stroke-width="2" filter="url(#shadow)"/>
-    <ellipse cx="24" cy="20" rx="8" ry="4" fill="#F5DEB3"/>
-    <rect x="20" y="32" width="8" height="8" rx="4" fill="#8B4513"/>
-    <circle cx="24" cy="26" r="2" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
+    <!-- Ana çay bardağı -->
+    <rect x="14" y="18" width="20" height="16" rx="8" fill="url(#çayGradient)" filter="url(#glassShadow)"/>
+    <!-- İç katman -->
+    <rect x="16" y="20" width="16" height="12" rx="6" fill="url(#çayHighlight)" opacity="0.7"/>
+    <!-- Çay sıvısı -->
+    <rect x="16" y="20" width="16" height="12" rx="6" fill="url(#teaGradient)" opacity="0.8"/>
+    <!-- Bardağın üst kısmı -->
+    <ellipse cx="24" cy="18" rx="10" ry="5" fill="url(#çayGradient)" opacity="0.9"/>
+    <!-- Çay yaprakları -->
+    <ellipse cx="20" cy="24" rx="2" ry="3" fill="#228B22" opacity="0.7"/>
+    <ellipse cx="28" cy="24" rx="2" ry="3" fill="#228B22" opacity="0.7"/>
+    <ellipse cx="24" cy="28" rx="2" ry="3" fill="#228B22" opacity="0.7"/>
+    <!-- Buhar -->
+    <path d="M22 14 Q24 12 26 14" stroke="#F5F5F5" stroke-width="1" opacity="0.6" fill="none"/>
+    <path d="M24 12 Q26 10 28 12" stroke="#F5F5F5" stroke-width="1" opacity="0.4" fill="none"/>
+    <!-- Glassmorphism efekti -->
+    <rect x="14" y="18" width="20" height="16" rx="8" fill="url(#çayHighlight)" opacity="0.2" filter="url(#glassEffect)"/>
   </svg>`,
   
   kahve: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <linearGradient id="kahveGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color:#654321;stop-opacity:1" />
-        <stop offset="100%" style="stop-color:#4B2E05;stop-opacity:1" />
+        <stop offset="0%" style="stop-color:#654321;stop-opacity:0.9" />
+        <stop offset="50%" style="stop-color:#8B4513;stop-opacity:0.8" />
+        <stop offset="100%" style="stop-color:#4B2E05;stop-opacity:0.9" />
       </linearGradient>
-      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-        <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+      <linearGradient id="kahveHighlight" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#FFD700;stop-opacity:0.6" />
+        <stop offset="100%" style="stop-color:#FFA500;stop-opacity:0.4" />
+      </linearGradient>
+      <linearGradient id="coffeeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#8B4513;stop-opacity:0.9" />
+        <stop offset="50%" style="stop-color:#A0522D;stop-opacity:0.8" />
+        <stop offset="100%" style="stop-color:#654321;stop-opacity:0.9" />
+      </linearGradient>
+      <filter id="glassShadow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+        <feOffset dx="0" dy="4" result="offset"/>
+        <feComposite in2="offset" operator="over"/>
+        <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.3 0"/>
+      </filter>
+      <filter id="glassEffect">
+        <feGaussianBlur stdDeviation="1"/>
+        <feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.1 0"/>
       </filter>
     </defs>
-    <rect x="16" y="20" width="16" height="12" rx="6" fill="url(#kahveGradient)" stroke="#4B2E05" stroke-width="2" filter="url(#shadow)"/>
-    <ellipse cx="24" cy="20" rx="8" ry="4" fill="#8B4513"/>
-    <rect x="20" y="32" width="8" height="8" rx="4" fill="#654321"/>
-    <circle cx="24" cy="26" r="2" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
+    <!-- Ana kahve fincanı -->
+    <rect x="14" y="18" width="20" height="16" rx="8" fill="url(#kahveGradient)" filter="url(#glassShadow)"/>
+    <!-- İç katman -->
+    <rect x="16" y="20" width="16" height="12" rx="6" fill="url(#kahveHighlight)" opacity="0.7"/>
+    <!-- Kahve sıvısı -->
+    <rect x="16" y="20" width="16" height="12" rx="6" fill="url(#coffeeGradient)" opacity="0.8"/>
+    <!-- Fincanın üst kısmı -->
+    <ellipse cx="24" cy="18" rx="10" ry="5" fill="url(#kahveGradient)" opacity="0.9"/>
+    <!-- Kahve köpüğü -->
+    <ellipse cx="22" cy="22" rx="3" ry="2" fill="#F5DEB3" opacity="0.9"/>
+    <ellipse cx="26" cy="22" rx="3" ry="2" fill="#F5DEB3" opacity="0.9"/>
+    <ellipse cx="24" cy="24" rx="2" ry="1" fill="#F5DEB3" opacity="0.8"/>
+    <!-- Kahve çekirdekleri -->
+    <ellipse cx="20" cy="26" rx="1" ry="2" fill="#4B2E05" opacity="0.7"/>
+    <ellipse cx="28" cy="26" rx="1" ry="2" fill="#4B2E05" opacity="0.7"/>
+    <ellipse cx="24" cy="28" rx="1" ry="2" fill="#4B2E05" opacity="0.7"/>
+    <!-- Buhar -->
+    <path d="M22 14 Q24 12 26 14" stroke="#F5F5F5" stroke-width="1" opacity="0.6" fill="none"/>
+    <path d="M24 12 Q26 10 28 12" stroke="#F5F5F5" stroke-width="1" opacity="0.4" fill="none"/>
+    <path d="M26 14 Q28 12 30 14" stroke="#F5F5F5" stroke-width="1" opacity="0.3" fill="none"/>
+    <!-- Glassmorphism efekti -->
+    <rect x="14" y="18" width="20" height="16" rx="8" fill="url(#kahveHighlight)" opacity="0.2" filter="url(#glassEffect)"/>
   </svg>`,
   
   türk: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -538,20 +743,55 @@ const productIcons = {
   baklava: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <linearGradient id="baklavaGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color:#F4A460;stop-opacity:1" />
-        <stop offset="100%" style="stop-color:#8B4513;stop-opacity:1" />
+        <stop offset="0%" style="stop-color:#F4A460;stop-opacity:0.9" />
+        <stop offset="50%" style="stop-color:#DEB887;stop-opacity:0.8" />
+        <stop offset="100%" style="stop-color:#8B4513;stop-opacity:0.9" />
       </linearGradient>
-      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-        <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+      <linearGradient id="baklavaHighlight" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#FFD700;stop-opacity:0.8" />
+        <stop offset="50%" style="stop-color:#FFA500;stop-opacity:0.6" />
+        <stop offset="100%" style="stop-color:#FF8C00;stop-opacity:0.8" />
+      </linearGradient>
+      <linearGradient id="filloGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#F5DEB3;stop-opacity:0.9" />
+        <stop offset="50%" style="stop-color:#DEB887;stop-opacity:0.8" />
+        <stop offset="100%" style="stop-color:#D2B48C;stop-opacity:0.9" />
+      </linearGradient>
+      <filter id="glassShadow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+        <feOffset dx="0" dy="4" result="offset"/>
+        <feComposite in2="offset" operator="over"/>
+        <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.3 0"/>
+      </filter>
+      <filter id="glassEffect">
+        <feGaussianBlur stdDeviation="1"/>
+        <feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.1 0"/>
       </filter>
     </defs>
-    <rect x="12" y="20" width="24" height="8" rx="4" fill="url(#baklavaGradient)" stroke="#8B4513" stroke-width="2" filter="url(#shadow)"/>
-    <rect x="16" y="24" width="16" height="4" rx="2" fill="#DEB887"/>
-    <circle cx="20" cy="26" r="1" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
-    <circle cx="24" cy="26" r="1" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
-    <circle cx="28" cy="26" r="1" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
-    <circle cx="22" cy="28" r="1" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
-    <circle cx="26" cy="28" r="1" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
+    <!-- Ana baklava şekli -->
+    <rect x="10" y="18" width="28" height="12" rx="6" fill="url(#baklavaGradient)" filter="url(#glassShadow)"/>
+    <!-- İç katman -->
+    <rect x="12" y="20" width="24" height="8" rx="4" fill="url(#baklavaHighlight)" opacity="0.7"/>
+    <!-- Yufka katmanları -->
+    <rect x="14" y="22" width="20" height="4" rx="2" fill="url(#filloGradient)" opacity="0.9"/>
+    <!-- Ceviz içi -->
+    <ellipse cx="18" cy="24" rx="2" ry="1" fill="#8B4513" opacity="0.8"/>
+    <ellipse cx="22" cy="24" rx="2" ry="1" fill="#8B4513" opacity="0.8"/>
+    <ellipse cx="26" cy="24" rx="2" ry="1" fill="#8B4513" opacity="0.8"/>
+    <ellipse cx="30" cy="24" rx="2" ry="1" fill="#8B4513" opacity="0.8"/>
+    <!-- Şerbet damlaları -->
+    <circle cx="16" cy="26" r="1" fill="#FFD700" opacity="0.9"/>
+    <circle cx="20" cy="26" r="1" fill="#FFD700" opacity="0.9"/>
+    <circle cx="24" cy="26" r="1" fill="#FFD700" opacity="0.9"/>
+    <circle cx="28" cy="26" r="1" fill="#FFD700" opacity="0.9"/>
+    <circle cx="32" cy="26" r="1" fill="#FFD700" opacity="0.9"/>
+    <!-- Üst süsleme -->
+    <ellipse cx="18" cy="20" rx="1" ry="2" fill="#FFD700" opacity="0.8"/>
+    <ellipse cx="22" cy="20" rx="1" ry="2" fill="#FFD700" opacity="0.8"/>
+    <ellipse cx="26" cy="20" rx="1" ry="2" fill="#FFD700" opacity="0.8"/>
+    <ellipse cx="30" cy="20" rx="1" ry="2" fill="#FFD700" opacity="0.8"/>
+    <!-- Glassmorphism efekti -->
+    <rect x="10" y="18" width="28" height="12" rx="6" fill="url(#baklavaHighlight)" opacity="0.2" filter="url(#glassEffect)"/>
   </svg>`,
   
   sütlaç: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1226,6 +1466,186 @@ const productIcons = {
   
   // Varsayılan ikon
   
+  // YENİ EKLENEN PROFESYONEL İKONLAR
+  
+  // TÜRK MUTFAĞI EK YEMEKLER
+  karnıyarık: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="karnıyarıkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#32CD32;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#228B22;stop-opacity:1" />
+      </linearGradient>
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+      </filter>
+    </defs>
+    <ellipse cx="24" cy="32" rx="14" ry="6" fill="url(#karnıyarıkGradient)" stroke="#228B22" stroke-width="2" filter="url(#shadow)"/>
+    <ellipse cx="24" cy="32" rx="10" ry="3" fill="#90EE90"/>
+    <circle cx="18" cy="30" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="30" cy="30" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="24" cy="34" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+  </svg>`,
+  
+  dolma: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="dolmaGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#32CD32;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#228B22;stop-opacity:1" />
+      </linearGradient>
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+      </filter>
+    </defs>
+    <ellipse cx="24" cy="24" rx="12" ry="8" fill="url(#dolmaGradient)" stroke="#228B22" stroke-width="2" filter="url(#shadow)"/>
+    <ellipse cx="24" cy="24" rx="8" ry="5" fill="#90EE90"/>
+    <circle cx="20" cy="20" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="28" cy="20" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="24" cy="28" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+  </svg>`,
+  
+  sarma: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="sarmaGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#32CD32;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#228B22;stop-opacity:1" />
+      </linearGradient>
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+      </filter>
+    </defs>
+    <ellipse cx="24" cy="24" rx="14" ry="6" fill="url(#sarmaGradient)" stroke="#228B22" stroke-width="2" filter="url(#shadow)"/>
+    <ellipse cx="24" cy="24" rx="10" ry="4" fill="#90EE90"/>
+    <path d="M12 20 Q24 16 36 20" stroke="#228B22" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M12 24 Q24 20 36 24" stroke="#228B22" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M12 28 Q24 24 36 28" stroke="#228B22" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </svg>`,
+  
+  // ULUSLARARASI YEMEKLER
+  schnitzel: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="schnitzelGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#FFA500;stop-opacity:1" />
+      </linearGradient>
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+      </filter>
+    </defs>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="url(#schnitzelGradient)" stroke="#FFA500" stroke-width="2" filter="url(#shadow)"/>
+    <ellipse cx="24" cy="24" rx="12" ry="5" fill="#FFE4B5"/>
+    <circle cx="20" cy="22" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="28" cy="22" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="24" cy="26" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+  </svg>`,
+  
+  goulash: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="goulashGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#FF8C00;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#FFA500;stop-opacity:1" />
+      </linearGradient>
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+      </filter>
+    </defs>
+    <ellipse cx="24" cy="32" rx="14" ry="6" fill="url(#goulashGradient)" stroke="#FF8C00" stroke-width="2" filter="url(#shadow)"/>
+    <ellipse cx="24" cy="32" rx="10" ry="3" fill="#FFE4B5"/>
+    <circle cx="18" cy="30" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="30" cy="30" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="24" cy="34" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+  </svg>`,
+  
+  // ASYA MUTFAĞI EK YEMEKLER
+  dumpling: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="dumplingGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#F5DEB3;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#DEB887;stop-opacity:1" />
+      </linearGradient>
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+      </filter>
+    </defs>
+    <ellipse cx="24" cy="24" rx="12" ry="8" fill="url(#dumplingGradient)" stroke="#8B4513" stroke-width="2" filter="url(#shadow)"/>
+    <ellipse cx="24" cy="24" rx="8" ry="5" fill="#DEB887"/>
+    <circle cx="20" cy="20" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="28" cy="20" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="24" cy="28" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+  </svg>`,
+  
+  // İTALYAN MUTFAĞI
+  gnocchi: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="gnocchiGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#F5DEB3;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#DEB887;stop-opacity:1" />
+      </linearGradient>
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+      </filter>
+    </defs>
+    <ellipse cx="24" cy="32" rx="14" ry="6" fill="url(#gnocchiGradient)" stroke="#8B4513" stroke-width="2" filter="url(#shadow)"/>
+    <ellipse cx="24" cy="32" rx="10" ry="3" fill="#DEB887"/>
+    <circle cx="18" cy="30" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="24" cy="30" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="30" cy="30" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="21" cy="34" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="27" cy="34" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+  </svg>`,
+  
+  // FRANSIZ MUTFAĞI
+  ratatouille: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="ratatouilleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#32CD32;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#228B22;stop-opacity:1" />
+      </linearGradient>
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+      </filter>
+    </defs>
+    <ellipse cx="24" cy="32" rx="14" ry="6" fill="url(#ratatouilleGradient)" stroke="#228B22" stroke-width="2" filter="url(#shadow)"/>
+    <ellipse cx="24" cy="32" rx="10" ry="3" fill="#90EE90"/>
+    <circle cx="18" cy="30" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="30" cy="30" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="24" cy="34" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+  </svg>`,
+  
+  // İÇECEKLER EK
+  smoothie: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="smoothieGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#FF69B4;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#FF1493;stop-opacity:1" />
+      </linearGradient>
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+      </filter>
+    </defs>
+    <rect x="18" y="12" width="12" height="24" rx="6" fill="url(#smoothieGradient)" stroke="#FF1493" stroke-width="2" filter="url(#shadow)"/>
+    <circle cx="24" cy="18" r="2" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
+    <circle cx="24" cy="24" r="2" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
+    <circle cx="24" cy="30" r="2" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
+  </svg>`,
+  
+  // TATLILAR EK
+  profiterol: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="profiterolGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#F5DEB3;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#DEB887;stop-opacity:1" />
+      </linearGradient>
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+      </filter>
+    </defs>
+    <circle cx="24" cy="24" r="10" fill="url(#profiterolGradient)" stroke="#8B4513" stroke-width="2" filter="url(#shadow)"/>
+    <circle cx="24" cy="24" r="6" fill="#DEB887"/>
+    <circle cx="20" cy="20" r="2" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
+    <circle cx="28" cy="20" r="2" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
+    <circle cx="24" cy="28" r="2" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
+  </svg>`,
+  
   // Varsayılan ikon
   default: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
     <defs>
@@ -1246,4 +1666,16 @@ const productIcons = {
 };
 
 // Debug: productIcons yüklendiğini kontrol et
-console.log('productIcons loaded:', Object.keys(productIcons).length, 'icons available'); 
+console.log('productIcons loaded:', Object.keys(productIcons).length, 'icons available');
+
+// İkon sayısını ve kategorileri göster
+const iconCategories = {
+  'Türk Mutfağı': ['kebap', 'döner', 'pide', 'lahmacun', 'hamburger', 'pizza', 'makarna', 'pilav', 'çorba', 'balık', 'tavuk', 'et', 'börek', 'salata', 'mantı', 'köfte', 'iskender', 'adana', 'urfa', 'menemen', 'imambayıldı', 'hünkarbeğendi', 'çiğköfte', 'mercimek', 'ezogelin', 'karnıyarık', 'dolma', 'sarma'],
+  'İçecekler': ['çay', 'kahve', 'türk', 'nescafe', 'su', 'kola', 'fanta', 'sprite', 'ayran', 'şalgam', 'boza', 'salep', 'wine', 'beer', 'cocktail', 'smoothie'],
+  'Tatlılar': ['baklava', 'sütlaç', 'dondurma', 'künefe', 'kadayıf', 'revani', 'şekerpare', 'lokum', 'profiterol'],
+  'Meyveler': ['meyve', 'elma', 'portakal', 'muz', 'çilek'],
+  'Kuruyemişler': ['kuruyemiş', 'fındık'],
+  'Uluslararası': ['sushi', 'pasta', 'steak', 'lasagna', 'risotto', 'paella', 'ramen', 'curry', 'padthai', 'hummus', 'falafel', 'shawarma', 'taco', 'burrito', 'schnitzel', 'goulash', 'dumpling', 'gnocchi', 'ratatouille', 'cheesecake', 'tiramisu']
+};
+
+console.log('Icon categories:', iconCategories); 
