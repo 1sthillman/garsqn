@@ -1,4 +1,4 @@
-// Türk mutfağı ve restoran ürünleri için profesyonel SVG ikon seti
+// Türk mutfağı ve uluslararası restoran ürünleri için profesyonel SVG ikon seti
 const productIcons = {
   // YEMEKLER - ANA YEMEKLER
   kebap: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -794,6 +794,437 @@ const productIcons = {
     <circle cx="26" cy="22" r="1" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
     <circle cx="24" cy="26" r="1" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
   </svg>`,
+  
+  // ULUSLARARASI YEMEKLER
+  sushi: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="sushiGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#F5DEB3;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#DEB887;stop-opacity:1" />
+      </linearGradient>
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+      </filter>
+    </defs>
+    <ellipse cx="24" cy="24" rx="12" ry="6" fill="url(#sushiGradient)" stroke="#8B4513" stroke-width="2" filter="url(#shadow)"/>
+    <ellipse cx="24" cy="24" rx="8" ry="4" fill="#DEB887"/>
+    <circle cx="20" cy="22" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="28" cy="22" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="24" cy="26" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+  </svg>`,
+  
+  pasta: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="pastaGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#F5DEB3;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#DEB887;stop-opacity:1" />
+      </linearGradient>
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+      </filter>
+    </defs>
+    <ellipse cx="24" cy="32" rx="14" ry="6" fill="url(#pastaGradient)" stroke="#8B4513" stroke-width="2" filter="url(#shadow)"/>
+    <ellipse cx="24" cy="32" rx="10" ry="4" fill="#DEB887"/>
+    <path d="M12 20 Q24 16 36 20" stroke="#8B4513" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M12 24 Q24 20 36 24" stroke="#8B4513" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M12 28 Q24 24 36 28" stroke="#8B4513" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </svg>`,
+  
+  steak: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="steakGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#8B4513;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#654321;stop-opacity:1" />
+      </linearGradient>
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+      </filter>
+    </defs>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="url(#steakGradient)" stroke="#654321" stroke-width="2" filter="url(#shadow)"/>
+    <ellipse cx="24" cy="24" rx="10" ry="4" fill="#CD853F"/>
+    <circle cx="20" cy="22" r="2" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
+    <circle cx="28" cy="22" r="2" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
+    <circle cx="24" cy="26" r="2" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
+  </svg>`,
+  
+  lasagna: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="lasagnaGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#F4A460;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#DEB887;stop-opacity:1" />
+      </linearGradient>
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+      </filter>
+    </defs>
+    <rect x="12" y="20" width="24" height="8" rx="4" fill="url(#lasagnaGradient)" stroke="#8B4513" stroke-width="2" filter="url(#shadow)"/>
+    <rect x="16" y="24" width="16" height="4" rx="2" fill="#DEB887"/>
+    <circle cx="20" cy="26" r="1" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="24" cy="26" r="1" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="28" cy="26" r="1" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+  </svg>`,
+  
+  risotto: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="risottoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#F5DEB3;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#DEB887;stop-opacity:1" />
+      </linearGradient>
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+      </filter>
+    </defs>
+    <ellipse cx="24" cy="32" rx="14" ry="6" fill="url(#risottoGradient)" stroke="#8B4513" stroke-width="2" filter="url(#shadow)"/>
+    <ellipse cx="24" cy="32" rx="10" ry="4" fill="#DEB887"/>
+    <circle cx="18" cy="30" r="1" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
+    <circle cx="24" cy="30" r="1" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
+    <circle cx="30" cy="30" r="1" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
+  </svg>`,
+  
+  paella: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="paellaGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#F4A460;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#DEB887;stop-opacity:1" />
+      </linearGradient>
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+      </filter>
+    </defs>
+    <ellipse cx="24" cy="32" rx="16" ry="8" fill="url(#paellaGradient)" stroke="#8B4513" stroke-width="2" filter="url(#shadow)"/>
+    <ellipse cx="24" cy="32" rx="12" ry="5" fill="#DEB887"/>
+    <circle cx="18" cy="30" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="30" cy="30" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="24" cy="34" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+  </svg>`,
+  
+  // TÜRK MUTFAĞI EK YEMEKLER
+  menemen: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="menemenGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#FFA500;stop-opacity:1" />
+      </linearGradient>
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+      </filter>
+    </defs>
+    <ellipse cx="24" cy="32" rx="14" ry="6" fill="url(#menemenGradient)" stroke="#FFA500" stroke-width="2" filter="url(#shadow)"/>
+    <ellipse cx="24" cy="32" rx="10" ry="3" fill="#FFE4B5"/>
+    <circle cx="18" cy="30" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="30" cy="30" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="24" cy="34" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+  </svg>`,
+  
+  imambayıldı: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="imambayıldıGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#32CD32;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#228B22;stop-opacity:1" />
+      </linearGradient>
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+      </filter>
+    </defs>
+    <ellipse cx="24" cy="32" rx="14" ry="6" fill="url(#imambayıldıGradient)" stroke="#228B22" stroke-width="2" filter="url(#shadow)"/>
+    <ellipse cx="24" cy="32" rx="10" ry="3" fill="#90EE90"/>
+    <circle cx="18" cy="30" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="30" cy="30" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="24" cy="34" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+  </svg>`,
+  
+  hünkarbeğendi: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="hünkarbeğendiGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#F5DEB3;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#DEB887;stop-opacity:1" />
+      </linearGradient>
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+      </filter>
+    </defs>
+    <ellipse cx="24" cy="32" rx="14" ry="6" fill="url(#hünkarbeğendiGradient)" stroke="#8B4513" stroke-width="2" filter="url(#shadow)"/>
+    <ellipse cx="24" cy="32" rx="10" ry="3" fill="#DEB887"/>
+    <circle cx="18" cy="30" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="30" cy="30" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="24" cy="34" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+  </svg>`,
+  
+  // ULUSLARARASI İÇECEKLER
+  wine: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="wineGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#8B0000;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#4B0082;stop-opacity:1" />
+      </linearGradient>
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+      </filter>
+    </defs>
+    <rect x="18" y="12" width="12" height="24" rx="6" fill="url(#wineGradient)" stroke="#4B0082" stroke-width="2" filter="url(#shadow)"/>
+    <circle cx="24" cy="18" r="2" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
+    <circle cx="24" cy="24" r="2" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
+    <circle cx="24" cy="30" r="2" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
+  </svg>`,
+  
+  beer: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="beerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#FFA500;stop-opacity:1" />
+      </linearGradient>
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+      </filter>
+    </defs>
+    <rect x="18" y="12" width="12" height="24" rx="6" fill="url(#beerGradient)" stroke="#FFA500" stroke-width="2" filter="url(#shadow)"/>
+    <circle cx="24" cy="18" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="24" cy="24" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="24" cy="30" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+  </svg>`,
+  
+  cocktail: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="cocktailGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#FF69B4;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#FF1493;stop-opacity:1" />
+      </linearGradient>
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+      </filter>
+    </defs>
+    <rect x="18" y="12" width="12" height="24" rx="6" fill="url(#cocktailGradient)" stroke="#FF1493" stroke-width="2" filter="url(#shadow)"/>
+    <circle cx="24" cy="18" r="2" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
+    <circle cx="24" cy="24" r="2" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
+    <circle cx="24" cy="30" r="2" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
+  </svg>`,
+  
+  // ASYA MUTFAĞI
+  ramen: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="ramenGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#F5DEB3;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#DEB887;stop-opacity:1" />
+      </linearGradient>
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+      </filter>
+    </defs>
+    <ellipse cx="24" cy="32" rx="16" ry="8" fill="url(#ramenGradient)" stroke="#8B4513" stroke-width="2" filter="url(#shadow)"/>
+    <ellipse cx="24" cy="32" rx="12" ry="5" fill="#DEB887"/>
+    <path d="M12 20 Q24 16 36 20" stroke="#8B4513" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M12 24 Q24 20 36 24" stroke="#8B4513" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M12 28 Q24 24 36 28" stroke="#8B4513" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </svg>`,
+  
+  curry: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="curryGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#FF8C00;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#FFA500;stop-opacity:1" />
+      </linearGradient>
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+      </filter>
+    </defs>
+    <ellipse cx="24" cy="32" rx="14" ry="6" fill="url(#curryGradient)" stroke="#FF8C00" stroke-width="2" filter="url(#shadow)"/>
+    <ellipse cx="24" cy="32" rx="10" ry="3" fill="#FFE4B5"/>
+    <circle cx="18" cy="30" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="30" cy="30" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="24" cy="34" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+  </svg>`,
+  
+  padthai: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="padthaiGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#F4A460;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#DEB887;stop-opacity:1" />
+      </linearGradient>
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+      </filter>
+    </defs>
+    <ellipse cx="24" cy="32" rx="14" ry="6" fill="url(#padthaiGradient)" stroke="#8B4513" stroke-width="2" filter="url(#shadow)"/>
+    <ellipse cx="24" cy="32" rx="10" ry="3" fill="#DEB887"/>
+    <path d="M12 20 Q24 16 36 20" stroke="#8B4513" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M12 24 Q24 20 36 24" stroke="#8B4513" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </svg>`,
+  
+  // ORTA DOĞU MUTFAĞI
+  hummus: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="hummusGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#F4A460;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#DEB887;stop-opacity:1" />
+      </linearGradient>
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+      </filter>
+    </defs>
+    <ellipse cx="24" cy="32" rx="14" ry="6" fill="url(#hummusGradient)" stroke="#8B4513" stroke-width="2" filter="url(#shadow)"/>
+    <ellipse cx="24" cy="32" rx="10" ry="3" fill="#DEB887"/>
+    <circle cx="18" cy="30" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="30" cy="30" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="24" cy="34" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+  </svg>`,
+  
+  falafel: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="falafelGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#32CD32;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#228B22;stop-opacity:1" />
+      </linearGradient>
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+      </filter>
+    </defs>
+    <circle cx="24" cy="24" r="12" fill="url(#falafelGradient)" stroke="#228B22" stroke-width="2" filter="url(#shadow)"/>
+    <circle cx="24" cy="24" r="8" fill="#90EE90"/>
+    <circle cx="20" cy="20" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="28" cy="20" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="24" cy="28" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+  </svg>`,
+  
+  shawarma: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="shawarmaGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#8B4513;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#654321;stop-opacity:1" />
+      </linearGradient>
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+      </filter>
+    </defs>
+    <rect x="16" y="6" width="16" height="36" rx="8" fill="url(#shawarmaGradient)" stroke="#654321" stroke-width="2" filter="url(#shadow)"/>
+    <rect x="18" y="10" width="12" height="28" rx="6" fill="#D2691E"/>
+    <ellipse cx="24" cy="24" rx="6" ry="12" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
+    <circle cx="24" cy="18" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="24" cy="30" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+  </svg>`,
+  
+  // MEKSİKA MUTFAĞI
+  taco: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="tacoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#F4A460;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#DEB887;stop-opacity:1" />
+      </linearGradient>
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+      </filter>
+    </defs>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="url(#tacoGradient)" stroke="#8B4513" stroke-width="2" filter="url(#shadow)"/>
+    <ellipse cx="24" cy="24" rx="12" ry="5" fill="#DEB887"/>
+    <circle cx="18" cy="20" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="30" cy="20" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="24" cy="28" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+  </svg>`,
+  
+  burrito: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="burritoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#F4A460;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#DEB887;stop-opacity:1" />
+      </linearGradient>
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+      </filter>
+    </defs>
+    <rect x="12" y="20" width="24" height="8" rx="4" fill="url(#burritoGradient)" stroke="#8B4513" stroke-width="2" filter="url(#shadow)"/>
+    <rect x="16" y="24" width="16" height="4" rx="2" fill="#DEB887"/>
+    <circle cx="20" cy="26" r="1" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="24" cy="26" r="1" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="28" cy="26" r="1" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+  </svg>`,
+  
+  // TÜRK MUTFAĞI EK YEMEKLER
+  çiğköfte: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="çiğköfteGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#8B4513;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#654321;stop-opacity:1" />
+      </linearGradient>
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+      </filter>
+    </defs>
+    <ellipse cx="24" cy="24" rx="12" ry="6" fill="url(#çiğköfteGradient)" stroke="#654321" stroke-width="2" filter="url(#shadow)"/>
+    <ellipse cx="24" cy="24" rx="8" ry="4" fill="#CD853F"/>
+    <circle cx="20" cy="22" r="1" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
+    <circle cx="28" cy="22" r="1" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
+    <circle cx="24" cy="26" r="1" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
+  </svg>`,
+  
+  mercimek: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="mercimekGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#FF8C00;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#FFA500;stop-opacity:1" />
+      </linearGradient>
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+      </filter>
+    </defs>
+    <ellipse cx="24" cy="32" rx="14" ry="6" fill="url(#mercimekGradient)" stroke="#FF8C00" stroke-width="2" filter="url(#shadow)"/>
+    <ellipse cx="24" cy="32" rx="10" ry="3" fill="#FFE4B5"/>
+    <circle cx="18" cy="30" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="30" cy="30" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="24" cy="34" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+  </svg>`,
+  
+  ezogelin: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="ezogelinGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#FF8C00;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#FFA500;stop-opacity:1" />
+      </linearGradient>
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+      </filter>
+    </defs>
+    <ellipse cx="24" cy="32" rx="14" ry="6" fill="url(#ezogelinGradient)" stroke="#FF8C00" stroke-width="2" filter="url(#shadow)"/>
+    <ellipse cx="24" cy="32" rx="10" ry="3" fill="#FFE4B5"/>
+    <circle cx="18" cy="30" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="30" cy="30" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+    <circle cx="24" cy="34" r="2" fill="#FF6347" stroke="#DC143C" stroke-width="0.5"/>
+  </svg>`,
+  
+  // ULUSLARARASI TATLILAR
+  cheesecake: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="cheesecakeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#F5DEB3;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#DEB887;stop-opacity:1" />
+      </linearGradient>
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+      </filter>
+    </defs>
+    <rect x="12" y="20" width="24" height="8" rx="4" fill="url(#cheesecakeGradient)" stroke="#8B4513" stroke-width="2" filter="url(#shadow)"/>
+    <rect x="16" y="24" width="16" height="4" rx="2" fill="#DEB887"/>
+    <circle cx="20" cy="26" r="1" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
+    <circle cx="24" cy="26" r="1" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
+    <circle cx="28" cy="26" r="1" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
+  </svg>`,
+  
+  tiramisu: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="tiramisuGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#F5DEB3;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#DEB887;stop-opacity:1" />
+      </linearGradient>
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+      </filter>
+    </defs>
+    <rect x="12" y="20" width="24" height="8" rx="4" fill="url(#tiramisuGradient)" stroke="#8B4513" stroke-width="2" filter="url(#shadow)"/>
+    <rect x="16" y="24" width="16" height="4" rx="2" fill="#DEB887"/>
+    <circle cx="20" cy="26" r="1" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
+    <circle cx="24" cy="26" r="1" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
+    <circle cx="28" cy="26" r="1" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
+  </svg>`,
+  
+  // Varsayılan ikon
   
   // Varsayılan ikon
   default: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
