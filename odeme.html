@@ -735,13 +735,15 @@
             payment_endpoint_url: 'https://www.shopier.com/ShowProduct/api_pay4.php',
             website_index: '1',
             return_url: 'https://1sthillman.github.io/garsqn/odeme-sonrasi.html',
-            test_mode: false // Gerçek mod aktif
+            test_mode: false, // Gerçek mod aktif
+            domain_id: '1', // Shopier domain ID
+            order_id_prefix: 'ADISYON' // Sipariş ID prefix
         };
         
         // Shopier signature oluştur - Resmi Shopier dokümanına göre
         function generateShopierSignature(randomNr, orderId, amount, currency) {
-            // Shopier'in resmi dokümanına göre signature oluşturma
-            const data = SHOPIER_CONFIG.api_key + randomNr + orderId + amount + currency + SHOPIER_CONFIG.secret;
+            // Shopier'in beklediği formatta signature oluşturma
+            const data = SHOPIER_CONFIG.api_key + randomNr + SHOPIER_CONFIG.secret;
             
             // Base64 encoding
             const base64Data = btoa(data);
@@ -783,37 +785,46 @@
                 
                 // Resmi Shopier API dokümantasyonuna göre form verileri
                 const shopierData = {
+                    // API Bilgileri
                     API_key: SHOPIER_CONFIG.api_key,
                     website_index: SHOPIER_CONFIG.website_index,
-                    platform_order_id: orderId,
+                    platform: '0', // Web sitesi
+                    domain_id: SHOPIER_CONFIG.domain_id,
+                    
+                    // Sipariş Bilgileri
+                    platform_order_id: `${SHOPIER_CONFIG.order_id_prefix}${orderId}`,
                     product_name: selectedPackage.name,
-                    product_type: '2', // Digital product
+                    product_type: '0', // Fiziksel ürün (Shopier'in istediği format)
+                    total_order_value: amount,
+                    currency: currency,
+                    
+                    // Müşteri Bilgileri
                     buyer_name: restaurantInfo?.name || 'Restoran',
-                    buyer_surname: '',
+                    buyer_surname: 'Sahibi',
                     buyer_email: restaurantInfo?.email || 'info@restoran.com',
                     buyer_account_age: '0',
                     buyer_id_nr: RESTAURANT_ID,
                     buyer_phone: restaurantInfo?.phone || '',
-                    billing_address: '',
-                    billing_city: '',
+                    
+                    // Adres Bilgileri
+                    billing_address: 'Adisyon QR Menü',
+                    billing_city: 'İstanbul',
                     billing_country: 'TR',
-                    billing_postcode: '',
-                    shipping_address: '',
-                    shipping_city: '',
+                    billing_postcode: '34000',
+                    shipping_address: 'Adisyon QR Menü',
+                    shipping_city: 'İstanbul',
                     shipping_country: 'TR',
-                    shipping_postcode: '',
-                    total_order_value: amount,
-                    currency: currency,
-                    platform: '0',
+                    shipping_postcode: '34000',
+                    
+                    // Teknik Bilgiler
                     is_in_frame: '0',
                     current_language: '0', // TR
-                    modul_version: '1.0.4', // Shopier'in beklediği versiyon
+                    modul_version: '1.0.4',
                     random_nr: randomNr.toString(),
                     signature: signature,
-                    // Return URL - Shopier'in beklediği formatta
+                    
+                    // Dönüş URL'leri
                     return_url: `${SHOPIER_CONFIG.return_url}?payment_id=${orderId}&restaurant_id=${RESTAURANT_ID}&status=success`,
-                    // Ek gerekli alanlar
-                    lang: 'tr',
                     notification_url: `${SHOPIER_CONFIG.return_url}?payment_id=${orderId}&restaurant_id=${RESTAURANT_ID}&status=notification`
                 };
                 
@@ -864,11 +875,13 @@
                     // Gerçek Shopier entegrasyonu - Form ile gönder
                     console.log('Shopier ödeme sayfasına yönlendiriliyor...');
                     
+                    // Form oluştur
                     const form = document.createElement('form');
                     form.method = 'POST';
                     form.action = SHOPIER_CONFIG.payment_endpoint_url;
                     form.target = '_self'; // Aynı pencerede aç
                     form.style.display = 'none';
+                    form.acceptCharset = 'UTF-8';
                     
                     // Form alanlarını ekle
                     Object.keys(shopierData).forEach(key => {
@@ -878,6 +891,9 @@
                         input.value = shopierData[key];
                         form.appendChild(input);
                     });
+                    
+                    // Debug için form verilerini konsola yazdır
+                    console.log('Form verileri:', shopierData);
                     
                     // Shopier'e gönder
                     document.body.appendChild(form);
