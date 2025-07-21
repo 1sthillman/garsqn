@@ -45,8 +45,8 @@ function woocommerce_shopier_init()
         private function getShopierEndpoints()
         {
             return array(
+                'https://www.shopier.com/ShowProduct/api_pay4.php', // Doğru endpoint öncelikli
                 'https://www.shopier.com/ShowProduct/api_pay.php',
-                'https://www.shopier.com/ShowProduct/api_pay4.php',
                 'https://www.shopier.com/ShowProduct/api_pay2.php'
             );
         }
@@ -142,7 +142,7 @@ function woocommerce_shopier_init()
                 'payment_endpoint_url' => array(
                     'title' => $this->getLangText('Payment Endpoint URL'),
                     'type' => 'text',
-                    'default' => 'https://www.shopier.com/ShowProduct/api_pay.php',
+                    'default' => 'https://www.shopier.com/ShowProduct/api_pay4.php',
                     'description' => $this->getLangText('In standard usage, you don\'t need to change this field.')
                 ),
 
