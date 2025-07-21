@@ -113,7 +113,7 @@ function woocommerce_shopier_init()
                 'payment_endpoint_url' => array(
                     'title' => $this->getLangText('Payment Endpoint URL'),
                     'type' => 'text',
-                    'default' => $this->getLangText('https://www.shopier.com/ShowProduct/api_pay4.php'),
+                    'default' => 'https://www.shopier.com/ShowProduct/api_pay4.php',
                     'description' => $this->getLangText('In standard usage, you don\'t need to change this field.')
                 ),
 
@@ -216,9 +216,11 @@ function woocommerce_shopier_init()
 
 
             $items = $order->get_items();
+            $productNames = ''; // Initialize $productNames variable
 
             foreach ($items as $item) {
-                $productNames .= $item['name'].';';
+                $productName = $item['name'];
+                $productNames .= $productName.';';
                 $product = $item->get_product();
                 $product_id = $item['product_id'];
 
@@ -346,6 +348,8 @@ function woocommerce_shopier_init()
                 );
             }
 
+            // Shopier API dokümanına göre signature oluşturma
+            // random_nr + platform_order_id + total_order_value + currency formatında
             $data = $args["random_nr"] . $args["platform_order_id"] . $args["total_order_value"] . $args["currency"];
             $signature = hash_hmac('SHA256', $data, $this->secret, true);
             $signature = base64_encode($signature);
@@ -412,7 +416,8 @@ function woocommerce_shopier_init()
                         $order = new WC_Order($order_id);
 
                         $signature = base64_decode($_POST["signature"]);
-                        $expected = hash_hmac('SHA256', $random_nr . $order_id, $this->secret, true);
+                        $data = $random_nr . $order_id . $order->order_total . '0'; // 0 for TRY currency
+                        $expected = hash_hmac('SHA256', $data, $this->secret, true);
 
                         $transauthorised = false;
                         if ($order->status !== 'completed') {

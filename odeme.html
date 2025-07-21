@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -732,7 +733,7 @@
         const SHOPIER_CONFIG = {
             api_key: 'ba946ce45c717d982cc6decbcb616bb2',
             secret: '8a186b6f15655c57c65ec415ae121e69',
-            payment_endpoint_url: 'https://www.shopier.com/ShowProduct/api_pay.php',
+            payment_endpoint_url: 'https://www.shopier.com/ShowProduct/api_pay4.php',
             website_index: '1',
             return_url: 'https://1sthillman.github.io/garsqn/odeme-sonrasi.html',
             test_mode: false, // Gerçek mod aktif
@@ -743,12 +744,15 @@
         // Shopier signature oluştur - Resmi Shopier dokümanına göre
         function generateShopierSignature(randomNr, orderId, amount, currency) {
             // Shopier'in beklediği formatta signature oluşturma
-            const data = SHOPIER_CONFIG.api_key + randomNr + SHOPIER_CONFIG.secret;
+            const data = randomNr + orderId + amount + currency;
+            
+            // SHA256 HMAC oluştur
+            const hmacData = CryptoJS.HmacSHA256(data, SHOPIER_CONFIG.secret);
             
             // Base64 encoding
-            const base64Data = btoa(data);
+            const signature = CryptoJS.enc.Base64.stringify(hmacData);
             
-            return base64Data;
+            return signature;
         }
         
         // Ödeme işlemi
@@ -879,6 +883,10 @@
                     form.target = '_self'; // Aynı pencerede aç
                     form.style.display = 'none';
                     form.acceptCharset = 'UTF-8';
+                    
+                    // Debug için logla - Sadece geliştirme sırasında
+                    console.log('Shopier signature:', signature);
+                    console.log('Shopier data:', randomNr.toString() + orderId + amount + currency);
                     
                     // Form alanlarını ekle
                     Object.keys(shopierData).forEach(key => {

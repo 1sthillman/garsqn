@@ -10,16 +10,16 @@ Allows you to use Pay Credit Card with the WooCommerce plugin.
 Shopier Module for WooCommerce
 
 Visit [https://www.shopier.com]
+
 == Installation ==
 1. You should have latest version of WooCommerce plugin installed
-2. Unzip and upload plugin folder to your /wp-content/plugins/ directory  OR Go to wp-admin > plugins > Add new Plugin & Upload plugin zip.
+2. Unzip and upload plugin folder to your /wp-content/plugins/ directory OR Go to wp-admin > plugins > Add new Plugin & Upload plugin zip.
 3. Go to wp-admin > Plugins(left menu) > Activate the plugin
 
 == Screenshots ==
 1. WooCommerce payment gateway setting page
 2. Pay with Credit Card setting page
 3. Checkout Page Payment gateway listing
-
 
 == Configuration ==
 
