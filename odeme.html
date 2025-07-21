@@ -733,7 +733,7 @@
         const SHOPIER_CONFIG = {
             api_key: 'ba946ce45c717d982cc6decbcb616bb2',
             secret: '8a186b6f15655c57c65ec415ae121e69',
-            payment_endpoint_url: 'https://www.shopier.com/ShowProduct/api_pay4.php', // Doğru endpoint: api_pay4.php
+            payment_endpoint_url: 'https://www.shopier.com/ShowProduct/api_pay.php', // api_pay.php kullanılıyor
             website_index: '1',
             return_url: 'https://1sthillman.github.io/garsqn/odeme-sonrasi.html',
             test_mode: false, // Gerçek mod aktif
@@ -746,8 +746,8 @@
         
         // Alternatif endpoint'ler (504 hatası durumunda)
         const SHOPIER_ENDPOINTS = [
-            'https://www.shopier.com/ShowProduct/api_pay4.php', // Doğru endpoint öncelikli
-            'https://www.shopier.com/ShowProduct/api_pay.php',
+            'https://www.shopier.com/ShowProduct/api_pay.php', // Birincil endpoint
+            'https://www.shopier.com/ShowProduct/api_pay4.php',
             'https://www.shopier.com/ShowProduct/api_pay2.php'
         ];
         
@@ -758,12 +758,14 @@
         function generateShopierSignature(randomNr, orderId, amount, currency) {
             // Shopier'in beklediği formatta signature oluşturma
             const data = randomNr + orderId + amount + currency;
+            console.log('Signature data:', data);
             
             // SHA256 HMAC oluştur
             const hmacData = CryptoJS.HmacSHA256(data, SHOPIER_CONFIG.secret);
             
             // Base64 encoding
             const signature = CryptoJS.enc.Base64.stringify(hmacData);
+            console.log('Generated signature:', signature);
             
             return signature;
         }
@@ -848,7 +850,7 @@
                 // Shopier form verilerini hazırla
                 const randomNr = Math.floor(Math.random() * 900000) + 100000;
                 const orderId = payment.id;
-                const amount = selectedPackage.price.replace('₺', '');
+                const amount = selectedPackage.price.replace('₺', '').replace('.', ''); // Nokta işaretini kaldır
                 const currency = '0'; // TRY
                 
                 // Shopier signature oluştur
@@ -891,6 +893,7 @@
                     modul_version: '1.0.4',
                     random_nr: randomNr.toString(),
                     signature: signature,
+                    platform: '1', // WooCommerce
                     
                     // Dönüş URL'leri
                     return_url: `${SHOPIER_CONFIG.return_url}?payment_id=${orderId}&restaurant_id=${RESTAURANT_ID}&status=success`,
@@ -961,6 +964,7 @@
                     console.log('Test Mode:', SHOPIER_CONFIG.test_mode);
                     console.log('Tarayıcı:', navigator.userAgent);
                     console.log('Protokol:', window.location.protocol);
+                    console.log('Form Verileri:', JSON.stringify(shopierData));
                     console.log('------------------------------------------------');
                     
                     // Debug için form verilerini konsola yazdır
