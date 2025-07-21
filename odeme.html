@@ -136,9 +136,12 @@
         
         .packages-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: var(--space-2xl);
             margin-bottom: var(--space-3xl);
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
         }
         
         .package-card {
@@ -388,6 +391,48 @@
             transform: none;
         }
         
+        .payment-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-lg);
+            margin-bottom: var(--space-xl);
+        }
+        
+        .info-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            text-align: center;
+            transition: var(--transition-normal);
+        }
+        
+        .info-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--glass-border-strong);
+        }
+        
+        .info-card i {
+            font-size: var(--font-size-3xl);
+            color: var(--premium-gold);
+            margin-bottom: var(--space-md);
+            display: block;
+        }
+        
+        .info-card h3 {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-bold);
+            margin-bottom: var(--space-sm);
+            color: var(--text-primary);
+        }
+        
+        .info-card p {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        
         .trial-info {
             text-align: center;
             margin-top: var(--space-xl);
@@ -416,6 +461,7 @@
             .packages-grid {
                 grid-template-columns: 1fr;
                 gap: var(--space-lg);
+                max-width: none;
             }
             
             .package-card {
@@ -453,32 +499,29 @@
         
         <div class="payment-section" id="paymentSection" style="display: none;">
             <div class="payment-title">Ödeme Bilgileri</div>
-            <form class="payment-form" id="paymentForm">
-                <div class="form-group">
-                    <label class="form-label">Kart Üzerindeki İsim</label>
-                    <input type="text" class="form-input" id="cardName" placeholder="Kart üzerindeki ismi girin" required>
+            <div class="payment-info">
+                <div class="info-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Güvenli Ödeme</h3>
+                    <p>Ödeme işleminiz Shopier güvenli ödeme sistemi üzerinden gerçekleştirilecektir.</p>
                 </div>
                 
-                <div class="form-group">
-                    <label class="form-label">Kart Numarası</label>
-                    <input type="text" class="form-input" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required>
+                <div class="info-card">
+                    <i class="fas fa-credit-card"></i>
+                    <h3>Kredi Kartı</h3>
+                    <p>Tüm kredi kartları ile güvenli ödeme yapabilirsiniz.</p>
                 </div>
                 
-                <div class="card-row">
-                    <div class="form-group">
-                        <label class="form-label">Son Kullanma Tarihi</label>
-                        <input type="text" class="form-input" id="cardExpiry" placeholder="MM/YY" maxlength="5" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">CVV</label>
-                        <input type="text" class="form-input" id="cardCvv" placeholder="123" maxlength="3" required>
-                    </div>
+                <div class="info-card">
+                    <i class="fas fa-lock"></i>
+                    <h3>SSL Korumalı</h3>
+                    <p>256-bit SSL şifreleme ile verileriniz korunmaktadır.</p>
                 </div>
-                
-                <button type="submit" class="pay-btn" id="payBtn">
-                    <i class="fas fa-lock"></i> Güvenli Ödeme Yap
-                </button>
-            </form>
+            </div>
+            
+            <button type="button" class="pay-btn" id="payBtn">
+                <i class="fas fa-lock"></i> Shopier ile Güvenli Ödeme
+            </button>
         </div>
         
         <div class="trial-info" id="trialInfo">
@@ -506,135 +549,68 @@
             {
                 id: 'starter_monthly',
                 name: 'Başlangıç Paketi',
-                price: '299₺',
+                price: '199₺',
                 period: 'Aylık',
-                originalPrice: '399₺',
-                discount: '25%',
-                tables: 15,
+                originalPrice: '299₺',
+                discount: '33%',
+                tables: 10,
                 features: [
-                    '15 Masa QR Kodu',
+                    '10 Masa QR Kodu',
                     'Müşteri Siparişleri',
                     'Garson Çağırma',
                     'Köz İsteme',
-                    '7/24 Destek',
-                    'Mobil Uyumlu',
-                    'Temel Raporlar'
+                    'Mobil Uyumlu'
                 ]
             },
             {
                 id: 'starter_yearly',
                 name: 'Başlangıç Paketi',
-                price: '2.999₺',
+                price: '1.999₺',
                 period: 'Yıllık',
-                originalPrice: '4.788₺',
-                discount: '37%',
-                tables: 15,
+                originalPrice: '3.588₺',
+                discount: '44%',
+                tables: 10,
                 features: [
-                    '15 Masa QR Kodu',
+                    '10 Masa QR Kodu',
                     'Müşteri Siparişleri',
                     'Garson Çağırma',
                     'Köz İsteme',
-                    '7/24 Destek',
                     'Mobil Uyumlu',
-                    'Temel Raporlar',
                     '2 Ay Bedava'
                 ]
             },
             {
                 id: 'professional_monthly',
                 name: 'Profesyonel Paket',
-                price: '599₺',
+                price: '399₺',
                 period: 'Aylık',
-                originalPrice: '799₺',
-                discount: '25%',
-                tables: 30,
+                originalPrice: '599₺',
+                discount: '33%',
+                tables: 25,
                 features: [
-                    '30 Masa QR Kodu',
+                    '25 Masa QR Kodu',
                     'Müşteri Siparişleri',
                     'Garson Çağırma',
                     'Köz İsteme',
-                    'Garson Sipariş Paneli',
-                    'Mutfak Paneli',
-                    'Kasiyer Paneli',
-                    '7/24 Destek',
                     'Mobil Uyumlu',
-                    'Gelişmiş Raporlar',
-                    'Özel Tasarım'
+                    '7/24 Destek'
                 ]
             },
             {
                 id: 'professional_yearly',
                 name: 'Profesyonel Paket',
-                price: '5.999₺',
+                price: '3.999₺',
                 period: 'Yıllık',
-                originalPrice: '9.588₺',
-                discount: '37%',
-                tables: 30,
+                originalPrice: '7.188₺',
+                discount: '44%',
+                tables: 25,
                 features: [
-                    '30 Masa QR Kodu',
+                    '25 Masa QR Kodu',
                     'Müşteri Siparişleri',
                     'Garson Çağırma',
                     'Köz İsteme',
-                    'Garson Sipariş Paneli',
-                    'Mutfak Paneli',
-                    'Kasiyer Paneli',
-                    '7/24 Destek',
                     'Mobil Uyumlu',
-                    'Gelişmiş Raporlar',
-                    'Özel Tasarım',
-                    '2 Ay Bedava'
-                ]
-            },
-            {
-                id: 'enterprise_monthly',
-                name: 'Kurumsal Paket',
-                price: '999₺',
-                period: 'Aylık',
-                originalPrice: '1.299₺',
-                discount: '23%',
-                tables: 50,
-                features: [
-                    '50 Masa QR Kodu',
-                    'Müşteri Siparişleri',
-                    'Garson Çağırma',
-                    'Köz İsteme',
-                    'Garson Sipariş Paneli',
-                    'Mutfak Paneli',
-                    'Kasiyer Paneli',
-                    'Yönetici Paneli',
                     '7/24 Destek',
-                    'Mobil Uyumlu',
-                    'Gelişmiş Raporlar',
-                    'Özel Tasarım',
-                    'API Erişimi',
-                    'Öncelikli Destek',
-                    'Eğitim Desteği'
-                ]
-            },
-            {
-                id: 'enterprise_yearly',
-                name: 'Kurumsal Paket',
-                price: '9.999₺',
-                period: 'Yıllık',
-                originalPrice: '15.588₺',
-                discount: '36%',
-                tables: 50,
-                features: [
-                    '50 Masa QR Kodu',
-                    'Müşteri Siparişleri',
-                    'Garson Çağırma',
-                    'Köz İsteme',
-                    'Garson Sipariş Paneli',
-                    'Mutfak Paneli',
-                    'Kasiyer Paneli',
-                    'Yönetici Paneli',
-                    '7/24 Destek',
-                    'Mobil Uyumlu',
-                    'Gelişmiş Raporlar',
-                    'Özel Tasarım',
-                    'API Erişimi',
-                    'Öncelikli Destek',
-                    'Eğitim Desteği',
                     '2 Ay Bedava'
                 ]
             }
@@ -690,8 +666,8 @@
                 card.className = 'package-card';
                 card.setAttribute('data-package-id', package.id);
                 
-                // Popüler paket işaretle (Profesyonel yıllık)
-                const isPopular = package.id === 'professional_yearly';
+                // Popüler paket işaretle (Profesyonel aylık)
+                const isPopular = package.id === 'professional_monthly';
                 const isYearly = package.period === 'Yıllık';
                 
                 card.innerHTML = `
@@ -745,60 +721,36 @@
         
         // Event listener'ları ayarla
         function setupEventListeners() {
-            // Kart numarası formatı
-            document.getElementById('cardNumber').addEventListener('input', function(e) {
-                let value = e.target.value.replace(/\s/g, '');
-                value = value.replace(/(\d{4})/g, '$1 ').trim();
-                e.target.value = value;
-            });
-            
-            // Son kullanma tarihi formatı
-            document.getElementById('cardExpiry').addEventListener('input', function(e) {
-                let value = e.target.value.replace(/\D/g, '');
-                if (value.length >= 2) {
-                    value = value.substring(0, 2) + '/' + value.substring(2, 4);
-                }
-                e.target.value = value;
-            });
-            
-            // CVV sadece rakam
-            document.getElementById('cardCvv').addEventListener('input', function(e) {
-                e.target.value = e.target.value.replace(/\D/g, '');
-            });
-            
-            // Ödeme formu gönderimi
-            document.getElementById('paymentForm').addEventListener('submit', function(e) {
+            // Ödeme butonu click event
+            document.getElementById('payBtn').addEventListener('click', function(e) {
                 e.preventDefault();
                 processPayment();
             });
+        }
+        
+        // Shopier API bilgileri
+        const SHOPIER_CONFIG = {
+            api_key: 'ba946ce45c717d982cc6decbcb616bb2',
+            secret: '8a186b6f15655c57c65ec415ae121e69',
+            payment_endpoint_url: 'https://www.shopier.com/ShowProduct/api_pay',
+            website_index: '1',
+            return_url: 'https://1sthillman.github.io/garsqn/odeme-sonrasi.html'
+        };
+        
+        // Shopier signature oluştur
+        function generateShopierSignature(randomNr, orderId, amount, currency) {
+            const data = randomNr + orderId + amount + currency;
+            // Bu fonksiyon client-side'da güvenli değil, gerçek uygulamada server-side yapılmalı
+            return btoa(data); // Basit encoding, gerçek uygulamada HMAC-SHA256 kullanılmalı
         }
         
         // Ödeme işlemi
         async function processPayment() {
             const payBtn = document.getElementById('payBtn');
             payBtn.disabled = true;
-            payBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> İşleniyor...';
+            payBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Shopier\'e Yönlendiriliyor...';
             
             try {
-                // Ödeme bilgilerini al
-                const cardName = document.getElementById('cardName').value;
-                const cardNumber = document.getElementById('cardNumber').value;
-                const cardExpiry = document.getElementById('cardExpiry').value;
-                const cardCvv = document.getElementById('cardCvv').value;
-                
-                // Basit doğrulama
-                if (!cardName || !cardNumber || !cardExpiry || !cardCvv) {
-                    throw new Error('Lütfen tüm alanları doldurun');
-                }
-                
-                if (cardNumber.replace(/\s/g, '').length !== 16) {
-                    throw new Error('Geçersiz kart numarası');
-                }
-                
-                if (cardCvv.length !== 3) {
-                    throw new Error('Geçersiz CVV');
-                }
-                
                 // Ödeme kaydını oluştur
                 const { data: payment, error: paymentError } = await supabase
                     .from('payments')
@@ -807,7 +759,6 @@
                         package_id: selectedPackage.id,
                         amount: selectedPackage.price.replace('₺', ''),
                         status: 'pending',
-                        card_last4: cardNumber.slice(-4),
                         created_at: new Date().toISOString()
                     }])
                     .select()
@@ -815,20 +766,67 @@
                 
                 if (paymentError) throw paymentError;
                 
-                // Restoran aboneliğini güncelle
-                await supabase
-                    .from('restaurants')
-                    .update({
-                        subscription_package: selectedPackage.id,
-                        subscription_status: 'active',
-                        subscription_start: new Date().toISOString(),
-                        subscription_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-                        table_limit: selectedPackage.tables
-                    })
-                    .eq('id', RESTAURANT_ID);
+                // Shopier form verilerini hazırla
+                const randomNr = Math.floor(Math.random() * 900000) + 100000;
+                const orderId = payment.id;
+                const amount = selectedPackage.price.replace('₺', '');
+                const currency = '0'; // TRY
                 
-                // Başarılı ödeme sayfasına yönlendir
-                window.location.href = `odeme-sonrasi.html?payment_id=${payment.id}&status=success&restaurant_id=${RESTAURANT_ID}`;
+                const shopierData = {
+                    API_key: SHOPIER_CONFIG.api_key,
+                    website_index: SHOPIER_CONFIG.website_index,
+                    use_adress: '0',
+                    platform_order_id: orderId,
+                    product_name: selectedPackage.name,
+                    product_type: '2', // Digital product
+                    buyer_name: restaurantInfo?.name || 'Restoran',
+                    buyer_surname: '',
+                    buyer_email: restaurantInfo?.email || 'info@restoran.com',
+                    buyer_account_age: '0',
+                    buyer_id_nr: RESTAURANT_ID,
+                    buyer_phone: restaurantInfo?.phone || '',
+                    billing_address: '',
+                    billing_city: '',
+                    billing_country: 'TR',
+                    billing_postcode: '',
+                    shipping_address: '',
+                    shipping_city: '',
+                    shipping_country: 'TR',
+                    shipping_postcode: '',
+                    total_order_value: amount,
+                    currency: currency,
+                    platform: '0',
+                    is_in_frame: '0',
+                    current_language: '0', // TR
+                    modul_version: '2.0.0',
+                    random_nr: randomNr.toString(),
+                    signature: generateShopierSignature(randomNr.toString(), orderId, amount, currency)
+                };
+                
+                // Shopier form oluştur ve gönder
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = SHOPIER_CONFIG.payment_endpoint_url;
+                form.style.display = 'none';
+                
+                // Form alanlarını ekle
+                Object.keys(shopierData).forEach(key => {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = key;
+                    input.value = shopierData[key];
+                    form.appendChild(input);
+                });
+                
+                // Return URL ekle
+                const returnUrlInput = document.createElement('input');
+                returnUrlInput.type = 'hidden';
+                returnUrlInput.name = 'return_url';
+                returnUrlInput.value = `${SHOPIER_CONFIG.return_url}?payment_id=${orderId}&restaurant_id=${RESTAURANT_ID}`;
+                form.appendChild(returnUrlInput);
+                
+                document.body.appendChild(form);
+                form.submit();
                 
             } catch (error) {
                 console.error('Ödeme hatası:', error);

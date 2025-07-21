@@ -353,9 +353,10 @@
         
         // URL parametrelerini al
         const urlParams = new URLSearchParams(window.location.search);
-        const paymentId = urlParams.get('payment_id');
+        const paymentId = urlParams.get('payment_id') || urlParams.get('platform_order_id');
         const status = urlParams.get('status');
         const restaurantId = urlParams.get('restaurant_id');
+        const shopierStatus = urlParams.get('status'); // Shopier callback
         
         let countdown = 5;
         let paymentData = null;
@@ -430,7 +431,9 @@
             const paymentAmount = document.getElementById('paymentAmount');
             const paymentDate = document.getElementById('paymentDate');
             
-            if (status === 'success' && paymentData) {
+            // Shopier callback kontrolü
+            const isSuccess = (status === 'success' || shopierStatus === 'success') && paymentData;
+            if (isSuccess) {
                 // Başarılı ödeme
                 resultIcon.className = 'result-icon success';
                 resultIcon.innerHTML = '<i class="fas fa-check"></i>';
@@ -441,12 +444,10 @@
                 
                 // Paket bilgilerini göster
                 const packages = {
-                    'starter_monthly': 'Başlangıç Paketi (15 Masa) - Aylık',
-                    'starter_yearly': 'Başlangıç Paketi (15 Masa) - Yıllık',
-                    'professional_monthly': 'Profesyonel Paket (30 Masa) - Aylık',
-                    'professional_yearly': 'Profesyonel Paket (30 Masa) - Yıllık',
-                    'enterprise_monthly': 'Kurumsal Paket (50 Masa) - Aylık',
-                    'enterprise_yearly': 'Kurumsal Paket (50 Masa) - Yıllık'
+                    'starter_monthly': 'Başlangıç Paketi (10 Masa) - Aylık',
+                    'starter_yearly': 'Başlangıç Paketi (10 Masa) - Yıllık',
+                    'professional_monthly': 'Profesyonel Paket (25 Masa) - Aylık',
+                    'professional_yearly': 'Profesyonel Paket (25 Masa) - Yıllık'
                 };
                 
                 packageName.textContent = packages[paymentData.package_id] || 'Bilinmeyen Paket';
@@ -500,7 +501,8 @@
         
         // Yönetim paneline yönlendir
         function redirectToDashboard() {
-            if (status === 'success' && restaurantId) {
+            const isSuccess = (status === 'success' || shopierStatus === 'success') && restaurantId;
+            if (isSuccess) {
                 window.location.href = `dashboard.html?restaurant_id=${restaurantId}`;
             } else {
                 window.location.href = `odeme.html?restaurant_id=${restaurantId}`;
