@@ -732,7 +732,7 @@
         const SHOPIER_CONFIG = {
             api_key: 'ba946ce45c717d982cc6decbcb616bb2',
             secret: '8a186b6f15655c57c65ec415ae121e69',
-            payment_endpoint_url: 'https://www.shopier.com/ShowProduct/api_pay4.php',
+            payment_endpoint_url: 'https://www.shopier.com/ShowProduct/api_pay.php',
             website_index: '1',
             return_url: 'https://1sthillman.github.io/garsqn/odeme-sonrasi.html',
             test_mode: false, // Gerçek mod aktif
@@ -743,17 +743,12 @@
         // Shopier signature oluştur - Resmi Shopier dokümanına göre
         function generateShopierSignature(randomNr, orderId, amount, currency) {
             // Shopier'in beklediği formatta signature oluşturma
-            const data = SHOPIER_CONFIG.api_key + randomNr + orderId + amount + currency + SHOPIER_CONFIG.secret;
+            const data = SHOPIER_CONFIG.api_key + randomNr + SHOPIER_CONFIG.secret;
             
-            // MD5 hash (Shopier'in beklediği format)
-            let hash = 0;
-            for (let i = 0; i < data.length; i++) {
-                const char = data.charCodeAt(i);
-                hash = ((hash << 5) - hash) + char;
-                hash = hash & hash; // Convert to 32bit integer
-            }
+            // Base64 encoding
+            const base64Data = btoa(data);
             
-            return Math.abs(hash).toString(16);
+            return base64Data;
         }
         
         // Ödeme işlemi
@@ -793,10 +788,9 @@
                     // API Bilgileri
                     API_key: SHOPIER_CONFIG.api_key,
                     website_index: SHOPIER_CONFIG.website_index,
-                    platform: '0', // Web sitesi
                     
                     // Sipariş Bilgileri
-                    platform_order_id: `${SHOPIER_CONFIG.order_id_prefix}${orderId}`,
+                    platform_order_id: orderId,
                     product_name: selectedPackage.name,
                     product_type: '0', // Fiziksel ürün
                     total_order_value: amount,
