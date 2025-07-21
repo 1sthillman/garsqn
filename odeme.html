@@ -759,6 +759,7 @@
                         package_id: selectedPackage.id,
                         amount: selectedPackage.price.replace('₺', ''),
                         status: 'pending',
+                        type: 'subscription',
                         created_at: new Date().toISOString()
                     }])
                     .select()
