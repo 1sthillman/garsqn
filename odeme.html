@@ -738,27 +738,15 @@
             test_mode: false // Gerçek mod aktif
         };
         
-        // Shopier signature oluştur
-        async function generateShopierSignature(randomNr, orderId, amount, currency) {
-            // Shopier'in beklediği format: randomNr + orderId + amount + currency + secret
-            const data = randomNr + orderId + amount + currency + SHOPIER_CONFIG.secret;
+        // Shopier signature oluştur - Resmi Shopier dokümanına göre
+        function generateShopierSignature(randomNr, orderId, amount, currency) {
+            // Shopier'in resmi dokümanına göre signature oluşturma
+            const data = SHOPIER_CONFIG.api_key + randomNr + orderId + amount + currency + SHOPIER_CONFIG.secret;
             
-            try {
-                // SHA-256 hash (MD5 desteklenmiyor)
-                const encoder = new TextEncoder();
-                const dataBuffer = encoder.encode(data);
-                
-                const hashBuffer = await crypto.subtle.digest('SHA-256', dataBuffer);
-                const hashArray = Array.from(new Uint8Array(hashBuffer));
-                const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-                
-                // İlk 32 karakteri al (MD5 benzeri)
-                return hashHex.substring(0, 32);
-            } catch (error) {
-                console.error('Signature oluşturma hatası:', error);
-                // Fallback: Basit hash
-                return btoa(data).replace(/[^a-zA-Z0-9]/g, '').substring(0, 32);
-            }
+            // Base64 encoding
+            const base64Data = btoa(data);
+            
+            return base64Data;
         }
         
         // Ödeme işlemi
@@ -790,13 +778,13 @@
                 const amount = selectedPackage.price.replace('₺', '');
                 const currency = '0'; // TRY
                 
-                // HMAC-SHA256 signature oluştur
-                const signature = await generateShopierSignature(randomNr.toString(), orderId, amount, currency);
+                // Shopier signature oluştur
+                const signature = generateShopierSignature(randomNr.toString(), orderId, amount, currency);
                 
+                // Resmi Shopier API dokümantasyonuna göre form verileri
                 const shopierData = {
                     API_key: SHOPIER_CONFIG.api_key,
                     website_index: SHOPIER_CONFIG.website_index,
-                    use_adress: '0',
                     platform_order_id: orderId,
                     product_name: selectedPackage.name,
                     product_type: '2', // Digital product
@@ -819,16 +807,14 @@
                     platform: '0',
                     is_in_frame: '0',
                     current_language: '0', // TR
-                    modul_version: '2.0.0',
+                    modul_version: '1.0.4', // Shopier'in beklediği versiyon
                     random_nr: randomNr.toString(),
                     signature: signature,
+                    // Return URL - Shopier'in beklediği formatta
+                    return_url: `${SHOPIER_CONFIG.return_url}?payment_id=${orderId}&restaurant_id=${RESTAURANT_ID}&status=success`,
                     // Ek gerekli alanlar
-                    product_id: selectedPackage.id,
-                    product_quantity: '1',
-                    product_price: amount,
-                    product_total: amount,
-                    // Return URL
-                    return_url: `${SHOPIER_CONFIG.return_url}?payment_id=${orderId}&restaurant_id=${RESTAURANT_ID}`
+                    lang: 'tr',
+                    notification_url: `${SHOPIER_CONFIG.return_url}?payment_id=${orderId}&restaurant_id=${RESTAURANT_ID}&status=notification`
                 };
                 
                 // Test modu kontrolü
@@ -876,12 +862,12 @@
                     }, 2000);
                 } else {
                     // Gerçek Shopier entegrasyonu - Form ile gönder
-                    console.log('Shopier form gönderimi yapılıyor...');
-                    console.log('Shopier verileri:', shopierData);
+                    console.log('Shopier ödeme sayfasına yönlendiriliyor...');
                     
                     const form = document.createElement('form');
                     form.method = 'POST';
                     form.action = SHOPIER_CONFIG.payment_endpoint_url;
+                    form.target = '_self'; // Aynı pencerede aç
                     form.style.display = 'none';
                     
                     // Form alanlarını ekle
@@ -893,6 +879,7 @@
                         form.appendChild(input);
                     });
                     
+                    // Shopier'e gönder
                     document.body.appendChild(form);
                     form.submit();
                 }
