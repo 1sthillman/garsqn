@@ -733,13 +733,17 @@
         const SHOPIER_CONFIG = {
             api_key: 'ba946ce45c717d982cc6decbcb616bb2',
             secret: '8a186b6f15655c57c65ec415ae121e69',
-            payment_endpoint_url: 'https://www.shopier.com/ShowProduct/api_pay4.php',
+            payment_endpoint_url: 'https://www.shopier.com/ShowProduct/api_pay.php',
             website_index: '1',
             return_url: 'https://1sthillman.github.io/garsqn/odeme-sonrasi.html',
             test_mode: false, // Gerçek mod aktif
             domain_id: '1', // Shopier domain ID
-            order_id_prefix: 'ADISYON' // Sipariş ID prefix
+            order_id_prefix: 'ADISYON', // Sipariş ID prefix
+            shop_id: '1234567' // Shopier panel'den alınan Shop ID
         };
+        
+        console.log('Shopier Entegrasyonu - Domain Kontrolü:', window.location.origin);
+        console.log('Shopier Entegrasyonu - API Endpoint:', SHOPIER_CONFIG.payment_endpoint_url);
         
         // Shopier signature oluştur - Resmi Shopier dokümanına göre
         function generateShopierSignature(randomNr, orderId, amount, currency) {
@@ -826,7 +830,10 @@
                     signature: signature,
                     
                     // Dönüş URL'leri
-                    return_url: `${SHOPIER_CONFIG.return_url}?payment_id=${orderId}&restaurant_id=${RESTAURANT_ID}&status=success`
+                    return_url: `${SHOPIER_CONFIG.return_url}?payment_id=${orderId}&restaurant_id=${RESTAURANT_ID}&status=success`,
+                    
+                    // Shopier Shop ID
+                    shopier_show_id: SHOPIER_CONFIG.shop_id // Shopier panelinden alınan Shop ID
                 };
                 
                 // Test modu kontrolü
