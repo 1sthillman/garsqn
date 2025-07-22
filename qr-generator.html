@@ -201,7 +201,7 @@
             
             <div class="form-group">
                 <label for="baseUrl">QR Kod URL'si (Opsiyonel)</label>
-                <input type="text" id="baseUrl" placeholder="Örn: https://yoursite.com/menu" value="https://egcklzfiyxxnvyxwoowq.supabase.co/storage/v1/object/public/restaurant-qr/index.html">
+                <input type="text" id="baseUrl" placeholder="Örn: https://yoursite.com/menu" value="https://your-domain.com/menu.html">
             </div>
             
             <button id="generateBtn">QR Kod Üret</button>
@@ -222,13 +222,10 @@
         </div>
     </div>
     
+    <script src="config.js?v=20250120"></script>
     <script>
-        // Supabase bağlantısı
-        const SUPABASE_URL = 'https://egcklzfiyxxnvyxwoowq.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVnY2tsemZpeXh4bnZ5eHdvb3dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0NjQxMTcsImV4cCI6MjA2NDA0MDExN30.dfRQv3lYFCaI1T5ydOw4HyoEJ0I1wOSIUcG8ueEbxKQ';
-        
-        // Supabase istemcisini başlat
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Supabase istemcisini başlat (config dosyasından)
+        const supabase = supabase.createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.anonKey);
         
         document.addEventListener('DOMContentLoaded', function() {
             const generateBtn = document.getElementById('generateBtn');
@@ -242,7 +239,7 @@
             
             generateBtn.addEventListener('click', async function() {
                 const tableNumber = tableNumberInput.value;
-                const baseUrl = baseUrlInput.value || 'https://egcklzfiyxxnvyxwoowq.supabase.co/storage/v1/object/public/restaurant-qr/index.html';
+                const baseUrl = baseUrlInput.value || 'https://your-domain.com/menu.html';
                 
                 if (!tableNumber || tableNumber < 1) {
                     alert('Lütfen geçerli bir masa numarası girin.');

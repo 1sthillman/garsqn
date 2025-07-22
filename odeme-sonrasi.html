@@ -344,12 +344,10 @@
         </div>
     </div>
 
+    <script src="config.js?v=20250120"></script>
     <script>
-        // Supabase konfigürasyonu
-        const SUPABASE_URL = 'https://egcklzfiyxxnvyxwoowq.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVnY2tsemZpeXh4bnZ5eHdvb3dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0NjQxMTcsImV4cCI6MjA2NDA0MDExN30.dfRQv3lYFCaI1T5ydOw4HyoEJ0I1wOSIUcG8ueEbxKQ';
-        
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Supabase konfigürasyonu (config dosyasından)
+        const supabase = window.supabase.createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.anonKey);
         
         // URL parametrelerini al
         const urlParams = new URLSearchParams(window.location.search);
