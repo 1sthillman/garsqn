@@ -291,10 +291,11 @@
     // Kullanıcı bilgileri ve oturumu oluştur/al
     async function initializeUserSession() {
       try {
-        // Benzersiz session ID oluştur
-        if (!currentSessionId) {
-          currentSessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-        }
+        // Her QR okutma işleminde yeni session ID oluştur
+        currentSessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        
+        console.log('🆕 Yeni kullanıcı session\'ı oluşturuluyor:', currentSessionId);
+        console.log('📱 Bu kullanıcı için 5 sipariş, 5 garson çağırma, 5 köz isteme hakkı var');
 
         // Kullanıcı bilgilerini topla
         const userInfo = {
@@ -415,8 +416,10 @@
       console.log('🍽️ Restoran ID:', userInfo.restaurantId);
       console.log('🪑 Masa ID:', userInfo.tableId);
       console.log('⏰ Session Süresi: 24 saat (1 gün sonra otomatik silinir)');
-      console.log('🔄 Kullanım Limitleri: Günlük 5 sipariş, 5 garson çağırma, 5 köz isteme');
+      console.log('🔄 Kullanım Limitleri: Her kullanıcı için günlük 5 sipariş, 5 garson çağırma, 5 köz isteme');
       console.log('🗑️ Otomatik Temizleme: Her saat başı eski session\'lar silinir');
+      console.log('🆕 Yeni Kullanıcı: Her QR okutma işleminde yeni session oluşturulur');
+      console.log('👥 Çoklu Kullanıcı: Aynı masada farklı kullanıcılar kendi limitlerini kullanır');
     }
 
     // Kullanım limiti kontrolü
@@ -436,10 +439,30 @@
         // Limit bilgilerini güncelle
         await loadUsageLimits();
 
+        // Kullanıcıya bilgi ver
+        if (data && data.length > 0) {
+          const result = data[0];
+          if (!result.can_proceed) {
+            showToast(`❌ Günlük ${getActionName(actionType)} limitiniz doldu! Yeni QR okutarak tekrar deneyebilirsiniz.`, 'error');
+          } else {
+            showToast(`✅ ${getActionName(actionType)} başarılı! Kalan hak: ${result.remaining_count}`, 'success');
+          }
+        }
+
         return data;
       } catch (error) {
         console.error('❌ Limit kontrolü hatası:', error);
         return false;
+      }
+    }
+
+    // İşlem adını getir
+    function getActionName(actionType) {
+      switch(actionType) {
+        case 'order': return 'Sipariş';
+        case 'call_waiter': return 'Garson Çağırma';
+        case 'call_charcoal': return 'Köz İsteme';
+        default: return 'İşlem';
       }
     }
 
@@ -450,18 +473,30 @@
       const charcoalBtn = document.getElementById('kozIsteBtn');
 
       if (orderBtn) {
-        orderBtn.innerHTML = `Siparişi Gönder (${usageLimits.order.remaining} kaldı)`;
-        orderBtn.disabled = usageLimits.order.remaining <= 0;
+        const remaining = usageLimits.order.remaining;
+        orderBtn.innerHTML = `Sipariş Ver (${remaining}/5)`;
+        orderBtn.disabled = remaining <= 0;
+        if (remaining <= 0) {
+          orderBtn.title = 'Günlük sipariş limitiniz doldu. Yeni QR okutarak tekrar deneyebilirsiniz.';
+        }
       }
 
       if (waiterBtn) {
-        waiterBtn.innerHTML = `Garson Çağır (${usageLimits.call_waiter.remaining} kaldı)`;
-        waiterBtn.disabled = usageLimits.call_waiter.remaining <= 0;
+        const remaining = usageLimits.call_waiter.remaining;
+        waiterBtn.innerHTML = `🔔 GARSON ÇAĞIR (${remaining}/5)`;
+        waiterBtn.disabled = remaining <= 0;
+        if (remaining <= 0) {
+          waiterBtn.title = 'Günlük garson çağırma limitiniz doldu. Yeni QR okutarak tekrar deneyebilirsiniz.';
+        }
       }
 
       if (charcoalBtn) {
-        charcoalBtn.innerHTML = `Köz İste (${usageLimits.call_charcoal.remaining} kaldı)`;
-        charcoalBtn.disabled = usageLimits.call_charcoal.remaining <= 0;
+        const remaining = usageLimits.call_charcoal.remaining;
+        charcoalBtn.innerHTML = `🔥 KÖZ İSTE (${remaining}/5)`;
+        charcoalBtn.disabled = remaining <= 0;
+        if (remaining <= 0) {
+          charcoalBtn.title = 'Günlük köz isteme limitiniz doldu. Yeni QR okutarak tekrar deneyebilirsiniz.';
+        }
       }
     }
 
@@ -507,7 +542,7 @@
         logUserInfo();
         
         // Session bilgisi toast mesajı
-        showToast('✅ Oturum başlatıldı! 24 saat sonra otomatik olarak silinecek.', 'success');
+        showToast('✅ Yeni kullanıcı oturumu başlatıldı! 5 sipariş, 5 garson çağırma, 5 köz isteme hakkınız var.', 'success');
         
         // Restoran ve masa bilgilerini al
         restaurantInfo = await getRestaurantInfo();
