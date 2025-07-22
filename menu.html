@@ -2224,7 +2224,7 @@
                     
                     const btn = document.createElement('button');
                     btn.className = 'category-btn';
-                    btn.setAttribute('data-category', category.id);
+                    btn.setAttribute('data-category', category.name); // ID yerine isim kullan
                     btn.textContent = category.name;
                     categoryBar.appendChild(btn);
                 });
@@ -2243,8 +2243,9 @@
                             renderProducts();
                         } else {
                             const filteredProducts = products.filter(product => {
-                                const matches = product.category_id === categoryId;
-                                console.log(`🔍 Ürün: ${product.name}, Kategori ID: ${product.category_id}, Aranan: ${categoryId}, Eşleşme: ${matches}`);
+                                // Kategori ID'si yoksa kategori ismi ile eşleştir
+                                const matches = product.category_id === categoryId || product.category === categoryId;
+                                console.log(`🔍 Ürün: ${product.name}, Kategori: ${product.category}, Kategori ID: ${product.category_id}, Aranan: ${categoryId}, Eşleşme: ${matches}`);
                                 return matches;
                             });
                             console.log('✅ Filtrelenmiş ürünler:', filteredProducts.length, 'ürün bulundu');
