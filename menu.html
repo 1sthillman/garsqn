@@ -216,6 +216,7 @@
             height: 400px;
             transform-style: preserve-3d;
             transition: transform 0.5s ease;
+            z-index: 10;
         }
 
         .product-card {
@@ -242,6 +243,7 @@
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
+            z-index: 5;
         }
 
         .product-card:hover {
@@ -1087,7 +1089,12 @@
                 // Reset carousel position and initialize
                 theta = 0;
                 currentIndex = 0;
-                initCarousel();
+                
+                // Force carousel to front position
+                setTimeout(() => {
+                    initCarousel();
+                    rotateCarousel();
+                }, 100);
             }
             
             function initCarousel() {
@@ -1109,40 +1116,44 @@
                     nextBtn.style.display = 'flex';
                 }
                 
-                const angle = 360 / totalCards;
+                // Position cards correctly
+                arrangeCards();
                 
-                // Position cards in a circle
-                cards.forEach((card, index) => {
-                    const cardAngle = angle * index;
-                    const rad = (cardAngle * Math.PI) / 180;
-                    const x = radius * Math.sin(rad);
-                    const z = radius * Math.cos(rad) * -1;
-                    
-                    card.style.transform = `rotateY(${cardAngle}deg) translateZ(${radius}px)`;
-                    card.dataset.index = index;
-                });
-                
-                // Add event listeners
+                // Add event listeners (remove old ones first)
+                prevBtn.removeEventListener('click', prevCard);
+                nextBtn.removeEventListener('click', nextCard);
                 prevBtn.addEventListener('click', prevCard);
                 nextBtn.addEventListener('click', nextCard);
                 
-                // Touch/mouse events for dragging
+                // Remove old event listeners
+                carousel.removeEventListener('mousedown', dragStart);
+                carousel.removeEventListener('touchstart', dragStart);
+                document.removeEventListener('mousemove', drag);
+                document.removeEventListener('touchmove', drag);
+                document.removeEventListener('mouseup', dragEnd);
+                document.removeEventListener('touchend', dragEnd);
+                
+                // Add new event listeners
                 carousel.addEventListener('mousedown', dragStart);
-                carousel.addEventListener('touchstart', dragStart, { passive: true });
+                carousel.addEventListener('touchstart', dragStart, { passive: false });
                 document.addEventListener('mousemove', drag);
                 document.addEventListener('touchmove', drag, { passive: false });
                 document.addEventListener('mouseup', dragEnd);
                 document.addEventListener('touchend', dragEnd);
                 
                 // Keyboard navigation
+                document.removeEventListener('keydown', handleKeyDown);
                 document.addEventListener('keydown', handleKeyDown);
                 
                 // Update radius on resize
-                window.addEventListener('resize', () => {
-                    radius = window.innerWidth <= 768 ? 250 : 400;
-                    arrangeCards();
-                    rotateCarousel();
-                });
+                window.removeEventListener('resize', handleResize);
+                window.addEventListener('resize', handleResize);
+            }
+            
+            function handleResize() {
+                radius = window.innerWidth <= 768 ? 250 : 400;
+                arrangeCards();
+                rotateCarousel();
             }
             
             function arrangeCards() {
@@ -1155,6 +1166,7 @@
                 // Tek ürün varsa ortaya getir
                 if (totalCards === 1) {
                     cards[0].style.transform = `rotateY(0deg) translateZ(0px)`;
+                    cards[0].dataset.index = '0';
                     return;
                 }
                 
@@ -1165,6 +1177,7 @@
                     // İlk ürünü öne getir (0 derece)
                     const adjustedAngle = cardAngle - 90; // 90 derece offset ile ilk ürün öne gelir
                     card.style.transform = `rotateY(${adjustedAngle}deg) translateZ(${radius}px)`;
+                    card.dataset.index = index;
                 });
             }
             
@@ -1213,7 +1226,9 @@
             }
             
             function dragStart(e) {
-                e.preventDefault();
+                if (e.type === 'touchstart') {
+                    e.preventDefault();
+                }
                 e.stopPropagation();
                 isDragging = true;
                 startX = e.pageX || e.touches[0].pageX;
@@ -1221,7 +1236,9 @@
             
             function drag(e) {
                 if (!isDragging) return;
-                e.preventDefault();
+                if (e.type === 'touchmove') {
+                    e.preventDefault();
+                }
                 e.stopPropagation();
                 
                 const currentX = e.pageX || (e.touches ? e.touches[0].pageX : startX);
