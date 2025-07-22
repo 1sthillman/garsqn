@@ -2343,12 +2343,24 @@
             // Masa durumu kontrolü
             async function checkTableStatus() {
                 try {
-                    const { data: table, error } = await supabase
+                    // İnternet bağlantısını kontrol et
+                    if (!navigator.onLine) {
+                        return null;
+                    }
+                    
+                    // Timeout ile API çağrısı
+                    const timeoutPromise = new Promise((_, reject) => 
+                        setTimeout(() => reject(new Error('Bağlantı zaman aşımı')), 8000)
+                    );
+                    
+                    const tableCall = supabase
                         .from('tables')
                         .select('status, order_locked')
                         .eq('id', TABLE_ID)
                         .eq('restaurant_id', RESTAURANT_ID)
                         .single();
+                    
+                    const { data: table, error } = await Promise.race([tableCall, timeoutPromise]);
                     
                     if (error) throw error;
                     
@@ -2362,7 +2374,18 @@
             // Garson çağır
             async function callWaiter(type) {
                 try {
-                    const { data, error } = await supabase
+                    // İnternet bağlantısını kontrol et
+                    if (!navigator.onLine) {
+                        showToast('warning', 'Bağlantı Hatası', 'İnternet bağlantınızı kontrol edin');
+                        return;
+                    }
+                    
+                    // Timeout ile API çağrısı
+                    const timeoutPromise = new Promise((_, reject) => 
+                        setTimeout(() => reject(new Error('Bağlantı zaman aşımı')), 10000)
+                    );
+                    
+                    const apiCall = supabase
                         .from('calls')
                         .insert([{
                             restaurant_id: RESTAURANT_ID,
@@ -2373,14 +2396,26 @@
                         .select()
                         .single();
                     
+                    const { data, error } = await Promise.race([apiCall, timeoutPromise]);
+                    
                     if (error) throw error;
                     
                     const message = type === 'garson' ? 'Garson çağrıldı!' : 'Köz isteğiniz iletildi!';
-                    showToast('info', 'Bilgi', message);
+                    showToast('success', 'Başarılı', message);
                     
                 } catch (error) {
                     console.error('Çağrı oluşturulamadı:', error);
-                    showToast('error', 'Hata', 'Çağrı oluşturulamadı');
+                    
+                    let errorMessage = 'Çağrı oluşturulamadı';
+                    if (error.message === 'Bağlantı zaman aşımı') {
+                        errorMessage = 'Bağlantı zaman aşımı. Lütfen tekrar deneyin.';
+                    } else if (error.message.includes('Failed to fetch')) {
+                        errorMessage = 'İnternet bağlantısı sorunu. Lütfen bağlantınızı kontrol edin.';
+                    } else if (error.code === '23514') {
+                        errorMessage = 'Geçersiz çağrı türü. Lütfen tekrar deneyin.';
+                    }
+                    
+                    showToast('error', 'Hata', errorMessage);
                 }
             }
             
@@ -2391,25 +2426,35 @@
                     return;
                 }
                 
-                // Masa durumunu kontrol et
-                const tableStatus = await checkTableStatus();
-                if (!tableStatus) {
-                    showToast('error', 'Hata', 'Masa durumu kontrol edilemedi');
-                    return;
-                }
-                
-                // Eğer masa kilitliyse sipariş vermeyi engelle
-                if (tableStatus.order_locked) {
-                    showToast('warning', 'Uyarı', 'Masanız şu anda servis ediliyor. Lütfen bekleyin.');
+                // İnternet bağlantısını kontrol et
+                if (!navigator.onLine) {
+                    showToast('warning', 'Bağlantı Hatası', 'İnternet bağlantınızı kontrol edin');
                     return;
                 }
                 
                 try {
+                    // Masa durumunu kontrol et
+                    const tableStatus = await checkTableStatus();
+                    if (!tableStatus) {
+                        showToast('error', 'Hata', 'Masa durumu kontrol edilemedi');
+                        return;
+                    }
+                    
+                    // Eğer masa kilitliyse sipariş vermeyi engelle
+                    if (tableStatus.order_locked) {
+                        showToast('warning', 'Uyarı', 'Masanız şu anda servis ediliyor. Lütfen bekleyin.');
+                        return;
+                    }
+                    
                     const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
                     const orderNotes = document.getElementById('orderNotes').value.trim();
                     
-                    // Sipariş oluştur
-                    const { data: order, error: orderError } = await supabase
+                    // Timeout ile API çağrısı
+                    const timeoutPromise = new Promise((_, reject) => 
+                        setTimeout(() => reject(new Error('Bağlantı zaman aşımı')), 15000)
+                    );
+                    
+                    const orderCall = supabase
                         .from('orders')
                         .insert([{
                             restaurant_id: RESTAURANT_ID,
@@ -2420,6 +2465,8 @@
                         }])
                         .select()
                         .single();
+                    
+                    const { data: order, error: orderError } = await Promise.race([orderCall, timeoutPromise]);
                     
                     if (orderError) throw orderError;
                     
@@ -2460,7 +2507,15 @@
                     
                 } catch (error) {
                     console.error('Sipariş gönderilemedi:', error);
-                    showToast('error', 'Hata', 'Sipariş gönderilirken hata oluştu');
+                    
+                    let errorMessage = 'Sipariş gönderilirken hata oluştu';
+                    if (error.message === 'Bağlantı zaman aşımı') {
+                        errorMessage = 'Bağlantı zaman aşımı. Lütfen tekrar deneyin.';
+                    } else if (error.message.includes('Failed to fetch')) {
+                        errorMessage = 'İnternet bağlantısı sorunu. Lütfen bağlantınızı kontrol edin.';
+                    }
+                    
+                    showToast('error', 'Hata', errorMessage);
                 }
             }
             
