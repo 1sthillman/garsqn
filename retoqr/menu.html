@@ -71,6 +71,25 @@
       transform: scale(0.97);
       box-shadow: 0 2px 8px 0 rgba(255,154,158,0.18);
     }
+
+    /* Kullanım limiti butonları */
+    .action-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+    }
+
+    .action-btn:disabled:hover {
+      transform: none;
+      box-shadow: none;
+    }
+
+    .usage-limit-info {
+      font-size: 0.8rem;
+      color: #6b7280;
+      text-align: center;
+      margin-top: 4px;
+    }
   </style>
 </head>
 <body>
@@ -164,41 +183,58 @@
 
     // Uygulamayı başlat
     async function initializeApp() {
-      // Restoran ve masa bilgilerini al
-      restaurantInfo = await getRestaurantInfo();
-      tableInfo = await getTableInfo();
-      
-      console.log('📋 Restoran Bilgileri:', restaurantInfo);
-      console.log('🪑 Masa Bilgileri:', tableInfo);
-      
-      if (!restaurantInfo || !tableInfo) {
-        showToast('Restoran veya masa bilgileri bulunamadı', 'error');
-        return;
+      try {
+        console.log('🚀 Uygulama başlatılıyor...');
+        
+        // Kullanıcı oturumunu başlat
+        const sessionInitialized = await initializeUserSession();
+        if (!sessionInitialized) {
+          showToast('Oturum başlatılamadı!', 'error');
+          return;
+        }
+        
+        // Restoran ve masa bilgilerini al
+        restaurantInfo = await getRestaurantInfo();
+        tableInfo = await getTableInfo();
+        
+        console.log('📋 Restoran Bilgileri:', restaurantInfo);
+        console.log('🪑 Masa Bilgileri:', tableInfo);
+        
+        if (!restaurantInfo || !tableInfo) {
+          showToast('Restoran veya masa bilgileri bulunamadı', 'error');
+          return;
+        }
+
+        // Ürünler ve kategorileri al
+        products = await getProducts();
+        categories = await getProductCategories();
+        
+        console.log('🍽️ Ürünler:', products);
+        console.log('📂 Kategoriler:', categories);
+
+        // UI'yi güncelle
+        updateUI();
+        
+        // Kategori barını oluştur
+        createCategoryBar();
+        
+        // Menüyü render et
+        renderMenu();
+        
+        // Siparişleri render et
+        renderOrders();
+        
+        // Event listener'ları ekle
+        submitOrderBtn.addEventListener('click', submitOrder);
+        callWaiterBtn.addEventListener('click', () => callWaiter('waiter'));
+        kozIsteBtn.addEventListener('click', () => callWaiter('charcoal'));
+        
+        console.log('✅ Uygulama başarıyla başlatıldı!');
+        
+      } catch (error) {
+        console.error('❌ Uygulama başlatma hatası:', error);
+        showToast('Uygulama başlatılırken hata oluştu', 'error');
       }
-
-      // Ürünler ve kategorileri al
-      products = await getProducts();
-      categories = await getProductCategories();
-      
-      console.log('🍽️ Ürünler:', products);
-      console.log('📂 Kategoriler:', categories);
-
-      // UI'yi güncelle
-      updateUI();
-      
-      // Kategori barını oluştur
-      createCategoryBar();
-      
-      // Menüyü render et
-      renderMenu();
-      
-      // Siparişleri render et
-      renderOrders();
-      
-      // Event listener'ları ekle
-      submitOrderBtn.addEventListener('click', submitOrder);
-      callWaiterBtn.addEventListener('click', () => callWaiter('waiter'));
-      kozIsteBtn.addEventListener('click', () => callWaiter('charcoal'));
     }
 
     // Restoran bilgilerini getir
@@ -458,6 +494,13 @@
         showToast('Sipariş listesi boş!', 'error');
         return;
       }
+
+      // Kullanım limiti kontrolü
+      const canOrder = await checkUsageLimit('order');
+      if (!canOrder) {
+        showToast('Günlük sipariş limitiniz doldu! Yarın tekrar deneyebilirsiniz.', 'error');
+        return;
+      }
       
       try {
         // Toplam fiyatı hesapla
@@ -469,6 +512,7 @@
           .insert([{
             restaurant_id: RESTAURANT_ID,
             table_id: TABLE_ID,
+            session_id: currentSessionId,
             status: 'pending',
             total_price: totalPrice,
             note: 'QR menüden sipariş'
@@ -521,13 +565,26 @@
 
     // Garson çağır
     async function callWaiter(callType = 'waiter') {
+      // Kullanım limiti kontrolü
+      const actionType = callType === 'waiter' ? 'call_waiter' : 'call_charcoal';
+      const canCall = await checkUsageLimit(actionType);
+      
+      if (!canCall) {
+        const message = callType === 'waiter' 
+          ? 'Günlük garson çağırma limitiniz doldu! Yarın tekrar deneyebilirsiniz.'
+          : 'Günlük köz isteme limitiniz doldu! Yarın tekrar deneyebilirsiniz.';
+        showToast(message, 'error');
+        return;
+      }
+
       try {
         const { data, error } = await supabase
           .from('calls')
           .insert([{
             restaurant_id: RESTAURANT_ID,
             table_id: TABLE_ID,
-            type: callType,
+            session_id: currentSessionId,
+            type: callType === 'waiter' ? 'garson' : 'köz',
             status: 'pending'
           }])
           .select()
