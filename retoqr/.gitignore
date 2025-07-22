@@ -1,0 +1,28 @@
+# API Güvenlik Dosyaları
+config.js
+config.js.map
+*.config.js
+
+# Debug Dosyaları
+*.log
+debug/
+
+# Geçici Dosyalar
+*.tmp
+*.temp
+
+# IDE Dosyaları
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS Dosyaları
+.DS_Store
+Thumbs.db
+
+# Node Modules (eğer varsa)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log* 
