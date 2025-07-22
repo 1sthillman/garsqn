@@ -154,6 +154,124 @@
     let categories = [];
     let orders = [];
     let currentOrder = null;
+    let currentSessionId = null;
+    let usageLimits = {
+      order: { count: 0, limit: 5, remaining: 5 },
+      call_waiter: { count: 0, limit: 5, remaining: 5 },
+      call_charcoal: { count: 0, limit: 5, remaining: 5 }
+    };
+
+    // Kullanıcı oturumu oluştur/al
+    async function initializeUserSession() {
+      try {
+        // Benzersiz session ID oluştur
+        if (!currentSessionId) {
+          currentSessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        }
+
+        console.log('🔐 Kullanıcı oturumu başlatılıyor:', currentSessionId);
+
+        // Oturumu oluştur veya mevcut oturumu al
+        const { data: sessionData, error: sessionError } = await supabase
+          .rpc('get_or_create_user_session', {
+            p_session_id: currentSessionId,
+            p_restaurant_id: RESTAURANT_ID,
+            p_table_id: TABLE_ID,
+            p_user_agent: navigator.userAgent,
+            p_ip_address: null // IP adresi client-side'da alınamaz
+          });
+
+        if (sessionError) {
+          console.error('❌ Oturum oluşturulamadı:', sessionError);
+          return false;
+        }
+
+        console.log('✅ Kullanıcı oturumu oluşturuldu:', sessionData);
+        
+        // Kullanım limitlerini yükle
+        await loadUsageLimits();
+        
+        return true;
+      } catch (error) {
+        console.error('❌ Oturum başlatma hatası:', error);
+        return false;
+      }
+    }
+
+    // Kullanım limitlerini yükle
+    async function loadUsageLimits() {
+      try {
+        const actions = ['order', 'call_waiter', 'call_charcoal'];
+        
+        for (const action of actions) {
+          const { data, error } = await supabase
+            .rpc('get_usage_info', {
+              p_session_id: currentSessionId,
+              p_action_type: action
+            });
+
+          if (!error && data && data.length > 0) {
+            const info = data[0];
+            usageLimits[action] = {
+              count: info.action_count,
+              limit: info.daily_limit,
+              remaining: info.remaining_count
+            };
+          }
+        }
+
+        console.log('📊 Kullanım limitleri yüklendi:', usageLimits);
+        updateUsageDisplay();
+      } catch (error) {
+        console.error('❌ Kullanım limitleri yüklenemedi:', error);
+      }
+    }
+
+    // Kullanım limiti kontrolü
+    async function checkUsageLimit(actionType) {
+      try {
+        const { data, error } = await supabase
+          .rpc('check_usage_limit', {
+            p_session_id: currentSessionId,
+            p_action_type: actionType
+          });
+
+        if (error) {
+          console.error('❌ Limit kontrolü hatası:', error);
+          return false;
+        }
+
+        // Limit bilgilerini güncelle
+        await loadUsageLimits();
+
+        return data;
+      } catch (error) {
+        console.error('❌ Limit kontrolü hatası:', error);
+        return false;
+      }
+    }
+
+    // Kullanım limiti gösterimi güncelle
+    function updateUsageDisplay() {
+      const orderBtn = document.getElementById('submitOrderBtn');
+      const waiterBtn = document.getElementById('callWaiterBtn');
+      const charcoalBtn = document.getElementById('kozIsteBtn');
+
+      if (orderBtn) {
+        orderBtn.innerHTML = `Siparişi Gönder (${usageLimits.order.remaining} kaldı)`;
+        orderBtn.disabled = usageLimits.order.remaining <= 0;
+      }
+
+      if (waiterBtn) {
+        waiterBtn.innerHTML = `Garson Çağır (${usageLimits.call_waiter.remaining} kaldı)`;
+        waiterBtn.disabled = usageLimits.call_waiter.remaining <= 0;
+      }
+
+      if (charcoalBtn) {
+        charcoalBtn.innerHTML = `Köz İste (${usageLimits.call_charcoal.remaining} kaldı)`;
+        charcoalBtn.disabled = usageLimits.call_charcoal.remaining <= 0;
+      }
+    }
 
     // DOM elementleri
     const menuGrid = document.getElementById('menuGrid');
