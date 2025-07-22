@@ -288,7 +288,7 @@
       call_charcoal: { count: 0, limit: 5, remaining: 5 }
     };
 
-    // Kullanıcı oturumu oluştur/al
+    // Kullanıcı bilgileri ve oturumu oluştur/al
     async function initializeUserSession() {
       try {
         // Benzersiz session ID oluştur
@@ -296,7 +296,24 @@
           currentSessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
         }
 
+        // Kullanıcı bilgilerini topla
+        const userInfo = {
+          sessionId: currentSessionId,
+          userAgent: navigator.userAgent,
+          language: navigator.language,
+          platform: navigator.platform,
+          screenResolution: `${screen.width}x${screen.height}`,
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          timestamp: new Date().toISOString(),
+          restaurantId: RESTAURANT_ID,
+          tableId: TABLE_ID,
+          // IP adresi için alternatif yöntemler
+          referrer: document.referrer,
+          url: window.location.href
+        };
+
         console.log('🔐 Kullanıcı oturumu başlatılıyor:', currentSessionId);
+        console.log('👤 Kullanıcı bilgileri:', userInfo);
 
         // Oturumu oluştur veya mevcut oturumu al
         const { data: sessionData, error: sessionError } = await supabase
@@ -352,6 +369,51 @@
       } catch (error) {
         console.error('❌ Kullanım limitleri yüklenemedi:', error);
       }
+    }
+
+    // Detaylı kullanıcı bilgilerini al
+    function getUserInfo() {
+      return {
+        sessionId: currentSessionId,
+        userAgent: navigator.userAgent,
+        language: navigator.language,
+        platform: navigator.platform,
+        screenResolution: `${screen.width}x${screen.height}`,
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        timestamp: new Date().toISOString(),
+        restaurantId: RESTAURANT_ID,
+        tableId: TABLE_ID,
+        referrer: document.referrer,
+        url: window.location.href,
+        // Ek bilgiler
+        cookieEnabled: navigator.cookieEnabled,
+        doNotTrack: navigator.doNotTrack,
+        hardwareConcurrency: navigator.hardwareConcurrency,
+        maxTouchPoints: navigator.maxTouchPoints,
+        onLine: navigator.onLine,
+        // Coğrafi konum (kullanıcı izni gerekir)
+        geolocation: 'available' in navigator,
+        // Cihaz bilgileri
+        deviceMemory: navigator.deviceMemory,
+        connection: navigator.connection ? {
+          effectiveType: navigator.connection.effectiveType,
+          downlink: navigator.connection.downlink,
+          rtt: navigator.connection.rtt
+        } : null
+      };
+    }
+
+    // Kullanıcı bilgilerini konsola yazdır
+    function logUserInfo() {
+      const userInfo = getUserInfo();
+      console.log('👤 Kullanıcı Bilgileri:', userInfo);
+      console.log('🆔 Session ID:', userInfo.sessionId);
+      console.log('🌐 Tarayıcı:', userInfo.userAgent);
+      console.log('📱 Platform:', userInfo.platform);
+      console.log('🖥️ Ekran:', userInfo.screenResolution);
+      console.log('⏰ Zaman Dilimi:', userInfo.timezone);
+      console.log('🍽️ Restoran ID:', userInfo.restaurantId);
+      console.log('🪑 Masa ID:', userInfo.tableId);
     }
 
     // Kullanım limiti kontrolü
@@ -437,6 +499,9 @@
           showToast('Oturum başlatılamadı!', 'error');
           return;
         }
+
+        // Kullanıcı bilgilerini yazdır
+        logUserInfo();
         
         // Restoran ve masa bilgilerini al
         restaurantInfo = await getRestaurantInfo();
