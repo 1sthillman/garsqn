@@ -575,6 +575,46 @@
             transform: none;
             box-shadow: none;
         }
+
+        .cart-note {
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .cart-note label {
+            display: block;
+            color: #fff;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .cart-note textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            color: #fff;
+            font-family: inherit;
+            font-size: 0.9rem;
+            resize: vertical;
+            backdrop-filter: blur(10px);
+        }
+
+        .cart-note textarea:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+
+        .cart-note textarea::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
         
         /* Responsive Design */
         @media (max-width: 768px) {
@@ -786,16 +826,20 @@
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <div class="cart-items" id="cartItems">
-                <!-- Cart items will be dynamically added here -->
-            </div>
-            <div class="cart-total">
-                <span>Toplam:</span>
-                <span id="cartTotal">0₺</span>
-            </div>
-            <button class="order-btn" id="orderBtn" disabled>
-                Sipariş Ver
-            </button>
+                                        <div class="cart-items" id="cartItems">
+                                <!-- Cart items will be dynamically added here -->
+                            </div>
+                            <div class="cart-note">
+                                <label for="orderNote">Sipariş Notu:</label>
+                                <textarea id="orderNote" placeholder="Özel isteklerinizi buraya yazabilirsiniz..."></textarea>
+                            </div>
+                            <div class="cart-total">
+                                <span>Toplam:</span>
+                                <span id="cartTotal">0₺</span>
+                            </div>
+                            <button class="order-btn" id="orderBtn" disabled>
+                                Sipariş Ver
+                            </button>
         </div>
     </div>
 
@@ -1023,6 +1067,16 @@
                 if (cards.length === 0) return;
                 
                 const totalCards = cards.length;
+                
+                // Tek ürün varsa kontrol butonlarını gizle
+                if (totalCards <= 1) {
+                    prevBtn.style.display = 'none';
+                    nextBtn.style.display = 'none';
+                } else {
+                    prevBtn.style.display = 'flex';
+                    nextBtn.style.display = 'flex';
+                }
+                
                 const angle = 360 / totalCards;
                 
                 // Position cards in a circle
@@ -1063,6 +1117,15 @@
                 const carousel = document.getElementById('product-carousel');
                 const cards = carousel.querySelectorAll('.product-card');
                 const totalCards = cards.length;
+                
+                if (totalCards === 0) return;
+                
+                // Tek ürün varsa ortaya getir
+                if (totalCards === 1) {
+                    cards[0].style.transform = `rotateY(0deg) translateZ(0px)`;
+                    return;
+                }
+                
                 const angle = 360 / totalCards;
                 
                 cards.forEach((card, index) => {
@@ -1073,11 +1136,21 @@
             
             function rotateCarousel() {
                 const carousel = document.getElementById('product-carousel');
+                const cards = carousel.querySelectorAll('.product-card');
+                const totalCards = cards.length;
+                
+                if (totalCards === 0) return;
+                
+                // Tek ürün varsa döndürme yapma
+                if (totalCards === 1) {
+                    carousel.style.transform = `rotateY(0deg)`;
+                    currentIndex = 0;
+                    return;
+                }
+                
                 carousel.style.transform = `rotateY(${theta}deg)`;
                 
                 // Update current card index
-                const cards = carousel.querySelectorAll('.product-card');
-                const totalCards = cards.length;
                 currentIndex = Math.round(Math.abs(theta / (360 / totalCards)) % totalCards);
                 if (currentIndex >= totalCards) currentIndex = 0;
             }
@@ -1086,6 +1159,9 @@
                 const carousel = document.getElementById('product-carousel');
                 const cards = carousel.querySelectorAll('.product-card');
                 const totalCards = cards.length;
+                
+                if (totalCards <= 1) return;
+                
                 theta -= 360 / totalCards;
                 rotateCarousel();
             }
@@ -1094,6 +1170,9 @@
                 const carousel = document.getElementById('product-carousel');
                 const cards = carousel.querySelectorAll('.product-card');
                 const totalCards = cards.length;
+                
+                if (totalCards <= 1) return;
+                
                 theta += 360 / totalCards;
                 rotateCarousel();
             }
@@ -1326,6 +1405,8 @@
                 }
                 
                 try {
+                    const orderNote = document.getElementById('orderNote').value.trim();
+                    
                     const orderItems = cart.map(item => ({
                         product_id: item.id,
                         quantity: item.quantity,
@@ -1342,6 +1423,7 @@
                             table_id: TABLE_ID,
                             items: orderItems,
                             total: total,
+                            note: orderNote,
                             status: 'pending'
                         }])
                         .select()
@@ -1349,8 +1431,9 @@
                     
                     if (error) throw error;
                     
-                    // Clear cart
+                    // Clear cart and note
                     cart = [];
+                    document.getElementById('orderNote').value = '';
                     updateCartDisplay();
                     closeCartModal();
                     
