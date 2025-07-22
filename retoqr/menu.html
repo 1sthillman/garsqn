@@ -414,6 +414,9 @@
       console.log('⏰ Zaman Dilimi:', userInfo.timezone);
       console.log('🍽️ Restoran ID:', userInfo.restaurantId);
       console.log('🪑 Masa ID:', userInfo.tableId);
+      console.log('⏰ Session Süresi: 24 saat (1 gün sonra otomatik silinir)');
+      console.log('🔄 Kullanım Limitleri: Günlük 5 sipariş, 5 garson çağırma, 5 köz isteme');
+      console.log('🗑️ Otomatik Temizleme: Her saat başı eski session\'lar silinir');
     }
 
     // Kullanım limiti kontrolü
@@ -502,6 +505,9 @@
 
         // Kullanıcı bilgilerini yazdır
         logUserInfo();
+        
+        // Session bilgisi toast mesajı
+        showToast('✅ Oturum başlatıldı! 24 saat sonra otomatik olarak silinecek.', 'success');
         
         // Restoran ve masa bilgilerini al
         restaurantInfo = await getRestaurantInfo();
