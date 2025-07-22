@@ -251,19 +251,20 @@
         }
         
         .cart-btn {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.15) 100%);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 2px solid rgba(255, 255, 255, 0.6);
             color: var(--text-primary);
-            font-size: var(--font-size-2xl);
+            font-size: var(--font-size-xl);
             position: relative;
             cursor: pointer;
-            padding: var(--space-lg);
+            padding: var(--space-md);
             border-radius: var(--radius-full);
             transition: var(--transition-elastic);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.4);
             overflow: hidden;
+            z-index: 100;
         }
         
         .cart-btn::before {
@@ -296,6 +297,35 @@
         
         .cart-btn:active {
             transform: translateY(-3px) scale(1.1);
+        }
+        
+        .contact-btn {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: var(--text-primary);
+            font-size: var(--font-size-lg);
+            position: relative;
+            cursor: pointer;
+            padding: var(--space-sm);
+            border-radius: var(--radius-full);
+            transition: var(--transition-elastic);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+            overflow: hidden;
+            z-index: 100;
+        }
+        
+        .contact-btn:hover {
+            transform: translateY(-4px) scale(1.1);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3), 0 0 15px rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .contact-btn i {
+            font-size: var(--font-size-lg);
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.8));
         }
         
         .cart-badge {
@@ -443,10 +473,10 @@
         /* Product Grid - Enhanced */
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: var(--space-xl);
-            padding: 0 var(--space-lg);
-            max-width: 1200px;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: var(--space-md);
+            padding: 0 var(--space-md);
+            max-width: 1400px;
             margin: 0 auto var(--space-3xl);
         }
         
@@ -513,7 +543,7 @@
         
         .product-image {
             width: 100%;
-            height: 220px;
+            height: 120px;
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
             display: flex;
             align-items: center;
@@ -1760,6 +1790,9 @@
                 <div class="table-info">
                     <span>Masa <span id="tableId">--</span></span>
                 </div>
+                <button class="contact-btn glow-effect" id="contactBtn" onclick="window.open('mailto:sthillmanbusiness@gmail.com', '_blank')">
+                    <i class="fas fa-envelope"></i>
+                </button>
                 <button class="cart-btn glow-effect" id="cartBtn">
                     <i class="fas fa-shopping-cart"></i>
                     <span class="cart-badge" id="cartBadge">0</span>
