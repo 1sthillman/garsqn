@@ -91,7 +91,7 @@
             padding: 1rem;
             z-index: 1000;
         }
-
+        
         .header-content {
             display: flex;
             justify-content: space-between;
@@ -99,7 +99,7 @@
             max-width: 1200px;
             margin: 0 auto;
         }
-
+        
         .logo {
             font-size: 1.2rem;
             font-weight: 600;
@@ -108,13 +108,13 @@
             align-items: center;
             gap: 0.5rem;
         }
-
+        
         .header-right {
             display: flex;
             align-items: center;
             gap: 1rem;
         }
-
+        
         .table-info {
             background: rgba(255, 255, 255, 0.2);
             color: #fff;
@@ -138,7 +138,7 @@
             align-items: center;
             justify-content: center;
         }
-
+        
         .cart-badge {
             position: absolute;
             top: -5px;
@@ -171,11 +171,11 @@
             scrollbar-width: none;
             -ms-overflow-style: none;
         }
-
+        
         .category-bar::-webkit-scrollbar {
             display: none;
         }
-
+        
         .category-btn {
             background: rgba(255, 255, 255, 0.2);
             border: none;
@@ -188,7 +188,7 @@
             font-size: 0.9rem;
             font-weight: 500;
         }
-
+        
         .category-btn.active {
             background: rgba(255, 255, 255, 0.3);
             transform: scale(1.05);
@@ -199,26 +199,32 @@
             margin-top: 160px;
             margin-bottom: 120px;
             padding: 1rem;
-            display: flex;
-            flex-direction: column;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 1rem;
-            max-width: 600px;
+            max-width: 1200px;
             margin-left: auto;
             margin-right: auto;
+            overflow-y: auto;
+            max-height: calc(100vh - 280px);
         }
-
+        
         .product-card {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 1rem;
             padding: 1.5rem;
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
-
+        
         .product-card::before {
             content: '';
             position: absolute;
@@ -230,12 +236,12 @@
             opacity: 0;
             transition: opacity 0.3s ease;
         }
-
+        
         .product-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
-
+        
         .product-card:hover::before {
             opacity: 1;
         }
@@ -256,7 +262,7 @@
             color: rgba(255, 255, 255, 0.7);
             font-size: 1.2rem;
         }
-
+        
         .product-name {
             font-size: 1.5rem;
             font-weight: 600;
@@ -329,6 +335,205 @@
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
         }
 
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            z-index: 10000;
+            pointer-events: none;
+        }
+
+        .toast {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 1rem;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1rem;
+            color: #fff;
+            font-weight: 500;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+            pointer-events: auto;
+            max-width: 300px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.success {
+            border-left: 4px solid #00ff88;
+        }
+
+        .toast.info {
+            border-left: 4px solid #00a2ff;
+        }
+
+        .toast.error {
+            border-left: 4px solid #ff4757;
+        }
+
+        /* Cart Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            z-index: 10000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            max-width: 500px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            color: #fff;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .cart-items {
+            margin-bottom: 1.5rem;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .cart-item-price {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .cart-item-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quantity-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .quantity-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .quantity-display {
+            min-width: 30px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .order-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);
+            border: none;
+            border-radius: 1rem;
+            color: #000;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .order-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .order-btn:disabled {
+            background: rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.5);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
         /* Responsive Design */
         @media (max-width: 768px) {
             .header-content {
@@ -363,6 +568,7 @@
                 margin-top: 140px;
                 margin-bottom: 100px;
                 padding: 0.8rem;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             }
             
             .product-card {
@@ -382,7 +588,7 @@
                 font-size: 0.8rem;
             }
         }
-
+        
         @media (max-width: 480px) {
             .header-content {
                 padding: 0 0.5rem;
@@ -416,6 +622,7 @@
                 margin-top: 130px;
                 margin-bottom: 90px;
                 padding: 0.6rem;
+                grid-template-columns: 1fr;
             }
             
             .product-card {
@@ -492,34 +699,59 @@
         </button>
     </div>
 
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Cart Modal -->
+    <div class="modal-overlay" id="cartModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Sepetim</div>
+                <button class="modal-close" id="closeCartModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="cart-items" id="cartItems">
+                <!-- Cart items will be dynamically added here -->
+            </div>
+            <div class="cart-total">
+                <span>Toplam:</span>
+                <span id="cartTotal">0₺</span>
+            </div>
+            <button class="order-btn" id="orderBtn" disabled>
+                Sipariş Ver
+            </button>
+        </div>
+    </div>
+
     <script>
         // Güvenli API Konfigürasyonu
         (function() {
-            'use strict';
-            
-            const _0x4a2b = {
-                _0x7c1d: 'aHR0cHM6Ly9lZ2NrbHpmaXl4eG52eXh3b293cS5zdXBhYmFzZS5jbw==',
-                _0x8e3f: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVnY2tsemZpeXh4bnZ5eHdvb3dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0NjQxMTcsImV4cCI6MjA2NDA0MDExN30.dfRQv3lYFCaI1T5ydOw4HyoEJ0I1wOSIUcG8ueEbxKQ'
-            };
-            
-            function _0x2d8e(_0x5f1a) {
-                return atob(_0x5f1a);
-            }
-            
-            Object.defineProperty(window, 'SUPABASE_CONFIG', {
-                get: function() {
-                    return {
-                        url: _0x2d8e(_0x4a2b._0x7c1d),
-                        anonKey: _0x4a2b._0x8e3f
-                    };
-                },
-                set: function() {
-                    console.warn('⚠️ API konfigürasyonu korunuyor');
-                    return false;
-                },
-                configurable: false,
-                enumerable: false
-            });
+          'use strict';
+          
+          const _0x4a2b = {
+            _0x7c1d: 'aHR0cHM6Ly9lZ2NrbHpmaXl4eG52eXh3b293cS5zdXBhYmFzZS5jbw==',
+            _0x8e3f: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVnY2tsemZpeXh4bnZ5eHdvb3dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0NjQxMTcsImV4cCI6MjA2NDA0MDExN30.dfRQv3lYFCaI1T5ydOw4HyoEJ0I1wOSIUcG8ueEbxKQ'
+          };
+          
+          function _0x2d8e(_0x5f1a) {
+            return atob(_0x5f1a);
+          }
+          
+          Object.defineProperty(window, 'SUPABASE_CONFIG', {
+            get: function() {
+              return {
+                url: _0x2d8e(_0x4a2b._0x7c1d),
+                anonKey: _0x4a2b._0x8e3f
+              };
+            },
+            set: function() {
+              console.warn('⚠️ API konfigürasyonu korunuyor');
+              return false;
+            },
+            configurable: false,
+            enumerable: false
+          });
         })();
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -649,11 +881,11 @@
                     const productsInCategory = products.filter(product => product.category === category.name);
                     
                     if (productsInCategory.length > 0) {
-                        const btn = document.createElement('button');
-                        btn.className = 'category-btn';
+                    const btn = document.createElement('button');
+                    btn.className = 'category-btn';
                         btn.setAttribute('data-category', category.name);
-                        btn.textContent = category.name;
-                        categoryBar.appendChild(btn);
+                    btn.textContent = category.name;
+                    categoryBar.appendChild(btn);
                     }
                 });
                 
@@ -693,16 +925,40 @@
                                 <i class="fas fa-ellipsis-v"></i>
                             </div>
                         </div>
-                        <div class="product-name">${product.name}</div>
+                                <div class="product-name">${product.name}</div>
                         <div class="product-category">${product.category || 'Ürün'}</div>
                         <div class="product-footer">
-                            <div class="product-price">${product.price}₺</div>
+                                <div class="product-price">${product.price}₺</div>
                         </div>
                     `;
                     
                     card.addEventListener('click', () => addToCart(product));
                     productGrid.appendChild(card);
                 });
+            }
+            
+            function showToast(message, type = 'success') {
+                const toastContainer = document.getElementById('toastContainer');
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                toast.textContent = message;
+                
+                toastContainer.appendChild(toast);
+                
+                // Trigger animation
+                setTimeout(() => {
+                    toast.classList.add('show');
+                }, 100);
+                
+                // Remove toast after 3 seconds
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    setTimeout(() => {
+                        if (toast.parentNode) {
+                            toast.parentNode.removeChild(toast);
+                        }
+                    }, 300);
+                }, 3000);
             }
             
             function addToCart(product) {
@@ -715,18 +971,98 @@
                 }
                 
                 updateCartDisplay();
-                alert(`${product.name} sepetinize eklendi.`);
+                showToast(`${product.name} sepetinize eklendi!`, 'success');
             }
             
             function updateCartDisplay() {
                 const cartBadge = document.getElementById('cartBadge');
                 const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
                 cartBadge.textContent = totalQuantity;
+                
+                // Update cart modal content
+                updateCartModal();
+            }
+            
+            function updateCartModal() {
+                const cartItems = document.getElementById('cartItems');
+                const cartTotal = document.getElementById('cartTotal');
+                const orderBtn = document.getElementById('orderBtn');
+                
+                cartItems.innerHTML = '';
+                
+                if (cart.length === 0) {
+                    cartItems.innerHTML = '<div style="text-align: center; color: rgba(255,255,255,0.7); padding: 2rem;">Sepetiniz boş</div>';
+                    cartTotal.textContent = '0₺';
+                    orderBtn.disabled = true;
+                    return;
+                }
+                
+                let total = 0;
+                
+                cart.forEach((item, index) => {
+                    const cartItem = document.createElement('div');
+                    cartItem.className = 'cart-item';
+                    cartItem.innerHTML = `
+                        <div class="cart-item-info">
+                            <div class="cart-item-name">${item.name}</div>
+                            <div class="cart-item-price">${item.price}₺</div>
+                        </div>
+                        <div class="cart-item-controls">
+                            <button class="quantity-btn" onclick="updateQuantity(${index}, -1)">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <div class="quantity-display">${item.quantity}</div>
+                            <button class="quantity-btn" onclick="updateQuantity(${index}, 1)">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    `;
+                    cartItems.appendChild(cartItem);
+                    total += item.price * item.quantity;
+                });
+                
+                cartTotal.textContent = `${total}₺`;
+                orderBtn.disabled = false;
+            }
+            
+            function updateQuantity(index, change) {
+                const item = cart[index];
+                const newQuantity = item.quantity + change;
+                
+                if (newQuantity <= 0) {
+                    cart.splice(index, 1);
+                } else {
+                    item.quantity = newQuantity;
+                }
+                
+                updateCartDisplay();
+            }
+            
+            function openCartModal() {
+                const modal = document.getElementById('cartModal');
+                modal.classList.add('show');
+            }
+            
+            function closeCartModal() {
+                const modal = document.getElementById('cartModal');
+                modal.classList.remove('show');
             }
             
             function setupEventListeners() {
                 document.getElementById('contactBtn').addEventListener('click', function() {
                     window.open('mailto:sthillmanbusiness@gmail.com', '_blank');
+                });
+                
+                document.getElementById('cartBtn').addEventListener('click', function() {
+                    openCartModal();
+                });
+                
+                document.getElementById('closeCartModal').addEventListener('click', function() {
+                    closeCartModal();
+                });
+                
+                document.getElementById('orderBtn').addEventListener('click', function() {
+                    submitOrder();
                 });
                 
                 document.getElementById('callWaiterBtn').addEventListener('click', function() {
@@ -735,6 +1071,13 @@
                 
                 document.getElementById('requestCharcoalBtn').addEventListener('click', function() {
                     callWaiter('köz');
+                });
+                
+                // Close modal when clicking outside
+                document.getElementById('cartModal').addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        closeCartModal();
+                    }
                 });
             }
             
@@ -754,13 +1097,61 @@
                     if (error) throw error;
                     
                     const message = type === 'garson' ? 'Garson çağrıldı!' : 'Köz isteğiniz iletildi!';
-                    alert(message);
+                    showToast(message, 'info');
                     
                 } catch (error) {
                     console.error('Çağrı oluşturulamadı:', error);
-                    alert('Çağrı oluşturulamadı. Lütfen tekrar deneyin.');
+                    showToast('Çağrı oluşturulamadı. Lütfen tekrar deneyin.', 'error');
                 }
             }
+            
+            async function submitOrder() {
+                if (cart.length === 0) {
+                    showToast('Sepetiniz boş!', 'error');
+                    return;
+                }
+                
+                try {
+                    const orderItems = cart.map(item => ({
+                        product_id: item.id,
+                        quantity: item.quantity,
+                        price: item.price,
+                        name: item.name
+                    }));
+                    
+                    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                    
+                    const { data, error } = await supabase
+                        .from('orders')
+                        .insert([{
+                            restaurant_id: RESTAURANT_ID,
+                            table_id: TABLE_ID,
+                            items: orderItems,
+                            total: total,
+                            status: 'pending'
+                        }])
+                        .select()
+                        .single();
+                    
+                    if (error) throw error;
+                    
+                    // Clear cart
+                    cart = [];
+                    updateCartDisplay();
+                    closeCartModal();
+                    
+                    showToast('Siparişiniz başarıyla gönderildi!', 'success');
+                    
+                } catch (error) {
+                    console.error('Sipariş gönderilemedi:', error);
+                    showToast('Sipariş gönderilemedi. Lütfen tekrar deneyin.', 'error');
+                }
+            }
+            
+            // Make functions globally available
+            window.updateQuantity = updateQuantity;
+            window.openCartModal = openCartModal;
+            window.closeCartModal = closeCartModal;
             
             initializeApp();
         });
