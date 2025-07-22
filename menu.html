@@ -2218,15 +2218,25 @@
                 allBtn.textContent = 'Tüm Ürünler';
                 categoryBar.appendChild(allBtn);
                 
-                // Diğer kategoriler
+                // Her kategori için ürün sayısını kontrol et
                 categories.forEach((category, index) => {
                     console.log(`📂 Kategori ${index + 1}:`, category);
                     
-                    const btn = document.createElement('button');
-                    btn.className = 'category-btn';
-                    btn.setAttribute('data-category', category.name); // ID yerine isim kullan
-                    btn.textContent = category.name;
-                    categoryBar.appendChild(btn);
+                    // Bu kategorideki ürün sayısını hesapla
+                    const productsInCategory = products.filter(product => product.category === category.name);
+                    console.log(`📦 ${category.name} kategorisinde ${productsInCategory.length} ürün var`);
+                    
+                    // Sadece ürünü olan kategorileri göster
+                    if (productsInCategory.length > 0) {
+                        const btn = document.createElement('button');
+                        btn.className = 'category-btn';
+                        btn.setAttribute('data-category', category.name);
+                        btn.textContent = category.name;
+                        categoryBar.appendChild(btn);
+                        console.log(`✅ ${category.name} kategorisi eklendi (${productsInCategory.length} ürün)`);
+                    } else {
+                        console.log(`❌ ${category.name} kategorisi atlandı (0 ürün)`);
+                    }
                 });
                 
                 // Kategori tıklama olaylarını ekle
