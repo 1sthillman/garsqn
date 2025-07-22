@@ -208,6 +208,7 @@
             margin-bottom: 120px;
             touch-action: none;
             overflow: hidden;
+            text-align: center;
         }
 
         .carousel {
@@ -244,6 +245,7 @@
             -moz-user-select: none;
             -ms-user-select: none;
             z-index: 5;
+            text-align: center;
         }
 
         .product-card:hover {
@@ -665,20 +667,21 @@
             }
             
             .product-card {
-                width: 250px;
-                height: 180px;
-                margin-left: -125px;
-                margin-top: -90px;
-                padding: 1rem;
+                width: 280px;
+                height: 200px;
+                margin-left: -140px;
+                margin-top: -100px;
+                padding: 1.2rem;
             }
             
             .product-name {
-                font-size: 1.3rem;
+                font-size: 1.4rem;
+                margin-bottom: 1rem;
             }
             
             .product-price {
-                font-size: 1rem;
-                padding: 0.4rem 0.8rem;
+                font-size: 1.2rem;
+                padding: 0.6rem 1rem;
             }
             
             .product-card {
@@ -735,25 +738,26 @@
             }
             
             .carousel {
-                width: 250px;
-                height: 250px;
+                width: 280px;
+                height: 280px;
             }
             
             .product-card {
-                width: 220px;
-                height: 160px;
-                margin-left: -110px;
-                margin-top: -80px;
-                padding: 0.8rem;
+                width: 260px;
+                height: 180px;
+                margin-left: -130px;
+                margin-top: -90px;
+                padding: 1rem;
             }
             
             .product-name {
-                font-size: 1.1rem;
+                font-size: 1.3rem;
+                margin-bottom: 0.8rem;
             }
             
             .product-price {
-                font-size: 0.9rem;
-                padding: 0.3rem 0.6rem;
+                font-size: 1.1rem;
+                padding: 0.5rem 0.8rem;
             }
             
             .control-btn {
@@ -1090,11 +1094,14 @@
                 theta = 0;
                 currentIndex = 0;
                 
-                // Force carousel to front position
+                // Force carousel to center position
                 setTimeout(() => {
                     initCarousel();
+                    // İlk ürünü tam ortaya getir
+                    const carousel = document.getElementById('product-carousel');
+                    carousel.style.transform = 'rotateY(0deg)';
                     rotateCarousel();
-                }, 100);
+                }, 50);
             }
             
             function initCarousel() {
@@ -1174,9 +1181,8 @@
                 
                 cards.forEach((card, index) => {
                     const cardAngle = angle * index;
-                    // İlk ürünü öne getir (0 derece)
-                    const adjustedAngle = cardAngle - 90; // 90 derece offset ile ilk ürün öne gelir
-                    card.style.transform = `rotateY(${adjustedAngle}deg) translateZ(${radius}px)`;
+                    // İlk ürünü öne getir (0 derece) - offset'i kaldırdık
+                    card.style.transform = `rotateY(${cardAngle}deg) translateZ(${radius}px)`;
                     card.dataset.index = index;
                 });
             }
@@ -1197,9 +1203,8 @@
                 
                 carousel.style.transform = `rotateY(${theta}deg)`;
                 
-                // Update current card index with offset adjustment
-                const adjustedTheta = theta + 90; // 90 derece offset'i geri ekle
-                currentIndex = Math.round(Math.abs(adjustedTheta / (360 / totalCards)) % totalCards);
+                // Update current card index - offset'i kaldırdık
+                currentIndex = Math.round(Math.abs(theta / (360 / totalCards)) % totalCards);
                 if (currentIndex >= totalCards) currentIndex = 0;
             }
             
