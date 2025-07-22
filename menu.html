@@ -8,6 +8,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="icons.js?v=2"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.163.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.163.0/examples/jsm/",
+          "animejs": "https://cdn.jsdelivr.net/npm/animejs@3.2.2/lib/anime.es.js",
+          "simplex-noise": "https://cdn.skypack.dev/simplex-noise@4.0.1"
+        }
+      }
+    </script>
     <style>
         * {
             margin: 0;
@@ -16,69 +26,57 @@
         }
         
         body {
-            background: #232228;
-            font-family: "Nunito", sans-serif;
-            color: #fff;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        .full-wh {
-            position: absolute;
-            top: 0px;
-            left: 0px;
-            bottom: 0px;
-            width: 100%;
+            margin: 0;
+            overflow: hidden; 
+            background-color: #000000; 
+            color: white; 
+            font-family: 'Nunito', sans-serif;
         }
         
-        .bg-animation {
+        canvas {
+            display: block; 
+            width: 100%; 
+            height: 100%;
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
             z-index: -1;
         }
         
-        #stars {
-            width: 1px;
-            height: 1px;
-            background: transparent;
-            box-shadow: 117px 1613px #c49952, 1488px 635px #c49952, 944px 914px #c49952, 647px 277px #c49952, 1792px 1205px #c49952, 656px 1517px #c49952, 820px 1839px #c49952, 1153px 1400px #c49952, 870px 13px #c49952, 550px 702px #c49952, 1155px 1056px #c49952, 88px 1709px #c49952, 1450px 1090px #c49952, 1929px 457px #c49952, 1390px 905px #c49952, 1771px 269px #c49952, 1741px 669px #c49952, 432px 64px #c49952, 563px 996px #c49952, 1918px 1873px #c49952, 1845px 1211px #c49952, 231px 1503px #c49952, 37px 220px #c49952, 1970px 495px #c49952, 1812px 925px #c49952, 67px 1398px #c49952, 535px 279px #c49952, 1837px 829px #c49952, 1945px 685px #c49952, 1677px 1817px #c49952, 1317px 1415px #c49952, 1785px 905px #c49952, 1787px 1554px #c49952, 802px 1296px #c49952, 512px 1101px #c49952, 583px 1364px #c49952, 336px 558px #c49952, 979px 334px #c49952, 106px 792px #c49952, 204px 34px #c49952, 1845px 1763px #c49952, 445px 1599px #c49952, 386px 453px #c49952, 471px 952px #c49952, 1466px 1676px #c49952, 1885px 303px #c49952, 51px 1717px #c49952, 1211px 299px #c49952, 1546px 1887px #c49952, 1067px 33px #c49952, 1088px 1326px #c49952, 1938px 760px #c49952, 470px 648px #c49952, 1213px 269px #c49952, 1767px 78px #c49952, 977px 976px #c49952, 1926px 175px #c49952, 722px 1512px #c49952, 945px 227px #c49952, 1811px 99px #c49952, 1912px 1406px #c49952, 1602px 1243px #c49952, 610px 449px #c49952, 654px 1393px #c49952, 1930px 1193px #c49952, 258px 1184px #c49952, 89px 265px #c49952, 824px 1494px #c49952, 1506px 1435px #c49952, 1027px 753px #c49952, 1px 1197px #c49952, 530px 1161px #c49952, 864px 1555px #c49952, 1610px 1604px #c49952, 1035px 1114px #c49952, 1456px 133px #c49952, 1196px 1253px #c49952, 361px 1037px #c49952, 834px 351px #c49952, 436px 1676px #c49952, 1194px 1007px #c49952, 1141px 647px #c49952, 319px 454px #c49952, 937px 1769px #c49952, 1872px 1013px #c49952, 733px 643px #c49952, 1250px 511px #c49952, 189px 296px #c49952, 1639px 163px #c49952, 1584px 336px #c49952, 1912px 1343px #c49952, 1298px 1307px #c49952, 1750px 902px #c49952, 1940px 1887px #c49952, 1999px 1999px #c49952;
-            animation: animateStar 50s linear infinite;
+        #loading {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            flex-direction: column; 
+            justify-content: center;
+            align-items: center;
+            z-index: 1000; 
+            transition: opacity 0.6s ease-out; 
         }
         
-        #stars2 {
-            width: 2px;
-            height: 2px;
-            background: transparent;
-            box-shadow: 1747px 122px #c49952, 134px 1321px #c49952, 1900px 1876px #c49952, 1887px 1887px #c49952, 1999px 1999px #c49952;
-            animation: animateStar 100s linear infinite;
+        #loading span {
+            font-size: 24px;
+            letter-spacing: 2px;
+            margin-bottom: 15px; 
         }
         
-        #stars3 {
-            width: 3px;
-            height: 3px;
-            background: transparent;
-            box-shadow: 1747px 122px #c49952, 134px 1321px #c49952, 1900px 1876px #c49952, 1887px 1887px #c49952, 1999px 1999px #c49952;
-            animation: animateStar 150s linear infinite;
+        #progress-container {
+             width: 60%;
+             max-width: 300px;
+             height: 6px;
+             background-color: rgba(255, 255, 255, 0.1);
+             border-radius: 3px;
+             overflow: hidden; 
         }
         
-        #stars4 {
-            width: 4px;
-            height: 4px;
-            background: transparent;
-            box-shadow: 1747px 122px #c49952, 134px 1321px #c49952, 1900px 1876px #c49952, 1887px 1887px #c49952, 1999px 1999px #c49952;
-            animation: animateStar 200s linear infinite;
-        }
-        
-        @keyframes animateStar {
-            from {
-                transform: translateY(0px);
-            }
-            to {
-                transform: translateY(-2000px);
-            }
+        #progress {
+            height: 100%;
+            width: 0%; 
+            background: linear-gradient(90deg, #00a2ff, #00ffea); 
+            transition: width 0.3s ease; 
+            border-radius: 3px;
         }
 
         /* Header */
@@ -441,12 +439,14 @@
 </head>
 <body>
 
-    <div class="bg-animation">
-        <div id="stars"></div>
-        <div id="stars2"></div>
-        <div id="stars3"></div>
-        <div id="stars4"></div>
+    <div id="loading">
+        <span>Initializing Particles...</span>
+        <div id="progress-container">
+             <div id="progress"></div>
+        </div>
     </div>
+
+    <canvas id="webglCanvas"></canvas>
 
     <header>
         <div class="header-content">
@@ -764,6 +764,464 @@
             
             initializeApp();
         });
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+        import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+        import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+        import anime from 'animejs';
+        import { createNoise3D, createNoise4D } from 'simplex-noise';
+
+        let scene, camera, renderer, controls, clock;
+        let composer, bloomPass; 
+
+        let particlesGeometry, particlesMaterial, particleSystem;
+        let currentPositions, sourcePositions, targetPositions, swarmPositions; 
+        let particleSizes, particleOpacities, particleEffectStrengths; 
+        let noise3D, noise4D; 
+
+        let morphTimeline = null; 
+        let isInitialized = false;
+        let isMorphing = false;
+
+        const CONFIG = {
+            particleCount: 8000,
+            shapeSize: 12,
+            swarmDistanceFactor: 1.5,
+            swirlFactor: 4.0,
+            noiseFrequency: 0.1,
+            noiseTimeScale: 0.04,
+            noiseMaxStrength: 2.8,
+            colorScheme: 'fire',
+            morphDuration: 4000,
+            particleSizeRange: [0.08, 0.25],
+            starCount: 12000,
+            bloomStrength: 1.3,
+            bloomRadius: 0.5,
+            bloomThreshold: 0.05,
+            idleFlowStrength: 0.25,
+            idleFlowSpeed: 0.08,
+            idleRotationSpeed: 0.02,
+            morphSizeFactor: 0.5, 
+            morphBrightnessFactor: 0.6 
+        };
+
+        const SHAPES = [
+            { name: 'Sphere', generator: generateSphere },
+            { name: 'Cube', generator: generateCube },
+            { name: 'Pyramid', generator: generatePyramid },
+            { name: 'Torus', generator: generateTorus },
+            { name: 'Galaxy', generator: generateGalaxy },
+            { name: 'Wave', generator: generateWave }
+        ];
+        let currentShapeIndex = 0;
+
+        const morphState = { progress: 0.0 };
+
+        const COLOR_SCHEMES = {
+            fire: { startHue: 0, endHue: 45, saturation: 0.95, lightness: 0.6 },
+            neon: { startHue: 300, endHue: 180, saturation: 1.0, lightness: 0.65 },
+            nature: { startHue: 90, endHue: 160, saturation: 0.85, lightness: 0.55 },
+            rainbow: { startHue: 0, endHue: 360, saturation: 0.9, lightness: 0.6 }
+        };
+
+        const tempVec = new THREE.Vector3();
+        const sourceVec = new THREE.Vector3();
+        const targetVec = new THREE.Vector3();
+        const swarmVec = new THREE.Vector3();
+        const noiseOffset = new THREE.Vector3();
+        const flowVec = new THREE.Vector3();
+        const bezPos = new THREE.Vector3();
+        const swirlAxis = new THREE.Vector3();
+        const currentVec = new THREE.Vector3();
+
+        function generateSphere(count, size) {
+            const points = new Float32Array(count * 3);
+            const phi = Math.PI * (Math.sqrt(5) - 1);
+            for (let i = 0; i < count; i++) {
+                const y = 1 - (i / (count - 1)) * 2;
+                const radius = Math.sqrt(1 - y * y);
+                const theta = phi * i;
+                const x = Math.cos(theta) * radius;
+                const z = Math.sin(theta) * radius;
+                points[i * 3] = x * size;
+                points[i * 3 + 1] = y * size;
+                points[i * 3 + 2] = z * size;
+            }
+            return points;
+        }
+
+        function generateCube(count, size) {
+            const points = new Float32Array(count * 3);
+            const halfSize = size / 2;
+            for (let i = 0; i < count; i++) {
+                const face = Math.floor(Math.random() * 6);
+                const u = Math.random() * size - halfSize;
+                const v = Math.random() * size - halfSize;
+                switch (face) {
+                    case 0: points.set([halfSize, u, v], i * 3); break;
+                    case 1: points.set([-halfSize, u, v], i * 3); break;
+                    case 2: points.set([u, halfSize, v], i * 3); break;
+                    case 3: points.set([u, -halfSize, v], i * 3); break;
+                    case 4: points.set([u, v, halfSize], i * 3); break;
+                    case 5: points.set([u, v, -halfSize], i * 3); break;
+                }
+            }
+            return points;
+        }
+
+        function generatePyramid(count, size) {
+            const points = new Float32Array(count * 3);
+            const halfBase = size / 2;
+            const height = size * 1.2;
+            const apex = new THREE.Vector3(0, height / 2, 0);
+            const baseVertices = [
+                new THREE.Vector3(-halfBase, -height / 2, -halfBase), new THREE.Vector3(halfBase, -height / 2, -halfBase),
+                new THREE.Vector3(halfBase, -height / 2, halfBase), new THREE.Vector3(-halfBase, -height / 2, halfBase)
+            ];
+            const baseArea = size * size;
+            const sideFaceHeight = Math.sqrt(Math.pow(height, 2) + Math.pow(halfBase, 2));
+            const sideFaceArea = 0.5 * size * sideFaceHeight;
+            const totalArea = baseArea + 4 * sideFaceArea;
+            const baseWeight = baseArea / totalArea;
+            const sideWeight = sideFaceArea / totalArea;
+            for (let i = 0; i < count; i++) {
+                const r = Math.random();
+                let p = new THREE.Vector3(); let u, v;
+                if (r < baseWeight) {
+                    u = Math.random(); v = Math.random();
+                    p.lerpVectors(baseVertices[0], baseVertices[1], u);
+                    const p2 = new THREE.Vector3().lerpVectors(baseVertices[3], baseVertices[2], u);
+                    p.lerp(p2, v);
+                } else {
+                    const faceIndex = Math.floor((r - baseWeight) / sideWeight);
+                    const v1 = baseVertices[faceIndex]; const v2 = baseVertices[(faceIndex + 1) % 4];
+                    u = Math.random(); v = Math.random();
+                    if (u + v > 1) { u = 1 - u; v = 1 - v; }
+                    p.addVectors(v1, tempVec.subVectors(v2, v1).multiplyScalar(u));
+                    p.add(tempVec.subVectors(apex, v1).multiplyScalar(v));
+                }
+                points.set([p.x, p.y, p.z], i * 3);
+            }
+            return points;
+        }
+
+        function generateTorus(count, size) {
+            const points = new Float32Array(count * 3);
+            const R = size * 0.7; const r = size * 0.3;
+            for (let i = 0; i < count; i++) {
+                const theta = Math.random() * Math.PI * 2; const phi = Math.random() * Math.PI * 2;
+                const x = (R + r * Math.cos(phi)) * Math.cos(theta);
+                const y = r * Math.sin(phi);
+                const z = (R + r * Math.cos(phi)) * Math.sin(theta);
+                points[i * 3] = x; points[i * 3 + 1] = y; points[i * 3 + 2] = z;
+            }
+            return points;
+        }
+
+        function generateGalaxy(count, size) {
+            const points = new Float32Array(count * 3);
+            const arms = 4; const armWidth = 0.6; const bulgeFactor = 0.3;
+            for (let i = 0; i < count; i++) {
+                const t = Math.pow(Math.random(), 1.5); const radius = t * size;
+                const armIndex = Math.floor(Math.random() * arms);
+                const armOffset = (armIndex / arms) * Math.PI * 2;
+                const rotationAmount = radius / size * 6; const angle = armOffset + rotationAmount;
+                const spread = (Math.random() - 0.5) * armWidth * (1 - radius / size);
+                const theta = angle + spread;
+                const x = radius * Math.cos(theta); const z = radius * Math.sin(theta);
+                const y = (Math.random() - 0.5) * size * 0.1 * (1 - radius / size * bulgeFactor);
+                points[i * 3] = x; points[i * 3 + 1] = y; points[i * 3 + 2] = z;
+            }
+            return points;
+        }
+
+        function generateWave(count, size) {
+            const points = new Float32Array(count * 3);
+            const waveScale = size * 0.4; const frequency = 3;
+            for (let i = 0; i < count; i++) {
+                const u = Math.random() * 2 - 1; const v = Math.random() * 2 - 1;
+                const x = u * size; const z = v * size;
+                const dist = Math.sqrt(u * u + v * v); const angle = Math.atan2(v, u);
+                const y = Math.sin(dist * Math.PI * frequency) * Math.cos(angle * 2) * waveScale * (1 - dist);
+                points[i * 3] = x; points[i * 3 + 1] = y; points[i * 3 + 2] = z;
+            }
+            return points;
+        }
+
+        function init() {
+            let progress = 0;
+            const progressBar = document.getElementById('progress');
+            const loadingScreen = document.getElementById('loading');
+            function updateProgress(increment) {
+                progress += increment;
+                progressBar.style.width = `${Math.min(100, progress)}%`;
+                if (progress >= 100) {
+                    setTimeout(() => {
+                        loadingScreen.style.opacity = '0';
+                        setTimeout(() => { loadingScreen.style.display = 'none'; }, 600);
+                    }, 200);
+                }
+            }
+
+            clock = new THREE.Clock();
+            noise3D = createNoise3D(() => Math.random());
+            noise4D = createNoise4D(() => Math.random());
+            scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0x000308, 0.03);
+            updateProgress(5);
+
+            camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 8, 28); 
+            camera.lookAt(scene.position);
+            updateProgress(5);
+
+            const canvas = document.getElementById('webglCanvas');
+            renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            renderer.toneMappingExposure = 1.1;
+            updateProgress(10);
+
+            controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true; controls.dampingFactor = 0.05;
+            controls.minDistance = 5; controls.maxDistance = 80;
+            controls.autoRotate = true; controls.autoRotateSpeed = 0.3;
+            updateProgress(5);
+
+            scene.add(new THREE.AmbientLight(0x404060));
+            const dirLight1 = new THREE.DirectionalLight(0xffffff, 1.5);
+            dirLight1.position.set(15, 20, 10); scene.add(dirLight1);
+            const dirLight2 = new THREE.DirectionalLight(0x88aaff, 0.9);
+            dirLight2.position.set(-15, -10, -15); scene.add(dirLight2);
+            updateProgress(10);
+
+            setupPostProcessing(); updateProgress(10);
+            createStarfield(); updateProgress(15);
+            setupParticleSystem(); updateProgress(25);
+
+            window.addEventListener('resize', onWindowResize);
+            updateProgress(15);
+
+            isInitialized = true;
+            animate();
+            console.log("Initialization complete.");
+        }
+
+        function setupPostProcessing() {
+            composer = new EffectComposer(renderer);
+            composer.addPass(new RenderPass(scene, camera));
+            bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), CONFIG.bloomStrength, CONFIG.bloomRadius, CONFIG.bloomThreshold);
+            composer.addPass(bloomPass);
+        }
+
+        function createStarfield() {
+            const starVertices = []; const starSizes = []; const starColors = [];
+            const starGeometry = new THREE.BufferGeometry();
+            for (let i = 0; i < CONFIG.starCount; i++) {
+                tempVec.set( THREE.MathUtils.randFloatSpread(400), THREE.MathUtils.randFloatSpread(400), THREE.MathUtils.randFloatSpread(400) );
+                if (tempVec.length() < 100) tempVec.setLength(100 + Math.random() * 300);
+                starVertices.push(tempVec.x, tempVec.y, tempVec.z);
+                starSizes.push(Math.random() * 0.15 + 0.05);
+                const color = new THREE.Color();
+                if (Math.random() < 0.1) { color.setHSL(Math.random(), 0.7, 0.65); } else { color.setHSL(0.6, Math.random() * 0.1, 0.8 + Math.random() * 0.2); }
+                starColors.push(color.r, color.g, color.b);
+            }
+            starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
+            starGeometry.setAttribute('color', new THREE.Float32BufferAttribute(starColors, 3));
+            starGeometry.setAttribute('size', new THREE.Float32BufferAttribute(starSizes, 1));
+            const starMaterial = new THREE.ShaderMaterial({
+                 uniforms: { pointTexture: { value: createStarTexture() } },
+                 vertexShader: `
+                      attribute float size; varying vec3 vColor; varying float vSize;
+                      void main() {
+                           vColor = color; vSize = size; vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+                           gl_PointSize = size * (400.0 / -mvPosition.z); gl_Position = projectionMatrix * mvPosition;
+                      }`,
+                 fragmentShader: `
+                      uniform sampler2D pointTexture; varying vec3 vColor; varying float vSize;
+                      void main() {
+                           float alpha = texture2D(pointTexture, gl_PointCoord).a; if (alpha < 0.1) discard;
+                           gl_FragColor = vec4(vColor, alpha * 0.9);
+                      }`,
+                 blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, vertexColors: true
+             });
+            scene.add(new THREE.Points(starGeometry, starMaterial));
+        }
+
+        function createStarTexture() {
+            const size = 64; const canvas = document.createElement('canvas');
+            canvas.width = size; canvas.height = size; const context = canvas.getContext('2d');
+            const gradient = context.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
+            gradient.addColorStop(0, 'rgba(255,255,255,1)'); gradient.addColorStop(0.2, 'rgba(255,255,255,0.8)');
+            gradient.addColorStop(0.5, 'rgba(255,255,255,0.3)'); gradient.addColorStop(1, 'rgba(255,255,255,0)');
+            context.fillStyle = gradient; context.fillRect(0, 0, size, size);
+            return new THREE.CanvasTexture(canvas);
+        }
+
+        function setupParticleSystem() {
+            targetPositions = SHAPES.map(shape => shape.generator(CONFIG.particleCount, CONFIG.shapeSize));
+            particlesGeometry = new THREE.BufferGeometry();
+
+            currentPositions = new Float32Array(targetPositions[0]);
+            sourcePositions = new Float32Array(targetPositions[0]);
+            swarmPositions = new Float32Array(CONFIG.particleCount * 3);
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(currentPositions, 3));
+
+            particleSizes = new Float32Array(CONFIG.particleCount);
+            particleOpacities = new Float32Array(CONFIG.particleCount);
+            particleEffectStrengths = new Float32Array(CONFIG.particleCount);
+            for (let i = 0; i < CONFIG.particleCount; i++) {
+                particleSizes[i] = THREE.MathUtils.randFloat(CONFIG.particleSizeRange[0], CONFIG.particleSizeRange[1]);
+                particleOpacities[i] = 1.0;
+                particleEffectStrengths[i] = 0.0;
+            }
+            particlesGeometry.setAttribute('size', new THREE.BufferAttribute(particleSizes, 1));
+            particlesGeometry.setAttribute('opacity', new THREE.BufferAttribute(particleOpacities, 1));
+            particlesGeometry.setAttribute('aEffectStrength', new THREE.BufferAttribute(particleEffectStrengths, 1));
+
+            const colors = new Float32Array(CONFIG.particleCount * 3);
+            updateColorArray(colors, currentPositions);
+            particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            particlesMaterial = new THREE.ShaderMaterial({
+                 uniforms: {
+                      pointTexture: { value: createStarTexture() }
+                 },
+                 vertexShader: `
+                      attribute float size;
+                      attribute float opacity;
+                      attribute float aEffectStrength;
+                      varying vec3 vColor;
+                      varying float vOpacity;
+                      varying float vEffectStrength;
+
+                      void main() {
+                           vColor = color;
+                           vOpacity = opacity;
+                           vEffectStrength = aEffectStrength;
+
+                           vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+
+                           float sizeScale = 1.0 - vEffectStrength * ${CONFIG.morphSizeFactor.toFixed(2)};
+                           gl_PointSize = size * sizeScale * (400.0 / -mvPosition.z);
+
+                           gl_Position = projectionMatrix * mvPosition;
+                      }
+                 `,
+                 fragmentShader: `
+                      uniform sampler2D pointTexture;
+                      varying vec3 vColor;
+                      varying float vOpacity;
+                      varying float vEffectStrength;
+
+                      void main() {
+                           float alpha = texture2D(pointTexture, gl_PointCoord).a;
+                           if (alpha < 0.05) discard;
+
+                           vec3 finalColor = vColor * (1.0 + vEffectStrength * ${CONFIG.morphBrightnessFactor.toFixed(2)});
+
+                           gl_FragColor = vec4(finalColor, alpha * vOpacity);
+                      }
+                 `,
+                 blending: THREE.AdditiveBlending,
+                 depthTest: true,
+                 depthWrite: false,
+                 transparent: true,
+                 vertexColors: true
+            });
+
+            particleSystem = new THREE.Points(particlesGeometry, particlesMaterial);
+            scene.add(particleSystem);
+        }
+
+        function updateColorArray(colors, positionsArray) {
+            const colorScheme = COLOR_SCHEMES[CONFIG.colorScheme];
+            const center = new THREE.Vector3(0, 0, 0);
+            const maxRadius = CONFIG.shapeSize * 1.1;
+            for (let i = 0; i < CONFIG.particleCount; i++) {
+                const i3 = i * 3;
+                tempVec.fromArray(positionsArray, i3);
+                const dist = tempVec.distanceTo(center);
+                let hue;
+                if (CONFIG.colorScheme === 'rainbow') {
+                    const normX = (tempVec.x / maxRadius + 1) / 2; const normY = (tempVec.y / maxRadius + 1) / 2; const normZ = (tempVec.z / maxRadius + 1) / 2;
+                    hue = (normX * 120 + normY * 120 + normZ * 120) % 360;
+                } else {
+                    hue = THREE.MathUtils.mapLinear( dist, 0, maxRadius, colorScheme.startHue, colorScheme.endHue );
+                }
+                const noiseValue = (noise3D(tempVec.x * 0.2, tempVec.y * 0.2, tempVec.z * 0.2) + 1) * 0.5;
+                const saturation = THREE.MathUtils.clamp(colorScheme.saturation * (0.9 + noiseValue * 0.2), 0, 1);
+                const lightness = THREE.MathUtils.clamp(colorScheme.lightness * (0.85 + noiseValue * 0.3), 0.1, 0.9);
+                const color = new THREE.Color().setHSL(hue / 360, saturation, lightness);
+                color.toArray(colors, i3);
+            }
+        }
+
+        function updateColors() {
+            const colors = particlesGeometry.attributes.color.array;
+            updateColorArray(colors, particlesGeometry.attributes.position.array);
+            particlesGeometry.attributes.color.needsUpdate = true;
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            if (!isInitialized) return;
+            const elapsedTime = clock.getElapsedTime();
+            const deltaTime = clock.getDelta();
+            controls.update();
+            const positions = particlesGeometry.attributes.position.array;
+            const effectStrengths = particlesGeometry.attributes.aEffectStrength.array;
+
+            updateIdleAnimation(positions, effectStrengths, elapsedTime, deltaTime);
+            particlesGeometry.attributes.position.needsUpdate = true;
+            if (particlesGeometry.attributes.aEffectStrength.needsUpdate) {
+                 particlesGeometry.attributes.aEffectStrength.needsUpdate = true;
+            }
+            composer.render(deltaTime);
+        }
+
+        function updateIdleAnimation(positions, effectStrengths, elapsedTime, deltaTime) {
+            const breathScale = 1.0 + Math.sin(elapsedTime * 0.5) * 0.015;
+            const timeScaled = elapsedTime * CONFIG.idleFlowSpeed;
+            const freq = 0.1;
+
+            let needsEffectStrengthReset = false;
+
+            for (let i = 0; i < CONFIG.particleCount; i++) {
+                const i3 = i * 3;
+                sourceVec.fromArray(sourcePositions, i3);
+                tempVec.copy(sourceVec).multiplyScalar(breathScale);
+                flowVec.set( noise4D(tempVec.x * freq, tempVec.y * freq, tempVec.z * freq, timeScaled), noise4D(tempVec.x * freq + 10, tempVec.y * freq + 10, tempVec.z * freq + 10, timeScaled), noise4D(tempVec.x * freq + 20, tempVec.y * freq + 20, tempVec.z * freq + 20, timeScaled) );
+                tempVec.addScaledVector(flowVec, CONFIG.idleFlowStrength);
+                currentVec.fromArray(positions, i3);
+                currentVec.lerp(tempVec, 0.05);
+                positions[i3] = currentVec.x;
+                positions[i3 + 1] = currentVec.y;
+                positions[i3 + 2] = currentVec.z;
+
+                if (effectStrengths[i] !== 0.0) {
+                    effectStrengths[i] = 0.0;
+                    needsEffectStrengthReset = true;
+                }
+            }
+             if (needsEffectStrengthReset) {
+                 particlesGeometry.attributes.aEffectStrength.needsUpdate = true;
+             }
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        init();
     </script>
 </body>
 </html> 
