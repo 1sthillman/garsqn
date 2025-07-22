@@ -2083,6 +2083,8 @@
             // Ürünleri getir
             async function getProducts() {
                 try {
+                    console.log('🔍 Ürünler getiriliyor, Restaurant ID:', RESTAURANT_ID);
+                    
                     const { data, error } = await supabase
                         .from('products')
                         .select('*')
@@ -2091,9 +2093,11 @@
                         .order('sort_order', { ascending: true });
                     
                     if (error) throw error;
+                    
+                    console.log('✅ Ürünler alındı:', data);
                     return data || [];
                 } catch (error) {
-                    console.error('Ürünler alınamadı:', error);
+                    console.error('❌ Ürünler alınamadı:', error);
                     return [];
                 }
             }
@@ -2101,6 +2105,8 @@
             // Kategorileri getir
             async function getCategories() {
                 try {
+                    console.log('🔍 Kategoriler getiriliyor, Restaurant ID:', RESTAURANT_ID);
+                    
                     const { data, error } = await supabase
                         .from('product_categories')
                         .select('*')
@@ -2108,9 +2114,11 @@
                         .order('sort_order', { ascending: true });
                     
                     if (error) throw error;
+                    
+                    console.log('✅ Kategoriler alındı:', data);
                     return data || [];
                 } catch (error) {
-                    console.error('Kategoriler alınamadı:', error);
+                    console.error('❌ Kategoriler alınamadı:', error);
                     return [];
                 }
             }
@@ -2201,6 +2209,8 @@
                 const categoryBar = document.getElementById('categoryBar');
                 categoryBar.innerHTML = '';
                 
+                console.log('📂 Kategori barı oluşturuluyor, toplam kategori sayısı:', categories.length);
+                
                 // Tümü kategorisi
                 const allBtn = document.createElement('button');
                 allBtn.className = 'category-btn active';
@@ -2209,7 +2219,9 @@
                 categoryBar.appendChild(allBtn);
                 
                 // Diğer kategoriler
-                categories.forEach(category => {
+                categories.forEach((category, index) => {
+                    console.log(`📂 Kategori ${index + 1}:`, category);
+                    
                     const btn = document.createElement('button');
                     btn.className = 'category-btn';
                     btn.setAttribute('data-category', category.id);
@@ -2224,16 +2236,18 @@
                         e.target.classList.add('active');
                         
                         const categoryId = e.target.getAttribute('data-category');
-                        console.log('Seçilen kategori:', categoryId);
+                        console.log('🎯 Seçilen kategori:', categoryId);
                         
                         if (categoryId === 'all') {
+                            console.log('📋 Tüm ürünler gösteriliyor, toplam:', products.length);
                             renderProducts();
                         } else {
                             const filteredProducts = products.filter(product => {
-                                console.log('Ürün kategori ID:', product.category_id, 'Aranan:', categoryId);
-                                return product.category_id === categoryId;
+                                const matches = product.category_id === categoryId;
+                                console.log(`🔍 Ürün: ${product.name}, Kategori ID: ${product.category_id}, Aranan: ${categoryId}, Eşleşme: ${matches}`);
+                                return matches;
                             });
-                            console.log('Filtrelenmiş ürünler:', filteredProducts);
+                            console.log('✅ Filtrelenmiş ürünler:', filteredProducts.length, 'ürün bulundu');
                             renderProducts(filteredProducts);
                         }
                     }
@@ -2320,12 +2334,17 @@
                 const productGrid = document.getElementById('productGrid');
                 productGrid.innerHTML = '';
                 
+                console.log('🎨 Ürünler render ediliyor, toplam:', filteredProducts.length);
+                
                 if (filteredProducts.length === 0) {
+                    console.log('⚠️ Bu kategoride ürün bulunamadı');
                     productGrid.innerHTML = '<div class="no-products">Bu kategoride ürün bulunamadı.</div>';
                     return;
                 }
                 
-                filteredProducts.forEach(product => {
+                filteredProducts.forEach((product, index) => {
+                    console.log(`📦 Ürün ${index + 1}:`, product.name, 'Kategori ID:', product.category_id);
+                    
                     const card = document.createElement('div');
                     card.className = 'product-card card-3d';
                     card.innerHTML = `
