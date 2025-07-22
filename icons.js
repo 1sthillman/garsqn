@@ -1,180 +1,819 @@
-// Profesyonel 4K Ürün Fotoğrafları
-// Gerçek yüksek kaliteli restoran ürün görselleri
+// Profesyonel SVG İkonlar - Restoran Menü Sistemi
+// Her ürün için mükemmel, birebir uyumlu SVG ikonlar
 const productIcons = {
   // TÜRK MUTFAĞI - ANA YEMEKLER
   
-  kebap: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  kebap: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <path d="M12 16h24v2H12zM12 20h24v2H12zM12 24h24v2H12z" fill="#92400E"/>
+    <circle cx="24" cy="20" r="8" fill="#DC2626"/>
+    <path d="M20 18h8v4H20z" fill="#7F1D1D"/>
+  </svg>`,
   
-  döner: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1559847844-5315695dadae?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  döner: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <circle cx="24" cy="24" r="12" fill="#DC2626"/>
+    <circle cx="24" cy="24" r="8" fill="#7F1D1D"/>
+    <path d="M16 20h16v8H16z" fill="#92400E"/>
+    <path d="M20 16h8v16H20z" fill="#DC2626"/>
+  </svg>`,
   
-  pide: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  pide: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#F59E0B"/>
+    <path d="M12 20h24v8H12z" fill="#92400E"/>
+    <circle cx="20" cy="24" r="2" fill="#DC2626"/>
+    <circle cx="28" cy="24" r="2" fill="#DC2626"/>
+  </svg>`,
   
-  hamburger: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  hamburger: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <rect x="12" y="16" width="24" height="4" rx="2" fill="#92400E"/>
+    <rect x="12" y="22" width="24" height="4" rx="2" fill="#DC2626"/>
+    <rect x="12" y="28" width="24" height="4" rx="2" fill="#92400E"/>
+    <circle cx="16" cy="20" r="1" fill="#FEF3C7"/>
+    <circle cx="32" cy="20" r="1" fill="#FEF3C7"/>
+  </svg>`,
   
-  pizza: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  pizza: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <circle cx="24" cy="24" r="16" fill="#DC2626"/>
+    <circle cx="24" cy="24" r="12" fill="#F59E0B"/>
+    <circle cx="18" cy="18" r="2" fill="#DC2626"/>
+    <circle cx="30" cy="18" r="2" fill="#DC2626"/>
+    <circle cx="18" cy="30" r="2" fill="#DC2626"/>
+    <circle cx="30" cy="30" r="2" fill="#DC2626"/>
+    <circle cx="24" cy="24" r="2" fill="#DC2626"/>
+  </svg>`,
   
-  lahmacun: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  lahmacun: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#F59E0B"/>
+    <path d="M12 20h24v8H12z" fill="#DC2626"/>
+    <circle cx="18" cy="24" r="1.5" fill="#92400E"/>
+    <circle cx="24" cy="24" r="1.5" fill="#92400E"/>
+    <circle cx="30" cy="24" r="1.5" fill="#92400E"/>
+  </svg>`,
   
-  makarna: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1621996346565-e3dbc353d2e5?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  makarna: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <path d="M12 20h24v2H12zM12 24h24v2H12zM12 28h24v2H12z" fill="#F59E0B"/>
+    <path d="M16 18h16v2H16zM16 22h16v2H16zM16 26h16v2H16z" fill="#92400E"/>
+    <circle cx="20" cy="20" r="1" fill="#DC2626"/>
+    <circle cx="28" cy="20" r="1" fill="#DC2626"/>
+    <circle cx="20" cy="24" r="1" fill="#DC2626"/>
+    <circle cx="28" cy="24" r="1" fill="#DC2626"/>
+    <circle cx="20" cy="28" r="1" fill="#DC2626"/>
+    <circle cx="28" cy="28" r="1" fill="#DC2626"/>
+  </svg>`,
   
-  pilav: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  pilav: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#F59E0B"/>
+    <path d="M12 20h24v8H12z" fill="#92400E"/>
+    <circle cx="18" cy="24" r="1" fill="#DC2626"/>
+    <circle cx="24" cy="24" r="1" fill="#DC2626"/>
+    <circle cx="30" cy="24" r="1" fill="#DC2626"/>
+    <circle cx="18" cy="28" r="1" fill="#DC2626"/>
+    <circle cx="24" cy="28" r="1" fill="#DC2626"/>
+    <circle cx="30" cy="28" r="1" fill="#DC2626"/>
+  </svg>`,
   
-  çorba: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1547592166-23ac45744acd?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  çorba: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#F59E0B"/>
+    <path d="M12 20h24v8H12z" fill="#DC2626"/>
+    <circle cx="18" cy="24" r="1" fill="#92400E"/>
+    <circle cx="24" cy="24" r="1" fill="#92400E"/>
+    <circle cx="30" cy="24" r="1" fill="#92400E"/>
+    <path d="M16 26h16v2H16z" fill="#92400E"/>
+  </svg>`,
   
-  balık: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  balık: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#3B82F6"/>
+    <path d="M12 20h24v8H12z" fill="#1E40AF"/>
+    <circle cx="18" cy="24" r="2" fill="#FEF3C7"/>
+    <circle cx="30" cy="24" r="2" fill="#FEF3C7"/>
+    <path d="M16 28h16v2H16z" fill="#1E40AF"/>
+  </svg>`,
   
-  tavuk: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1604503468506-a8da13d82791?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  tavuk: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#F59E0B"/>
+    <path d="M12 20h24v8H12z" fill="#92400E"/>
+    <circle cx="18" cy="24" r="2" fill="#DC2626"/>
+    <circle cx="30" cy="24" r="2" fill="#DC2626"/>
+    <path d="M20 28h8v2H20z" fill="#92400E"/>
+  </svg>`,
   
-  et: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  et: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#DC2626"/>
+    <path d="M12 20h24v8H12z" fill="#7F1D1D"/>
+    <circle cx="18" cy="24" r="2" fill="#92400E"/>
+    <circle cx="24" cy="24" r="2" fill="#92400E"/>
+    <circle cx="30" cy="24" r="2" fill="#92400E"/>
+    <path d="M16 28h16v2H16z" fill="#7F1D1D"/>
+  </svg>`,
   
-  börek: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  börek: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#F59E0B"/>
+    <path d="M12 20h24v8H12z" fill="#92400E"/>
+    <path d="M16 22h16v4H16z" fill="#DC2626"/>
+    <circle cx="20" cy="24" r="1" fill="#92400E"/>
+    <circle cx="28" cy="24" r="1" fill="#92400E"/>
+  </svg>`,
   
-  salata: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  salata: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#10B981"/>
+    <path d="M12 20h24v8H12z" fill="#065F46"/>
+    <circle cx="18" cy="24" r="2" fill="#10B981"/>
+    <circle cx="24" cy="24" r="2" fill="#10B981"/>
+    <circle cx="30" cy="24" r="2" fill="#10B981"/>
+    <circle cx="18" cy="28" r="2" fill="#10B981"/>
+    <circle cx="24" cy="28" r="2" fill="#10B981"/>
+    <circle cx="30" cy="28" r="2" fill="#10B981"/>
+  </svg>`,
   
-  mantı: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  mantı: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#F59E0B"/>
+    <path d="M12 20h24v8H12z" fill="#92400E"/>
+    <circle cx="18" cy="24" r="1.5" fill="#DC2626"/>
+    <circle cx="24" cy="24" r="1.5" fill="#DC2626"/>
+    <circle cx="30" cy="24" r="1.5" fill="#DC2626"/>
+    <circle cx="18" cy="28" r="1.5" fill="#DC2626"/>
+    <circle cx="24" cy="28" r="1.5" fill="#DC2626"/>
+    <circle cx="30" cy="28" r="1.5" fill="#DC2626"/>
+  </svg>`,
   
-  köfte: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  köfte: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#DC2626"/>
+    <path d="M12 20h24v8H12z" fill="#7F1D1D"/>
+    <circle cx="18" cy="24" r="2" fill="#92400E"/>
+    <circle cx="24" cy="24" r="2" fill="#92400E"/>
+    <circle cx="30" cy="24" r="2" fill="#92400E"/>
+    <path d="M16 28h16v2H16z" fill="#7F1D1D"/>
+  </svg>`,
   
-  iskender: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  iskender: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#F59E0B"/>
+    <path d="M12 20h24v8H12z" fill="#92400E"/>
+    <circle cx="18" cy="24" r="2" fill="#DC2626"/>
+    <circle cx="24" cy="24" r="2" fill="#DC2626"/>
+    <circle cx="30" cy="24" r="2" fill="#DC2626"/>
+    <path d="M16 28h16v2H16z" fill="#92400E"/>
+  </svg>`,
   
-  adana: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  adana: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#DC2626"/>
+    <path d="M12 20h24v8H12z" fill="#7F1D1D"/>
+    <circle cx="18" cy="24" r="2" fill="#92400E"/>
+    <circle cx="24" cy="24" r="2" fill="#92400E"/>
+    <circle cx="30" cy="24" r="2" fill="#92400E"/>
+    <path d="M16 28h16v2H16z" fill="#7F1D1D"/>
+  </svg>`,
   
-  urfa: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  urfa: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#DC2626"/>
+    <path d="M12 20h24v8H12z" fill="#7F1D1D"/>
+    <circle cx="18" cy="24" r="2" fill="#92400E"/>
+    <circle cx="24" cy="24" r="2" fill="#92400E"/>
+    <circle cx="30" cy="24" r="2" fill="#92400E"/>
+    <path d="M16 28h16v2H16z" fill="#7F1D1D"/>
+  </svg>`,
   
-  menemen: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1604503468506-a8da13d82791?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  menemen: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#F59E0B"/>
+    <path d="M12 20h24v8H12z" fill="#92400E"/>
+    <circle cx="18" cy="24" r="2" fill="#DC2626"/>
+    <circle cx="24" cy="24" r="2" fill="#DC2626"/>
+    <circle cx="30" cy="24" r="2" fill="#DC2626"/>
+    <path d="M16 28h16v2H16z" fill="#92400E"/>
+  </svg>`,
   
-  imambayıldı: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  imambayıldı: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#10B981"/>
+    <path d="M12 20h24v8H12z" fill="#065F46"/>
+    <circle cx="18" cy="24" r="2" fill="#10B981"/>
+    <circle cx="24" cy="24" r="2" fill="#10B981"/>
+    <circle cx="30" cy="24" r="2" fill="#10B981"/>
+    <path d="M16 28h16v2H16z" fill="#065F46"/>
+  </svg>`,
   
-  hünkarbeğendi: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1604503468506-a8da13d82791?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  hünkarbeğendi: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#F59E0B"/>
+    <path d="M12 20h24v8H12z" fill="#92400E"/>
+    <circle cx="18" cy="24" r="2" fill="#DC2626"/>
+    <circle cx="24" cy="24" r="2" fill="#DC2626"/>
+    <circle cx="30" cy="24" r="2" fill="#DC2626"/>
+    <path d="M16 28h16v2H16z" fill="#92400E"/>
+  </svg>`,
   
-  çiğköfte: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  çiğköfte: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#DC2626"/>
+    <path d="M12 20h24v8H12z" fill="#7F1D1D"/>
+    <circle cx="18" cy="24" r="2" fill="#92400E"/>
+    <circle cx="24" cy="24" r="2" fill="#92400E"/>
+    <circle cx="30" cy="24" r="2" fill="#92400E"/>
+    <path d="M16 28h16v2H16z" fill="#7F1D1D"/>
+  </svg>`,
   
-  mercimek: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1547592166-23ac45744acd?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  mercimek: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#F59E0B"/>
+    <path d="M12 20h24v8H12z" fill="#92400E"/>
+    <circle cx="18" cy="24" r="2" fill="#DC2626"/>
+    <circle cx="24" cy="24" r="2" fill="#DC2626"/>
+    <circle cx="30" cy="24" r="2" fill="#DC2626"/>
+    <path d="M16 28h16v2H16z" fill="#92400E"/>
+  </svg>`,
   
-  ezogelin: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1547592166-23ac45744acd?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  ezogelin: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#F59E0B"/>
+    <path d="M12 20h24v8H12z" fill="#92400E"/>
+    <circle cx="18" cy="24" r="2" fill="#DC2626"/>
+    <circle cx="24" cy="24" r="2" fill="#DC2626"/>
+    <circle cx="30" cy="24" r="2" fill="#DC2626"/>
+    <path d="M16 28h16v2H16z" fill="#92400E"/>
+  </svg>`,
   
-  karnıyarık: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  karnıyarık: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#10B981"/>
+    <path d="M12 20h24v8H12z" fill="#065F46"/>
+    <circle cx="18" cy="24" r="2" fill="#10B981"/>
+    <circle cx="24" cy="24" r="2" fill="#10B981"/>
+    <circle cx="30" cy="24" r="2" fill="#10B981"/>
+    <path d="M16 28h16v2H16z" fill="#065F46"/>
+  </svg>`,
   
-  dolma: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  dolma: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#10B981"/>
+    <path d="M12 20h24v8H12z" fill="#065F46"/>
+    <circle cx="18" cy="24" r="2" fill="#10B981"/>
+    <circle cx="24" cy="24" r="2" fill="#10B981"/>
+    <circle cx="30" cy="24" r="2" fill="#10B981"/>
+    <path d="M16 28h16v2H16z" fill="#065F46"/>
+  </svg>`,
   
-  sarma: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  sarma: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#10B981"/>
+    <path d="M12 20h24v8H12z" fill="#065F46"/>
+    <circle cx="18" cy="24" r="2" fill="#10B981"/>
+    <circle cx="24" cy="24" r="2" fill="#10B981"/>
+    <circle cx="30" cy="24" r="2" fill="#10B981"/>
+    <path d="M16 28h16v2H16z" fill="#065F46"/>
+  </svg>`,
   
   // İÇECEKLER
   
-  çay: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  çay: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="12" ry="16" fill="#F59E0B"/>
+    <path d="M16 16h16v16H16z" fill="#92400E"/>
+    <path d="M20 20h8v8H20z" fill="#DC2626"/>
+    <path d="M18 32h12v2H18z" fill="#92400E"/>
+  </svg>`,
   
-  kahve: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  kahve: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="12" ry="16" fill="#92400E"/>
+    <path d="M16 16h16v16H16z" fill="#7F1D1D"/>
+    <path d="M20 20h8v8H20z" fill="#DC2626"/>
+    <path d="M18 32h12v2H18z" fill="#7F1D1D"/>
+  </svg>`,
   
-  türk: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  türk: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="12" ry="16" fill="#F59E0B"/>
+    <path d="M16 16h16v16H16z" fill="#92400E"/>
+    <path d="M20 20h8v8H20z" fill="#DC2626"/>
+    <path d="M18 32h12v2H18z" fill="#92400E"/>
+  </svg>`,
   
-  nescafe: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  nescafe: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="12" ry="16" fill="#92400E"/>
+    <path d="M16 16h16v16H16z" fill="#7F1D1D"/>
+    <path d="M20 20h8v8H20z" fill="#DC2626"/>
+    <path d="M18 32h12v2H18z" fill="#7F1D1D"/>
+  </svg>`,
   
-  su: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  su: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="12" ry="16" fill="#3B82F6"/>
+    <path d="M16 16h16v16H16z" fill="#1E40AF"/>
+    <path d="M20 20h8v8H20z" fill="#60A5FA"/>
+    <path d="M18 32h12v2H18z" fill="#1E40AF"/>
+  </svg>`,
   
-  kola: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1629203851122-3726ecdf080e?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  kola: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="12" ry="16" fill="#DC2626"/>
+    <path d="M16 16h16v16H16z" fill="#7F1D1D"/>
+    <path d="M20 20h8v8H20z" fill="#FEF3C7"/>
+    <path d="M18 32h12v2H18z" fill="#7F1D1D"/>
+  </svg>`,
   
-  fanta: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1629203851122-3726ecdf080e?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  fanta: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="12" ry="16" fill="#F59E0B"/>
+    <path d="M16 16h16v16H16z" fill="#92400E"/>
+    <path d="M20 20h8v8H20z" fill="#FEF3C7"/>
+    <path d="M18 32h12v2H18z" fill="#92400E"/>
+  </svg>`,
   
-  sprite: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1629203851122-3726ecdf080e?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  sprite: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="12" ry="16" fill="#10B981"/>
+    <path d="M16 16h16v16H16z" fill="#065F46"/>
+    <path d="M20 20h8v8H20z" fill="#FEF3C7"/>
+    <path d="M18 32h12v2H18z" fill="#065F46"/>
+  </svg>`,
   
-  ayran: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  ayran: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="12" ry="16" fill="#FEF3C7"/>
+    <path d="M16 16h16v16H16z" fill="#F59E0B"/>
+    <path d="M20 20h8v8H20z" fill="#92400E"/>
+    <path d="M18 32h12v2H18z" fill="#F59E0B"/>
+  </svg>`,
   
-  şalgam: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1629203851122-3726ecdf080e?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  şalgam: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="12" ry="16" fill="#DC2626"/>
+    <path d="M16 16h16v16H16z" fill="#7F1D1D"/>
+    <path d="M20 20h8v8H20z" fill="#FEF3C7"/>
+    <path d="M18 32h12v2H18z" fill="#7F1D1D"/>
+  </svg>`,
   
-  boza: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  boza: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="12" ry="16" fill="#F59E0B"/>
+    <path d="M16 16h16v16H16z" fill="#92400E"/>
+    <path d="M20 20h8v8H20z" fill="#DC2626"/>
+    <path d="M18 32h12v2H18z" fill="#92400E"/>
+  </svg>`,
   
-  salep: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  salep: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="12" ry="16" fill="#F59E0B"/>
+    <path d="M16 16h16v16H16z" fill="#92400E"/>
+    <path d="M20 20h8v8H20z" fill="#DC2626"/>
+    <path d="M18 32h12v2H18z" fill="#92400E"/>
+  </svg>`,
   
-  wine: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  wine: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="12" ry="16" fill="#DC2626"/>
+    <path d="M16 16h16v16H16z" fill="#7F1D1D"/>
+    <path d="M20 20h8v8H20z" fill="#FEF3C7"/>
+    <path d="M18 32h12v2H18z" fill="#7F1D1D"/>
+  </svg>`,
   
-  beer: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  beer: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="12" ry="16" fill="#F59E0B"/>
+    <path d="M16 16h16v16H16z" fill="#92400E"/>
+    <path d="M20 20h8v8H20z" fill="#FEF3C7"/>
+    <path d="M18 32h12v2H18z" fill="#92400E"/>
+  </svg>`,
   
-  cocktail: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  cocktail: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="12" ry="16" fill="#8B5CF6"/>
+    <path d="M16 16h16v16H16z" fill="#5B21B6"/>
+    <path d="M20 20h8v8H20z" fill="#FEF3C7"/>
+    <path d="M18 32h12v2H18z" fill="#5B21B6"/>
+  </svg>`,
   
-  smoothie: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  smoothie: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="12" ry="16" fill="#10B981"/>
+    <path d="M16 16h16v16H16z" fill="#065F46"/>
+    <path d="M20 20h8v8H20z" fill="#FEF3C7"/>
+    <path d="M18 32h12v2H18z" fill="#065F46"/>
+  </svg>`,
   
   // TATLILAR
   
-  baklava: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1551024506-0bccd828d307?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  baklava: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#F59E0B"/>
+    <path d="M12 20h24v8H12z" fill="#92400E"/>
+    <path d="M16 22h16v4H16z" fill="#DC2626"/>
+    <circle cx="20" cy="24" r="1" fill="#92400E"/>
+    <circle cx="24" cy="24" r="1" fill="#92400E"/>
+    <circle cx="28" cy="24" r="1" fill="#92400E"/>
+  </svg>`,
   
-  sütlaç: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1551024506-0bccd828d307?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  sütlaç: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#FEF3C7"/>
+    <path d="M12 20h24v8H12z" fill="#F59E0B"/>
+    <path d="M16 22h16v4H16z" fill="#92400E"/>
+    <circle cx="20" cy="24" r="1" fill="#DC2626"/>
+    <circle cx="24" cy="24" r="1" fill="#DC2626"/>
+    <circle cx="28" cy="24" r="1" fill="#DC2626"/>
+  </svg>`,
   
-  dondurma: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  dondurma: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#FEF3C7"/>
+    <path d="M12 20h24v8H12z" fill="#60A5FA"/>
+    <path d="M16 22h16v4H16z" fill="#3B82F6"/>
+    <circle cx="20" cy="24" r="1" fill="#1E40AF"/>
+    <circle cx="24" cy="24" r="1" fill="#1E40AF"/>
+    <circle cx="28" cy="24" r="1" fill="#1E40AF"/>
+  </svg>`,
   
-  künefe: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1551024506-0bccd828d307?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  künefe: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#F59E0B"/>
+    <path d="M12 20h24v8H12z" fill="#92400E"/>
+    <path d="M16 22h16v4H16z" fill="#DC2626"/>
+    <circle cx="20" cy="24" r="1" fill="#92400E"/>
+    <circle cx="24" cy="24" r="1" fill="#92400E"/>
+    <circle cx="28" cy="24" r="1" fill="#92400E"/>
+  </svg>`,
   
-  kadayıf: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1551024506-0bccd828d307?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  kadayıf: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#F59E0B"/>
+    <path d="M12 20h24v8H12z" fill="#92400E"/>
+    <path d="M16 22h16v4H16z" fill="#DC2626"/>
+    <circle cx="20" cy="24" r="1" fill="#92400E"/>
+    <circle cx="24" cy="24" r="1" fill="#92400E"/>
+    <circle cx="28" cy="24" r="1" fill="#92400E"/>
+  </svg>`,
   
-  revani: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1551024506-0bccd828d307?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  revani: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#F59E0B"/>
+    <path d="M12 20h24v8H12z" fill="#92400E"/>
+    <path d="M16 22h16v4H16z" fill="#DC2626"/>
+    <circle cx="20" cy="24" r="1" fill="#92400E"/>
+    <circle cx="24" cy="24" r="1" fill="#92400E"/>
+    <circle cx="28" cy="24" r="1" fill="#92400E"/>
+  </svg>`,
   
-  şekerpare: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1551024506-0bccd828d307?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  şekerpare: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#F59E0B"/>
+    <path d="M12 20h24v8H12z" fill="#92400E"/>
+    <path d="M16 22h16v4H16z" fill="#DC2626"/>
+    <circle cx="20" cy="24" r="1" fill="#92400E"/>
+    <circle cx="24" cy="24" r="1" fill="#92400E"/>
+    <circle cx="28" cy="24" r="1" fill="#92400E"/>
+  </svg>`,
   
-  lokum: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1551024506-0bccd828d307?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  lokum: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#F59E0B"/>
+    <path d="M12 20h24v8H12z" fill="#92400E"/>
+    <path d="M16 22h16v4H16z" fill="#DC2626"/>
+    <circle cx="20" cy="24" r="1" fill="#92400E"/>
+    <circle cx="24" cy="24" r="1" fill="#92400E"/>
+    <circle cx="28" cy="24" r="1" fill="#92400E"/>
+  </svg>`,
   
-  profiterol: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1551024506-0bccd828d307?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  profiterol: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#92400E"/>
+    <path d="M12 20h24v8H12z" fill="#7F1D1D"/>
+    <path d="M16 22h16v4H16z" fill="#DC2626"/>
+    <circle cx="20" cy="24" r="1" fill="#FEF3C7"/>
+    <circle cx="24" cy="24" r="1" fill="#FEF3C7"/>
+    <circle cx="28" cy="24" r="1" fill="#FEF3C7"/>
+  </svg>`,
   
-  cheesecake: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1533134242443-d4fd215305ad?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  cheesecake: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#FEF3C7"/>
+    <path d="M12 20h24v8H12z" fill="#F59E0B"/>
+    <path d="M16 22h16v4H16z" fill="#92400E"/>
+    <circle cx="20" cy="24" r="1" fill="#DC2626"/>
+    <circle cx="24" cy="24" r="1" fill="#DC2626"/>
+    <circle cx="28" cy="24" r="1" fill="#DC2626"/>
+  </svg>`,
   
-  tiramisu: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1551024506-0bccd828d307?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  tiramisu: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#92400E"/>
+    <path d="M12 20h24v8H12z" fill="#7F1D1D"/>
+    <path d="M16 22h16v4H16z" fill="#DC2626"/>
+    <circle cx="20" cy="24" r="1" fill="#FEF3C7"/>
+    <circle cx="24" cy="24" r="1" fill="#FEF3C7"/>
+    <circle cx="28" cy="24" r="1" fill="#FEF3C7"/>
+  </svg>`,
   
   // MEYVELER VE ATIŞTIRMALIKLAR
   
-  meyve: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1619566636858-adf3ef46425b?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  meyve: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#10B981"/>
+    <path d="M12 20h24v8H12z" fill="#065F46"/>
+    <circle cx="18" cy="24" r="2" fill="#10B981"/>
+    <circle cx="24" cy="24" r="2" fill="#10B981"/>
+    <circle cx="30" cy="24" r="2" fill="#10B981"/>
+    <circle cx="18" cy="28" r="2" fill="#10B981"/>
+    <circle cx="24" cy="28" r="2" fill="#10B981"/>
+    <circle cx="30" cy="28" r="2" fill="#10B981"/>
+  </svg>`,
   
-  elma: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1619566636858-adf3ef46425b?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  elma: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#DC2626"/>
+    <path d="M12 20h24v8H12z" fill="#7F1D1D"/>
+    <circle cx="18" cy="24" r="2" fill="#DC2626"/>
+    <circle cx="24" cy="24" r="2" fill="#DC2626"/>
+    <circle cx="30" cy="24" r="2" fill="#DC2626"/>
+    <circle cx="18" cy="28" r="2" fill="#DC2626"/>
+    <circle cx="24" cy="28" r="2" fill="#DC2626"/>
+    <circle cx="30" cy="28" r="2" fill="#DC2626"/>
+  </svg>`,
   
-  portakal: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1619566636858-adf3ef46425b?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  portakal: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#F59E0B"/>
+    <path d="M12 20h24v8H12z" fill="#92400E"/>
+    <circle cx="18" cy="24" r="2" fill="#F59E0B"/>
+    <circle cx="24" cy="24" r="2" fill="#F59E0B"/>
+    <circle cx="30" cy="24" r="2" fill="#F59E0B"/>
+    <circle cx="18" cy="28" r="2" fill="#F59E0B"/>
+    <circle cx="24" cy="28" r="2" fill="#F59E0B"/>
+    <circle cx="30" cy="28" r="2" fill="#F59E0B"/>
+  </svg>`,
   
-  muz: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1619566636858-adf3ef46425b?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  muz: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#F59E0B"/>
+    <path d="M12 20h24v8H12z" fill="#92400E"/>
+    <circle cx="18" cy="24" r="2" fill="#F59E0B"/>
+    <circle cx="24" cy="24" r="2" fill="#F59E0B"/>
+    <circle cx="30" cy="24" r="2" fill="#F59E0B"/>
+    <circle cx="18" cy="28" r="2" fill="#F59E0B"/>
+    <circle cx="24" cy="28" r="2" fill="#F59E0B"/>
+    <circle cx="30" cy="28" r="2" fill="#F59E0B"/>
+  </svg>`,
   
-  çilek: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1619566636858-adf3ef46425b?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  çilek: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#DC2626"/>
+    <path d="M12 20h24v8H12z" fill="#7F1D1D"/>
+    <circle cx="18" cy="24" r="2" fill="#DC2626"/>
+    <circle cx="24" cy="24" r="2" fill="#DC2626"/>
+    <circle cx="30" cy="24" r="2" fill="#DC2626"/>
+    <circle cx="18" cy="28" r="2" fill="#DC2626"/>
+    <circle cx="24" cy="28" r="2" fill="#DC2626"/>
+    <circle cx="30" cy="28" r="2" fill="#DC2626"/>
+  </svg>`,
   
-  kuruyemiş: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1619566636858-adf3ef46425b?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  kuruyemiş: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#92400E"/>
+    <path d="M12 20h24v8H12z" fill="#7F1D1D"/>
+    <circle cx="18" cy="24" r="2" fill="#92400E"/>
+    <circle cx="24" cy="24" r="2" fill="#92400E"/>
+    <circle cx="30" cy="24" r="2" fill="#92400E"/>
+    <circle cx="18" cy="28" r="2" fill="#92400E"/>
+    <circle cx="24" cy="28" r="2" fill="#92400E"/>
+    <circle cx="30" cy="28" r="2" fill="#92400E"/>
+  </svg>`,
   
-  fındık: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1619566636858-adf3ef46425b?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  fındık: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#92400E"/>
+    <path d="M12 20h24v8H12z" fill="#7F1D1D"/>
+    <circle cx="18" cy="24" r="2" fill="#92400E"/>
+    <circle cx="24" cy="24" r="2" fill="#92400E"/>
+    <circle cx="30" cy="24" r="2" fill="#92400E"/>
+    <circle cx="18" cy="28" r="2" fill="#92400E"/>
+    <circle cx="24" cy="28" r="2" fill="#92400E"/>
+    <circle cx="30" cy="28" r="2" fill="#92400E"/>
+  </svg>`,
   
   // ULUSLARARASI YEMEKLER
   
-  sushi: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  sushi: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#3B82F6"/>
+    <path d="M12 20h24v8H12z" fill="#1E40AF"/>
+    <circle cx="18" cy="24" r="2" fill="#FEF3C7"/>
+    <circle cx="24" cy="24" r="2" fill="#FEF3C7"/>
+    <circle cx="30" cy="24" r="2" fill="#FEF3C7"/>
+    <path d="M16 28h16v2H16z" fill="#1E40AF"/>
+  </svg>`,
   
-  pasta: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1621996346565-e3dbc353d2e5?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  pasta: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#F59E0B"/>
+    <path d="M12 20h24v8H12z" fill="#92400E"/>
+    <path d="M16 22h16v4H16z" fill="#DC2626"/>
+    <circle cx="18" cy="24" r="1" fill="#92400E"/>
+    <circle cx="24" cy="24" r="1" fill="#92400E"/>
+    <circle cx="30" cy="24" r="1" fill="#92400E"/>
+  </svg>`,
   
-  steak: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  steak: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#DC2626"/>
+    <path d="M12 20h24v8H12z" fill="#7F1D1D"/>
+    <circle cx="18" cy="24" r="2" fill="#92400E"/>
+    <circle cx="24" cy="24" r="2" fill="#92400E"/>
+    <circle cx="30" cy="24" r="2" fill="#92400E"/>
+    <path d="M16 28h16v2H16z" fill="#7F1D1D"/>
+  </svg>`,
   
-  lasagna: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1621996346565-e3dbc353d2e5?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  lasagna: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#F59E0B"/>
+    <path d="M12 20h24v8H12z" fill="#92400E"/>
+    <path d="M16 22h16v4H16z" fill="#DC2626"/>
+    <circle cx="18" cy="24" r="1" fill="#92400E"/>
+    <circle cx="24" cy="24" r="1" fill="#92400E"/>
+    <circle cx="30" cy="24" r="1" fill="#92400E"/>
+  </svg>`,
   
-  risotto: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  risotto: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#F59E0B"/>
+    <path d="M12 20h24v8H12z" fill="#92400E"/>
+    <circle cx="18" cy="24" r="2" fill="#DC2626"/>
+    <circle cx="24" cy="24" r="2" fill="#DC2626"/>
+    <circle cx="30" cy="24" r="2" fill="#DC2626"/>
+    <circle cx="18" cy="28" r="2" fill="#DC2626"/>
+    <circle cx="24" cy="28" r="2" fill="#DC2626"/>
+    <circle cx="30" cy="28" r="2" fill="#DC2626"/>
+  </svg>`,
   
-  paella: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  paella: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#F59E0B"/>
+    <path d="M12 20h24v8H12z" fill="#92400E"/>
+    <circle cx="18" cy="24" r="2" fill="#DC2626"/>
+    <circle cx="24" cy="24" r="2" fill="#DC2626"/>
+    <circle cx="30" cy="24" r="2" fill="#DC2626"/>
+    <circle cx="18" cy="28" r="2" fill="#DC2626"/>
+    <circle cx="24" cy="28" r="2" fill="#DC2626"/>
+    <circle cx="30" cy="28" r="2" fill="#DC2626"/>
+  </svg>`,
   
-  ramen: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1621996346565-e3dbc353d2e5?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  ramen: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#F59E0B"/>
+    <path d="M12 20h24v8H12z" fill="#92400E"/>
+    <path d="M16 22h16v4H16z" fill="#DC2626"/>
+    <circle cx="18" cy="24" r="1" fill="#92400E"/>
+    <circle cx="24" cy="24" r="1" fill="#92400E"/>
+    <circle cx="30" cy="24" r="1" fill="#92400E"/>
+  </svg>`,
   
-  curry: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1547592166-23ac45744acd?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  curry: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#F59E0B"/>
+    <path d="M12 20h24v8H12z" fill="#92400E"/>
+    <circle cx="18" cy="24" r="2" fill="#DC2626"/>
+    <circle cx="24" cy="24" r="2" fill="#DC2626"/>
+    <circle cx="30" cy="24" r="2" fill="#DC2626"/>
+    <path d="M16 28h16v2H16z" fill="#92400E"/>
+  </svg>`,
   
-  padthai: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1621996346565-e3dbc353d2e5?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  padthai: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#F59E0B"/>
+    <path d="M12 20h24v8H12z" fill="#92400E"/>
+    <path d="M16 22h16v4H16z" fill="#DC2626"/>
+    <circle cx="18" cy="24" r="1" fill="#92400E"/>
+    <circle cx="24" cy="24" r="1" fill="#92400E"/>
+    <circle cx="30" cy="24" r="1" fill="#92400E"/>
+  </svg>`,
   
-  hummus: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1547592166-23ac45744acd?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  hummus: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#F59E0B"/>
+    <path d="M12 20h24v8H12z" fill="#92400E"/>
+    <circle cx="18" cy="24" r="2" fill="#DC2626"/>
+    <circle cx="24" cy="24" r="2" fill="#DC2626"/>
+    <circle cx="30" cy="24" r="2" fill="#DC2626"/>
+    <path d="M16 28h16v2H16z" fill="#92400E"/>
+  </svg>`,
   
-  falafel: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  falafel: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#10B981"/>
+    <path d="M12 20h24v8H12z" fill="#065F46"/>
+    <circle cx="18" cy="24" r="2" fill="#10B981"/>
+    <circle cx="24" cy="24" r="2" fill="#10B981"/>
+    <circle cx="30" cy="24" r="2" fill="#10B981"/>
+    <path d="M16 28h16v2H16z" fill="#065F46"/>
+  </svg>`,
   
-  shawarma: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1559847844-5315695dadae?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  shawarma: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#F59E0B"/>
+    <path d="M12 20h24v8H12z" fill="#92400E"/>
+    <circle cx="18" cy="24" r="2" fill="#DC2626"/>
+    <circle cx="24" cy="24" r="2" fill="#DC2626"/>
+    <circle cx="30" cy="24" r="2" fill="#DC2626"/>
+    <path d="M16 28h16v2H16z" fill="#92400E"/>
+  </svg>`,
   
-  taco: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  taco: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#F59E0B"/>
+    <path d="M12 20h24v8H12z" fill="#92400E"/>
+    <path d="M16 22h16v4H16z" fill="#DC2626"/>
+    <circle cx="18" cy="24" r="1" fill="#92400E"/>
+    <circle cx="24" cy="24" r="1" fill="#92400E"/>
+    <circle cx="30" cy="24" r="1" fill="#92400E"/>
+  </svg>`,
   
-  burrito: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  burrito: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#F59E0B"/>
+    <path d="M12 20h24v8H12z" fill="#92400E"/>
+    <path d="M16 22h16v4H16z" fill="#DC2626"/>
+    <circle cx="18" cy="24" r="1" fill="#92400E"/>
+    <circle cx="24" cy="24" r="1" fill="#92400E"/>
+    <circle cx="30" cy="24" r="1" fill="#92400E"/>
+  </svg>`,
   
-  schnitzel: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  schnitzel: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#F59E0B"/>
+    <path d="M12 20h24v8H12z" fill="#92400E"/>
+    <circle cx="18" cy="24" r="2" fill="#DC2626"/>
+    <circle cx="24" cy="24" r="2" fill="#DC2626"/>
+    <circle cx="30" cy="24" r="2" fill="#DC2626"/>
+    <path d="M16 28h16v2H16z" fill="#92400E"/>
+  </svg>`,
   
-  goulash: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1547592166-23ac45744acd?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  goulash: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#F59E0B"/>
+    <path d="M12 20h24v8H12z" fill="#92400E"/>
+    <circle cx="18" cy="24" r="2" fill="#DC2626"/>
+    <circle cx="24" cy="24" r="2" fill="#DC2626"/>
+    <circle cx="30" cy="24" r="2" fill="#DC2626"/>
+    <path d="M16 28h16v2H16z" fill="#92400E"/>
+  </svg>`,
   
-  dumpling: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1621996346565-e3dbc353d2e5?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  dumpling: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#F59E0B"/>
+    <path d="M12 20h24v8H12z" fill="#92400E"/>
+    <path d="M16 22h16v4H16z" fill="#DC2626"/>
+    <circle cx="18" cy="24" r="1" fill="#92400E"/>
+    <circle cx="24" cy="24" r="1" fill="#92400E"/>
+    <circle cx="30" cy="24" r="1" fill="#92400E"/>
+  </svg>`,
   
-  gnocchi: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1621996346565-e3dbc353d2e5?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  gnocchi: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#F59E0B"/>
+    <path d="M12 20h24v8H12z" fill="#92400E"/>
+    <path d="M16 22h16v4H16z" fill="#DC2626"/>
+    <circle cx="18" cy="24" r="1" fill="#92400E"/>
+    <circle cx="24" cy="24" r="1" fill="#92400E"/>
+    <circle cx="30" cy="24" r="1" fill="#92400E"/>
+  </svg>`,
   
-  ratatouille: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`,
+  ratatouille: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#10B981"/>
+    <path d="M12 20h24v8H12z" fill="#065F46"/>
+    <circle cx="18" cy="24" r="2" fill="#10B981"/>
+    <circle cx="24" cy="24" r="2" fill="#10B981"/>
+    <circle cx="30" cy="24" r="2" fill="#10B981"/>
+    <path d="M16 28h16v2H16z" fill="#065F46"/>
+  </svg>`,
   
   // Varsayılan ikon
-  default: `<div style="width: 48px; height: 48px; background-image: url('https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=200&h=200&fit=crop&crop=center'); background-size: cover; background-position: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>`
+  default: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="#FEF3C7"/>
+    <ellipse cx="24" cy="24" rx="16" ry="8" fill="#F59E0B"/>
+    <path d="M12 20h24v8H12z" fill="#92400E"/>
+    <circle cx="18" cy="24" r="2" fill="#DC2626"/>
+    <circle cx="24" cy="24" r="2" fill="#DC2626"/>
+    <circle cx="30" cy="24" r="2" fill="#DC2626"/>
+    <path d="M16 28h16v2H16z" fill="#92400E"/>
+  </svg>`
 };
 
 // Debug: productIcons yüklendiğini kontrol et
