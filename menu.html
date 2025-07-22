@@ -942,8 +942,8 @@
         </button>
     </div>
 
-    <!-- Background Controls -->
-    <div class="background-controls">
+    <!-- Background Controls (Hidden - Auto Changes) -->
+    <div class="background-controls" style="display: none;">
         <button id="shape-btn" class="bg-control-btn">
             <i class="fas fa-magic"></i>
             <span>Şekil Değiştir</span>
@@ -1826,12 +1826,12 @@
             function updateProgress(increment) {
                 progress += increment;
                 progressBar.style.width = `${Math.min(100, progress)}%`;
-                if (progress >= 100) {
-                    setTimeout(() => {
-                        loadingScreen.style.opacity = '0';
-                        setTimeout(() => { loadingScreen.style.display = 'none'; }, 600);
-                    }, 200);
-                }
+                            if (progress >= 100) {
+                setTimeout(() => {
+                    loadingScreen.style.opacity = '0';
+                    setTimeout(() => { loadingScreen.style.display = 'none'; }, 600);
+                }, 100);
+            }
             }
 
             clock = new THREE.Clock();
@@ -2121,6 +2121,36 @@
         window.CONFIG = CONFIG;
 
         init();
+        
+        // Auto color and shape changes
+        setupAutoChanges();
+    }
+    
+    function setupAutoChanges() {
+        // Auto color change every 10 seconds
+        setInterval(() => {
+            const colorSchemes = ['fire', 'neon', 'nature', 'rainbow'];
+            const currentIndex = colorSchemes.indexOf(CONFIG.colorScheme);
+            const nextIndex = (currentIndex + 1) % colorSchemes.length;
+            CONFIG.colorScheme = colorSchemes[nextIndex];
+            updateColors();
+            
+            // Update active color in UI
+            const colorOptions = document.querySelectorAll('.color-option');
+            colorOptions.forEach(opt => opt.classList.remove('active'));
+            const activeColor = document.querySelector(`.color-option[data-scheme="${CONFIG.colorScheme}"]`);
+            if (activeColor) {
+                activeColor.classList.add('active');
+            }
+        }, 10000);
+        
+        // Auto shape change every 15 seconds
+        setInterval(() => {
+            if (!isMorphing) {
+                triggerMorph();
+            }
+        }, 15000);
+    }
         
         // Background controls
         setupBackgroundControls();
