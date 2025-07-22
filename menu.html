@@ -134,7 +134,7 @@
             background-attachment: fixed;
             color: var(--text-primary);
             min-height: 100vh;
-            padding-bottom: 50px;
+            padding-bottom: 60px;
             overflow-x: hidden;
             position: relative;
         }
@@ -249,31 +249,13 @@
             text-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
         }
         
-        .logo-icon {
-            width: 24px;
-            height: 24px;
+        .logo i {
+            font-size: var(--font-size-lg);
             background: linear-gradient(135deg, #ffd700 0%, #ffb347 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             filter: drop-shadow(0 1px 3px rgba(255, 215, 0, 0.25));
-        }
-        
-        .contact-icon {
-            width: 20px;
-            height: 20px;
-            color: white;
-            filter: drop-shadow(0 1px 3px rgba(255, 255, 255, 0.3));
-        }
-        
-        .cart-icon {
-            width: 20px;
-            height: 20px;
-            color: white;
-            filter: drop-shadow(0 1px 3px rgba(255, 255, 255, 0.3));
-        }
-        
-        .action-btn i {
-            font-size: var(--font-size-sm);
-            color: white;
-            filter: drop-shadow(0 1px 2px rgba(255, 255, 255, 0.4));
         }
         
         @keyframes logoGlow {
@@ -340,8 +322,10 @@
             left: 100%;
         }
         
-        .cart-btn .cart-icon {
+        .cart-btn i {
+            font-size: var(--font-size-lg);
             filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.7));
+            text-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
         }
         
         .cart-btn:hover {
@@ -385,7 +369,8 @@
             border-color: rgba(255, 255, 255, 0.6);
         }
         
-        .contact-btn .contact-icon {
+        .contact-btn i {
+            font-size: var(--font-size-lg);
             filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.8));
         }
         
@@ -769,17 +754,17 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(15px) saturate(120%);
-            -webkit-backdrop-filter: blur(15px) saturate(120%);
-            border-top: 1px solid rgba(255, 255, 255, 0.15);
-            padding: var(--space-sm);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px) saturate(150%);
+            -webkit-backdrop-filter: blur(20px) saturate(150%);
+            border-top: 1px solid var(--glass-border-strong);
+            padding: var(--space-md);
             display: flex;
-            gap: var(--space-xs);
-            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.1), 0 -1px 3px rgba(255, 255, 255, 0.05);
+            gap: var(--space-sm);
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.15), 0 -1px 5px rgba(255, 255, 255, 0.08);
             z-index: var(--z-fixed);
-            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-            margin: 0 var(--space-xs);
+            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+            margin: 0 var(--space-sm);
         }
         
         .upgrade-btn {
@@ -824,11 +809,11 @@
         
         .action-btn {
             flex: 1;
-            padding: var(--space-xs) var(--space-sm);
+            padding: var(--space-sm) var(--space-md);
             border: 1px solid transparent;
-            border-radius: var(--radius-md);
+            border-radius: var(--radius-xl);
             font-size: var(--font-size-xs);
-            font-weight: var(--font-weight-medium);
+            font-weight: var(--font-weight-semibold);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -839,8 +824,8 @@
             overflow: hidden;
             color: white;
             text-transform: uppercase;
-            letter-spacing: 0.02em;
-            min-height: 32px;
+            letter-spacing: 0.03em;
+            min-height: 40px;
         }
         
         .action-btn::before {
@@ -877,16 +862,16 @@
         }
         
         .call-waiter {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            box-shadow: 0 8px 20px rgba(106, 17, 203, 0.3);
-            border-color: rgba(106, 17, 203, 0.2);
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+            background: var(--premium-ocean);
+            box-shadow: 0 15px 40px rgba(106, 17, 203, 0.5);
+            border-color: rgba(106, 17, 203, 0.3);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
         
         .call-waiter:hover {
-            transform: translateY(-2px) scale(1.01);
-            box-shadow: 0 10px 25px rgba(106, 17, 203, 0.4), 0 0 10px rgba(106, 17, 203, 0.2);
-            border-color: rgba(106, 17, 203, 0.3);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(106, 17, 203, 0.6), 0 0 15px rgba(106, 17, 203, 0.3);
+            border-color: rgba(106, 17, 203, 0.5);
         }
         
         .call-waiter i {
@@ -901,16 +886,16 @@
         }
         
         .request-charcoal {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            box-shadow: 0 8px 20px rgba(255, 154, 158, 0.3);
-            border-color: rgba(255, 154, 158, 0.2);
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+            background: var(--premium-rose);
+            box-shadow: 0 15px 40px rgba(255, 154, 158, 0.5);
+            border-color: rgba(255, 154, 158, 0.3);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
         
         .request-charcoal:hover {
-            transform: translateY(-2px) scale(1.01);
-            box-shadow: 0 10px 25px rgba(255, 154, 158, 0.4), 0 0 10px rgba(255, 154, 158, 0.2);
-            border-color: rgba(255, 154, 158, 0.3);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(255, 154, 158, 0.6), 0 0 15px rgba(255, 154, 158, 0.3);
+            border-color: rgba(255, 154, 158, 0.5);
         }
         
         .request-charcoal i {
@@ -1922,12 +1907,7 @@
     <header>
         <div class="header-content">
             <div class="logo">
-                <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M8.1 13.34L3.91 9.16C2.35 7.59 2.35 5.06 3.91 3.5L10.93 10.5L8.1 13.34Z" fill="currentColor"/>
-                    <path d="M14.88 11.53L13.41 13L15.88 15.47L17.35 14L14.88 11.53Z" fill="currentColor"/>
-                    <path d="M19.78 4.22L18.36 5.64L20.59 7.88L22 6.47L19.78 4.22Z" fill="currentColor"/>
-                    <path d="M20.59 7.88L19.78 4.22L16.12 7.88L20.59 7.88Z" fill="currentColor"/>
-                </svg>
+                <i class="fas fa-utensils"></i>
                 <span id="restaurantName">QR Menü</span>
             </div>
             <div class="header-right">
@@ -1935,14 +1915,10 @@
                     <span>Masa <span id="tableId">--</span></span>
                 </div>
                 <button class="contact-btn glow-effect" id="contactBtn" onclick="window.open('mailto:sthillmanbusiness@gmail.com', '_blank')">
-                    <svg class="contact-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M20 4H4C2.9 4 2 4.9 2 6V18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM20 8L12 13L4 8V6L12 11L20 6V8Z" fill="currentColor"/>
-                    </svg>
+                    <i class="fas fa-envelope"></i>
                 </button>
                 <button class="cart-btn glow-effect" id="cartBtn">
-                    <svg class="cart-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M7 18C5.9 18 5.01 18.9 5.01 20C5.01 21.1 5.9 22 7 22C8.1 22 9 21.1 9 20C9 18.9 8.1 18 7 18ZM1 2V4H3L6.6 11.59L5.25 14.04C5.09 14.32 5 14.65 5 15C5 16.1 5.9 17 7 17H19V15H7.42C7.28 15 7.17 14.89 7.17 14.75L7.2 14.63L8.1 13H15.55C16.3 13 16.96 12.59 17.3 11.97L20.88 5H5.21L4.27 2H1ZM17 18C15.9 18 15.01 18.9 15.01 20C15.01 21.1 15.9 22 17 22C18.1 22 19 21.1 19 20C19 18.9 18.1 18 17 18Z" fill="currentColor"/>
-                    </svg>
+                    <i class="fas fa-shopping-cart"></i>
                     <span class="cart-badge" id="cartBadge">0</span>
                 </button>
             </div>
