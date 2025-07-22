@@ -123,14 +123,57 @@
         }
         
         body {
-            background: linear-gradient(-45deg, #6a11cb, #2575fc, #4facfe, #00f2fe, #a8edea);
+            background: linear-gradient(135deg, 
+                #667eea 0%, 
+                #764ba2 25%, 
+                #f093fb 50%, 
+                #f5576c 75%, 
+                #4facfe 100%);
             background-size: 400% 400%;
-            animation: gradientShift 20s ease infinite;
+            animation: gradientShift 25s ease infinite;
             background-attachment: fixed;
             color: var(--text-primary);
             min-height: 100vh;
             padding-bottom: 100px;
             overflow-x: hidden;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 15% 85%, rgba(255, 255, 255, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 85% 15%, rgba(255, 255, 255, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 60%),
+                radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.07) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+            animation: backgroundFloat 20s ease-in-out infinite;
+        }
+        
+        @keyframes backgroundFloat {
+            0%, 100% { 
+                transform: translateY(0px) rotate(0deg);
+                opacity: 0.8;
+            }
+            25% { 
+                transform: translateY(-10px) rotate(1deg);
+                opacity: 0.9;
+            }
+            50% { 
+                transform: translateY(5px) rotate(-1deg);
+                opacity: 0.7;
+            }
+            75% { 
+                transform: translateY(-5px) rotate(0.5deg);
+                opacity: 0.85;
+            }
         }
         
         /* Header Styles - Enhanced */
@@ -402,6 +445,8 @@
             margin: 0 0 var(--space-xl);
             scrollbar-width: none;
             scroll-behavior: smooth;
+            position: relative;
+            z-index: 10;
         }
         
         .category-bar::-webkit-scrollbar {
@@ -409,11 +454,14 @@
         }
         
         .category-btn {
-            background: var(--glass-bg);
-            backdrop-filter: blur(25px) saturate(180%);
-            -webkit-backdrop-filter: blur(25px) saturate(180%);
-            border: 2px solid var(--glass-border);
-            color: var(--text-secondary);
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.15) 0%, 
+                rgba(255, 255, 255, 0.08) 50%, 
+                rgba(255, 255, 255, 0.03) 100%);
+            backdrop-filter: blur(30px) saturate(180%);
+            -webkit-backdrop-filter: blur(30px) saturate(180%);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: var(--text-primary);
             padding: var(--space-md) var(--space-xl);
             border-radius: var(--radius-2xl);
             font-size: var(--font-size-sm);
@@ -421,7 +469,10 @@
             white-space: nowrap;
             cursor: pointer;
             transition: var(--transition-elastic);
-            box-shadow: var(--glass-shadow), 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.12),
+                0 2px 8px rgba(0, 0, 0, 0.08),
+                inset 0 1px 1px rgba(255, 255, 255, 0.2);
             position: relative;
             overflow: hidden;
             min-width: 120px;
@@ -436,8 +487,8 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s ease-in-out;
         }
         
         .category-btn:hover::before {
@@ -445,17 +496,30 @@
         }
         
         .category-btn:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: var(--glass-shadow-strong), 0 10px 25px rgba(0,0,0,0.15);
-            border-color: var(--glass-border-strong);
+            transform: translateY(-8px) scale(1.08);
+            box-shadow: 
+                0 15px 45px rgba(0, 0, 0, 0.2),
+                0 5px 15px rgba(0, 0, 0, 0.1),
+                inset 0 1px 1px rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.25) 0%, 
+                rgba(255, 255, 255, 0.15) 50%, 
+                rgba(255, 255, 255, 0.08) 100%);
         }
         
         .category-btn.active {
-            background: var(--premium-ocean);
-            color: white;
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 15px 40px rgba(106, 17, 203, 0.4);
-            border-color: rgba(106, 17, 203, 0.4);
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.3) 0%, 
+                rgba(255, 255, 255, 0.2) 50%, 
+                rgba(255, 255, 255, 0.1) 100%);
+            color: var(--text-primary);
+            transform: translateY(-8px) scale(1.08);
+            box-shadow: 
+                0 20px 50px rgba(0, 0, 0, 0.25),
+                0 8px 20px rgba(0, 0, 0, 0.15),
+                inset 0 1px 1px rgba(255, 255, 255, 0.4);
+            border-color: rgba(255, 255, 255, 0.6);
         }
         
         .category-btn.active::after {
@@ -465,9 +529,18 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.15) 100%);
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.3) 0%, 
+                rgba(255, 255, 255, 0.2) 50%, 
+                rgba(255, 255, 255, 0.1) 100%);
             border-radius: inherit;
             pointer-events: none;
+            animation: activePulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes activePulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
         }
         
         /* Product Grid - Enhanced */
@@ -2140,6 +2213,28 @@
                     btn.textContent = category.name;
                     categoryBar.appendChild(btn);
                 });
+                
+                // Kategori tıklama olaylarını ekle
+                categoryBar.addEventListener('click', function(e) {
+                    if (e.target.classList.contains('category-btn')) {
+                        document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                        e.target.classList.add('active');
+                        
+                        const categoryId = e.target.getAttribute('data-category');
+                        console.log('Seçilen kategori:', categoryId);
+                        
+                        if (categoryId === 'all') {
+                            renderProducts();
+                        } else {
+                            const filteredProducts = products.filter(product => {
+                                console.log('Ürün kategori ID:', product.category_id, 'Aranan:', categoryId);
+                                return product.category_id === categoryId;
+                            });
+                            console.log('Filtrelenmiş ürünler:', filteredProducts);
+                            renderProducts(filteredProducts);
+                        }
+                    }
+                });
             }
             
             // Ürün adına göre SVG döndüren fonksiyon
@@ -2335,23 +2430,7 @@
             
             // Event listener'ları ayarla
             function setupEventListeners() {
-                // Kategori değiştirme
-                document.querySelectorAll('.category-btn').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-                        this.classList.add('active');
-                        
-                        const category = this.getAttribute('data-category');
-                        if (category === 'all') {
-                            renderProducts();
-                        } else {
-                            const filteredProducts = products.filter(product => 
-                                product.category_id === category || product.category === category
-                            );
-                            renderProducts(filteredProducts);
-                        }
-                    });
-                });
+                // Kategori değiştirme - artık createCategoryBar içinde yapılıyor
                 
                 // Sepet modalını açma
                 document.getElementById('cartBtn').addEventListener('click', function() {
