@@ -10,8 +10,476 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20250120" />
   <style>
+    /* Neon Elite Arkaplan Tasarımı */
+    :root {
+      --neon-primary: #00ffff;
+      --neon-secondary: #ff00ff;
+      --neon-accent: #ffff00;
+      --neon-glow: #0ff;
+      --dark-bg: #0a0a0a;
+      --glass-bg: rgba(255, 255, 255, 0.1);
+      --glass-border: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Ana Arkaplan */
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: var(--dark-bg);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Neon Arkaplan Katmanları */
+    .neon-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    /* Gradient Arkaplan */
+    .neon-bg-gradient {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(0, 255, 255, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 0, 255, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(255, 255, 0, 0.2) 0%, transparent 50%),
+        linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+    }
+
+    /* Neon Grid */
+    .neon-grid {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px);
+      background-size: 50px 50px;
+      animation: neon-grid-move 20s linear infinite;
+    }
+
+    @keyframes neon-grid-move {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(50px, 50px); }
+    }
+
+    /* Neon Partiküller */
+    .neon-particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .particle {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: var(--neon-primary);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--neon-primary);
+      animation: particle-float 8s ease-in-out infinite;
+    }
+
+    .particle:nth-child(odd) {
+      background: var(--neon-secondary);
+      box-shadow: 0 0 10px var(--neon-secondary);
+      animation-duration: 12s;
+    }
+
+    .particle:nth-child(3n) {
+      background: var(--neon-accent);
+      box-shadow: 0 0 10px var(--neon-accent);
+      animation-duration: 10s;
+    }
+
+    @keyframes particle-float {
+      0%, 100% { 
+        transform: translateY(0px) translateX(0px);
+        opacity: 0.3;
+      }
+      50% { 
+        transform: translateY(-20px) translateX(10px);
+        opacity: 1;
+      }
+    }
+
+    /* Neon Kenarlar */
+    .neon-border {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .neon-border::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--neon-primary), transparent);
+      box-shadow: 0 0 20px var(--neon-primary);
+    }
+
+    .neon-border::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--neon-secondary), transparent);
+      box-shadow: 0 0 20px var(--neon-secondary);
+    }
+
+    /* Glassmorphism Efektleri */
+    .glass {
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .glass-header {
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--neon-primary);
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 24px;
+      margin-bottom: 20px;
+      border-radius: 16px;
+    }
+
+    /* Neon Butonlar */
+    .neon-btn {
+      background: linear-gradient(135deg, var(--neon-primary), var(--neon-secondary));
+      border: none;
+      border-radius: 12px;
+      color: white;
+      font-weight: 600;
+      padding: 12px 24px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 
+        0 0 20px rgba(0, 255, 255, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .neon-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .neon-btn:hover::before {
+      left: 100%;
+    }
+
+    .neon-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 
+        0 0 30px rgba(0, 255, 255, 0.8),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+
+    /* Neon Kartlar */
+    .neon-card {
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(15px);
+      border: 1px solid var(--neon-primary);
+      border-radius: 16px;
+      box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        0 0 20px rgba(0, 255, 255, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .neon-card:hover {
+      border-color: var(--neon-secondary);
+      box-shadow: 
+        0 12px 40px rgba(0, 0, 0, 0.4),
+        0 0 30px rgba(255, 0, 255, 0.3);
+      transform: translateY(-4px);
+    }
+
+    /* Neon Text */
+    .neon-text {
+      color: var(--neon-primary);
+      text-shadow: 0 0 10px var(--neon-primary);
+    }
+
+    .neon-text-secondary {
+      color: var(--neon-secondary);
+      text-shadow: 0 0 10px var(--neon-secondary);
+    }
+
+    /* Ana Container */
+    .main-container {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    /* Header */
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--neon-primary);
+      text-shadow: 0 0 10px var(--neon-primary);
+    }
+
+    .table-number {
+      background: linear-gradient(135deg, var(--neon-primary), var(--neon-secondary));
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 600;
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+    }
+
+    /* Kategori Bar */
+    .category-bar {
+      display: flex;
+      gap: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .category-bar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .category-btn {
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid var(--neon-primary);
+      color: var(--neon-primary);
+      padding: 8px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+    }
+
+    .category-btn.active,
+    .category-btn:hover {
+      background: var(--neon-primary);
+      color: black;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+    }
+
+    /* Ürün Grid */
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 16px;
+      padding: 0 16px;
+    }
+
+    .product-card {
+      background: rgba(0, 0, 0, 0.7);
+      border: 1px solid var(--neon-secondary);
+      border-radius: 16px;
+      padding: 16px;
+      text-align: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 15px rgba(255, 0, 255, 0.3);
+      cursor: pointer;
+    }
+
+    .product-card:hover {
+      border-color: var(--neon-accent);
+      box-shadow: 0 0 25px rgba(255, 255, 0, 0.5);
+      transform: translateY(-4px);
+    }
+
+    .product-icon {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      border: 1px solid var(--neon-accent);
+    }
+
+    .product-name {
+      font-weight: 600;
+      color: white;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+    }
+
+    .product-price {
+      color: var(--neon-accent);
+      font-weight: 700;
+      font-size: 1.1rem;
+      text-shadow: 0 0 10px var(--neon-accent);
+    }
+
+    /* Sepet */
+    .cart-section {
+      background: rgba(0, 0, 0, 0.8);
+      border: 1px solid var(--neon-primary);
+      border-radius: 16px;
+      padding: 20px;
+      margin-top: 20px;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .cart-total {
+      font-weight: 700;
+      color: var(--neon-accent);
+      text-shadow: 0 0 10px var(--neon-accent);
+      font-size: 1.2rem;
+      margin-top: 16px;
+      text-align: center;
+    }
+
+    /* Action Buttons */
+    .action-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    .call-waiter-btn,
+    .koz-iste-btn {
+      background: linear-gradient(135deg, var(--neon-primary), var(--neon-secondary));
+      border: none;
+      border-radius: 12px;
+      color: white;
+      font-weight: 600;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+      font-size: 1rem;
+    }
+
+    .call-waiter-btn:hover,
+    .koz-iste-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px rgba(0, 255, 255, 0.8);
+    }
+
+    .koz-iste-btn {
+      background: linear-gradient(135deg, var(--neon-secondary), var(--neon-accent));
+      box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+    }
+
+    .koz-iste-btn:hover {
+      box-shadow: 0 0 30px rgba(255, 0, 255, 0.8);
+    }
+
+    /* Loading */
+    .loading-overlay {
+      background: rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--neon-primary);
+      box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+    }
+
+    .loading-spinner {
+      border: 3px solid rgba(0, 255, 255, 0.3);
+      border-top: 3px solid var(--neon-primary);
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+    }
+
+    /* Toast */
+    .toast {
+      background: rgba(0, 0, 0, 0.9);
+      border: 1px solid var(--neon-primary);
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .menu-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 12px;
+      }
+      
+      .product-card {
+        padding: 12px;
+      }
+      
+      .product-icon {
+        width: 40px;
+        height: 40px;
+      }
+    }
+
+    /* Partikül Pozisyonları */
+    .particle:nth-child(1) { left: 10%; top: 20%; animation-delay: 0s; }
+    .particle:nth-child(2) { left: 20%; top: 60%; animation-delay: 1s; }
+    .particle:nth-child(3) { left: 30%; top: 40%; animation-delay: 2s; }
+    .particle:nth-child(4) { left: 40%; top: 80%; animation-delay: 3s; }
+    .particle:nth-child(5) { left: 50%; top: 30%; animation-delay: 4s; }
+    .particle:nth-child(6) { left: 60%; top: 70%; animation-delay: 5s; }
+    .particle:nth-child(7) { left: 70%; top: 50%; animation-delay: 6s; }
+    .particle:nth-child(8) { left: 80%; top: 90%; animation-delay: 7s; }
+    .particle:nth-child(9) { left: 90%; top: 25%; animation-delay: 8s; }
+    .particle:nth-child(10) { left: 15%; top: 85%; animation-delay: 9s; }
+    .particle:nth-child(11) { left: 25%; top: 15%; animation-delay: 10s; }
+    .particle:nth-child(12) { left: 35%; top: 75%; animation-delay: 11s; }
+    .particle:nth-child(13) { left: 45%; top: 35%; animation-delay: 12s; }
+    .particle:nth-child(14) { left: 55%; top: 85%; animation-delay: 13s; }
+    .particle:nth-child(15) { left: 65%; top: 45%; animation-delay: 14s; }
+    .particle:nth-child(16) { left: 75%; top: 95%; animation-delay: 15s; }
+    .particle:nth-child(17) { left: 85%; top: 55%; animation-delay: 16s; }
+    .particle:nth-child(18) { left: 95%; top: 25%; animation-delay: 17s; }
+    .particle:nth-child(19) { left: 5%; top: 65%; animation-delay: 18s; }
+    .particle:nth-child(20) { left: 95%; top: 75%; animation-delay: 19s; }
+
     /* Ek stiller */
     .loading-overlay {
       position: fixed;
