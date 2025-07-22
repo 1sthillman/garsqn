@@ -2291,12 +2291,12 @@
                 
                 // Garson çağırma
                 document.getElementById('callWaiterBtn').addEventListener('click', function() {
-                    callWaiter('waiter');
+                    callWaiter('garson');
                 });
                 
                 // Köz isteme
                 document.getElementById('requestCharcoalBtn').addEventListener('click', function() {
-                    callWaiter('charcoal');
+                    callWaiter('köz');
                 });
                 
 
@@ -2305,6 +2305,25 @@
                 document.getElementById('checkoutBtn').addEventListener('click', function() {
                     submitOrder();
                 });
+            }
+            
+            // Masa durumu kontrolü
+            async function checkTableStatus() {
+                try {
+                    const { data: table, error } = await supabase
+                        .from('tables')
+                        .select('status, order_locked')
+                        .eq('id', TABLE_ID)
+                        .eq('restaurant_id', RESTAURANT_ID)
+                        .single();
+                    
+                    if (error) throw error;
+                    
+                    return table;
+                } catch (error) {
+                    console.error('Masa durumu kontrol edilemedi:', error);
+                    return null;
+                }
             }
             
             // Garson çağır
@@ -2323,7 +2342,7 @@
                     
                     if (error) throw error;
                     
-                    const message = type === 'waiter' ? 'Garson çağrıldı!' : 'Köz isteğiniz iletildi!';
+                    const message = type === 'garson' ? 'Garson çağrıldı!' : 'Köz isteğiniz iletildi!';
                     showToast('info', 'Bilgi', message);
                     
                 } catch (error) {
@@ -2336,6 +2355,19 @@
             async function submitOrder() {
                 if (cart.length === 0) {
                     showToast('error', 'Hata', 'Sepetiniz boş!');
+                    return;
+                }
+                
+                // Masa durumunu kontrol et
+                const tableStatus = await checkTableStatus();
+                if (!tableStatus) {
+                    showToast('error', 'Hata', 'Masa durumu kontrol edilemedi');
+                    return;
+                }
+                
+                // Eğer masa kilitliyse sipariş vermeyi engelle
+                if (tableStatus.order_locked) {
+                    showToast('warning', 'Uyarı', 'Masanız şu anda servis ediliyor. Lütfen bekleyin.');
                     return;
                 }
                 
@@ -2374,7 +2406,11 @@
                     // Masa durumunu güncelle
                     await supabase
                         .from('tables')
-                        .update({ status: 'active' })
+                        .update({ 
+                            status: 'active',
+                            order_locked: true,
+                            current_order_id: order.id
+                        })
                         .eq('id', TABLE_ID)
                         .eq('restaurant_id', RESTAURANT_ID);
                     
