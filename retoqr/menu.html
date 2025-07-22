@@ -87,34 +87,71 @@
   </style>
 </head>
 <body>
-  <div class="loading-overlay" id="loadingOverlay">
-    <div class="loading-spinner"></div>
-    <p>Menü yükleniyor...</p>
+  <!-- Neon Arkaplan -->
+  <div class="neon-background">
+    <div class="neon-bg-gradient"></div>
+    <div class="neon-grid"></div>
+    <div class="neon-particles">
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+    </div>
+    <div class="neon-border"></div>
   </div>
 
+  <div class="main-container">
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="loading-spinner"></div>
+      <p>Menü yükleniyor...</p>
+    </div>
 
-  <header class="glass-header">
-    <div class="logo" id="restaurantName">Yükleniyor...</div>
-    <div class="table-number">Masa <span id="table-id">--</span></div>
-  </header>
-  <main class="main-grid">
-    <section class="menu-section">
-      <h1 class="main-title">Dijital Menü</h1>
-      <div id="categoryBar" class="category-bar glass">
-        <!-- Kategoriler buraya dinamik olarak gelecek -->
-      </div>
-      <div class="menu-grid" id="menuGrid">
-        <!-- Menü kartları buraya dinamik olarak gelecek -->
-      </div>
-    </section>
-    <aside class="order-section glass">
-      <h2>Siparişlerim</h2>
-      <ul id="order-list"></ul>
-      <button id="submitOrderBtn" class="submit-order-btn neon-btn">Siparişi Gönder</button>
-      <button id="callWaiterBtn" class="call-waiter-btn neon-btn">Garson Çağır</button>
-      <button id="kozIsteBtn" class="koz-iste-btn">KÖZ İSTE</button>
-    </aside>
-  </main>
+
+    <header class="glass-header">
+      <div class="logo neon-text" id="restaurantName">Yükleniyor...</div>
+      <div class="table-number">Masa <span id="table-id">--</span></div>
+    </header>
+    
+    <main class="main-grid">
+      <section class="menu-section">
+        <div id="categoryBar" class="category-bar glass">
+          <!-- Kategoriler buraya dinamik olarak gelecek -->
+        </div>
+        <div class="menu-grid" id="menuGrid">
+          <!-- Menü kartları buraya dinamik olarak gelecek -->
+        </div>
+      </section>
+      
+      <aside class="order-section glass">
+        <h2 class="neon-text">Sepetim</h2>
+        <div id="cartItems">
+          <!-- Sepet öğeleri buraya gelecek -->
+        </div>
+        <div class="cart-total" id="cartTotal">Toplam: 0₺</div>
+        <button id="submitOrderBtn" class="neon-btn">Sipariş Ver</button>
+      </aside>
+    </main>
+    
+    <div class="action-buttons">
+      <button id="callWaiterBtn" class="call-waiter-btn neon-btn">🔔 GARSON ÇAĞIR</button>
+      <button id="kozIsteBtn" class="koz-iste-btn neon-btn">🔥 KÖZ İSTE</button>
+    </div>
   <div id="toast-container"></div>
   
   <script src="icons.js?v=20250120"></script>
