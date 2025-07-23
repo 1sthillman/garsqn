@@ -1953,7 +1953,7 @@
             
             async function initWelcomeAnimation() {
                 try {
-                    const { default: THREE } = await import('three');
+                    const THREE = await import('three');
                     const { OrbitControls } = await import('three/addons/controls/OrbitControls.js');
                     const { EffectComposer } = await import('three/addons/postprocessing/EffectComposer.js');
                     const { RenderPass } = await import('three/addons/postprocessing/RenderPass.js');
@@ -1961,12 +1961,12 @@
                     const { UnrealBloomPass } = await import('three/addons/postprocessing/UnrealBloomPass.js');
 
                     const canvas = document.querySelector('#welcome-canvas');
-                    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
+                    const renderer = new THREE.default.WebGLRenderer({ canvas, alpha: true });
                     renderer.setSize(window.innerWidth, window.innerHeight);
                     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-                    const scene = new THREE.Scene();
-                    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+                    const scene = new THREE.default.Scene();
+                    const camera = new THREE.default.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
                     camera.position.z = 5;
 
                     const controls = new OrbitControls(camera, renderer.domElement);
@@ -1974,30 +1974,30 @@
                     controls.enableZoom = false;
                     controls.enablePan = false;
 
-                    const light = new THREE.PointLight(0xffffff, 1);
+                    const light = new THREE.default.PointLight(0xffffff, 1);
                     light.position.set(5, 5, 5);
                     scene.add(light);
 
-                    const rotatingGroup = new THREE.Group();
+                    const rotatingGroup = new THREE.default.Group();
                     scene.add(rotatingGroup);
 
-                    const starGeometry = new THREE.BufferGeometry();
+                    const starGeometry = new THREE.default.BufferGeometry();
                     const starCount = 1000;
                     const starsPositions = new Float32Array(starCount * 3);
                     for (let i = 0; i < starCount * 3; i++) {
                         starsPositions[i] = (Math.random() - 0.5) * 200;
                     }
-                    starGeometry.setAttribute('position', new THREE.BufferAttribute(starsPositions, 3));
-                    const starMaterial = new THREE.PointsMaterial({
+                    starGeometry.setAttribute('position', new THREE.default.BufferAttribute(starsPositions, 3));
+                    const starMaterial = new THREE.default.PointsMaterial({
                         color: 0xff00ff,
                         size: 0.1,
                         sizeAttenuation: true
                     });
-                    const stars = new THREE.Points(starGeometry, starMaterial);
+                    const stars = new THREE.default.Points(starGeometry, starMaterial);
                     scene.add(stars);
 
-                    const innerGeometry = new THREE.IcosahedronGeometry(1, 1);
-                    const innerMaterial = new THREE.MeshStandardMaterial({
+                    const innerGeometry = new THREE.default.IcosahedronGeometry(1, 1);
+                    const innerMaterial = new THREE.default.MeshStandardMaterial({
                         color: 0x222222,
                         roughness: 0.5,
                         metalness: 1,
@@ -2005,17 +2005,17 @@
                         transparent: true,
                         opacity: 0.7
                     });
-                    const innerMesh = new THREE.Mesh(innerGeometry, innerMaterial);
+                    const innerMesh = new THREE.default.Mesh(innerGeometry, innerMaterial);
                     rotatingGroup.add(innerMesh);
 
-                    const outerGeometry = new THREE.IcosahedronGeometry(1.15, 1);
-                    const wireframeMaterial = new THREE.MeshBasicMaterial({
+                    const outerGeometry = new THREE.default.IcosahedronGeometry(1.15, 1);
+                    const wireframeMaterial = new THREE.default.MeshBasicMaterial({
                         color: 0xffffff,
                         wireframe: true,
                         transparent: true,
                         opacity: 0.1
                     });
-                    const wireframeMesh = new THREE.Mesh(outerGeometry, wireframeMaterial);
+                    const wireframeMesh = new THREE.default.Mesh(outerGeometry, wireframeMaterial);
                     rotatingGroup.add(wireframeMesh);
 
                     const positions = [];
@@ -2024,20 +2024,20 @@
                         positions.push(posAttr.getX(i), posAttr.getY(i), posAttr.getZ(i));
                     }
 
-                    const particleGeometry = new THREE.BufferGeometry();
-                    particleGeometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
-                    const particleMaterial = new THREE.PointsMaterial({
+                    const particleGeometry = new THREE.default.BufferGeometry();
+                    particleGeometry.setAttribute('position', new THREE.default.Float32BufferAttribute(positions, 3));
+                    const particleMaterial = new THREE.default.PointsMaterial({
                         color: 0xff00ff,
                         size: 0.025
                     });
-                    const particles = new THREE.Points(particleGeometry, particleMaterial);
+                    const particles = new THREE.default.Points(particleGeometry, particleMaterial);
                     rotatingGroup.add(particles);
 
                     const composer = new EffectComposer(renderer);
                     composer.addPass(new RenderPass(scene, camera));
 
                     const bloomPass = new UnrealBloomPass(
-                        new THREE.Vector2(window.innerWidth, window.innerHeight),
+                        new THREE.default.Vector2(window.innerWidth, window.innerHeight),
                         1.5,
                         0.4,
                         0.05
@@ -2047,7 +2047,7 @@
                     const ShockwaveShader = {
                         uniforms: {
                             tDiffuse: { value: null },
-                            center: { value: new THREE.Vector2(0.5, 0.5) },
+                            center: { value: new THREE.default.Vector2(0.5, 0.5) },
                             time: { value: 0.0 },
                             maxRadius: { value: 1.0 },
                             amplitude: { value: 0.1 },
