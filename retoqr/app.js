@@ -167,7 +167,7 @@ function renderMenu(productsToRender = products) {
   
   productsToRender.forEach(product => {
     const card = document.createElement('div');
-    card.className = 'menu-card glass';
+    card.className = 'menu-card';
     card.innerHTML = `
       <div class="menu-icon-svg">${getProductIcon(product.name)}</div>
       <div class="menu-info">

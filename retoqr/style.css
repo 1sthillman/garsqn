@@ -362,6 +362,10 @@ body {
   margin: 0 auto;
   align-items: start;
   justify-items: stretch;
+  position: relative;
+  z-index: 1;
+  grid-auto-rows: 180px;
+  grid-auto-flow: row;
 }
 
 /* Tablet için 3 sütun */
@@ -370,6 +374,7 @@ body {
     grid-template-columns: repeat(3, 1fr);
     gap: 16px;
     padding: 16px;
+    grid-auto-rows: 200px;
   }
 }
 
@@ -379,6 +384,7 @@ body {
     grid-template-columns: repeat(4, 1fr);
     gap: 20px;
     padding: 20px;
+    grid-auto-rows: 240px;
   }
 }
 
@@ -388,6 +394,7 @@ body {
     grid-template-columns: repeat(5, 1fr);
     gap: 24px;
     padding: 24px;
+    grid-auto-rows: 240px;
   }
 }
 
@@ -410,6 +417,16 @@ body {
   overflow: hidden;
   box-sizing: border-box;
   margin: 0;
+  backdrop-filter: blur(10px);
+  z-index: 2;
+}
+
+/* Glass class'ının etkisini kaldır */
+.menu-card.glass {
+  background: rgba(0, 0, 0, 0.7) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid var(--neon-secondary) !important;
+  box-shadow: 0 0 15px rgba(255, 0, 255, 0.3) !important;
 }
 
 /* Tablet için kart boyutu */
