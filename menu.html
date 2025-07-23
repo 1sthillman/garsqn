@@ -91,7 +91,8 @@
             width: 100%;
             height: 100%;
             z-index: -1;
-            pointer-events: none;
+            pointer-events: auto;
+            cursor: pointer;
         }
         
         .welcome-screen.hidden {
@@ -2294,13 +2295,13 @@
             let bgClock;
             
             const BG_CONFIG = {
-                particleCount: 8000,
-                shapeSize: 12,
-                morphDuration: 6000,
-                autoMorphInterval: 8.0, // saniye cinsinden
-                particleSizeRange: [0.05, 0.15],
-                bloomStrength: 0.8,
-                bloomRadius: 0.4,
+                particleCount: 12000,
+                shapeSize: 15,
+                morphDuration: 5000,
+                autoMorphInterval: 6.0, // saniye cinsinden - daha hızlı
+                particleSizeRange: [0.08, 0.2],
+                bloomStrength: 1.0,
+                bloomRadius: 0.5,
                 bloomThreshold: 0.1
             };
             
@@ -2586,10 +2587,16 @@
                     const y = positionsArray[i3 + 1];
                     const z = positionsArray[i3 + 2];
                     const dist = Math.sqrt(x * x + y * y + z * z);
-                    const hue = THREE.MathUtils.mapLinear(dist, 0, maxRadius, 200, 280);
-                    const saturation = 0.8;
-                    const lightness = 0.6;
-                    const color = new THREE.Color().setHSL(hue / 360, saturation, lightness);
+                    
+                    // Daha güzel gradient renk geçişi
+                    const hue = THREE.MathUtils.mapLinear(dist, 0, maxRadius, 180, 320);
+                    const saturation = 0.9;
+                    const lightness = 0.7;
+                    
+                    // Merkeze yakın parçacıklar daha parlak
+                    const brightness = THREE.MathUtils.mapLinear(dist, 0, maxRadius, 1.2, 0.8);
+                    
+                    const color = new THREE.Color().setHSL(hue / 360, saturation, lightness * brightness);
                     color.toArray(colors, i3);
                 }
             }
@@ -2603,7 +2610,6 @@
                 // Otomatik morph
                 bgAutoMorphTimer += deltaTime;
                 if (bgAutoMorphTimer >= BG_CONFIG.autoMorphInterval) {
-                    console.log('Otomatik morph tetiklendi! Şekil:', BG_SHAPES[bgCurrentShapeIndex].name);
                     triggerBackgroundMorph();
                     bgAutoMorphTimer = 0;
                 }
@@ -2623,7 +2629,6 @@
                 bgMorphProgress = 0;
                 const nextShapeIndex = (bgCurrentShapeIndex + 1) % BG_SHAPES.length;
                 bgCurrentShapeIndex = nextShapeIndex;
-                console.log('Morph başladı! Yeni şekil:', BG_SHAPES[bgCurrentShapeIndex].name);
             }
             
             function updateBackgroundMorph(deltaTime) {
