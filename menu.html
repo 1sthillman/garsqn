@@ -59,6 +59,214 @@
             font-family: 'Nunito', sans-serif;
         }
         
+        /* Giriş Ekranı Stilleri */
+        .welcome-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 50%, #0c0c0c 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            transition: opacity 0.8s ease-out, visibility 0.8s ease-out;
+        }
+        
+        .welcome-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .welcome-content {
+            text-align: center;
+            z-index: 2;
+            position: relative;
+        }
+        
+        .logo-container {
+            margin-bottom: 3rem;
+        }
+        
+        .main-title {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 800;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s ease-in-out infinite;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.2em;
+            text-shadow: 0 0 30px rgba(255, 107, 107, 0.5);
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .subtitle {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 300;
+            letter-spacing: 0.1em;
+        }
+        
+        .language-selection {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+        
+        .lang-select-btn {
+            position: relative;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 1rem;
+            padding: 1rem 2rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            backdrop-filter: blur(15px);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-width: 120px;
+            justify-content: center;
+        }
+        
+        .lang-select-btn:hover {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.08));
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+        
+        .lang-select-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: rgba(102, 126, 234, 0.5);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .flag {
+            font-size: 1.5rem;
+        }
+        
+        .lang-text {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        .enter-btn {
+            position: relative;
+            background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
+            border: none;
+            border-radius: 2rem;
+            padding: 1.5rem 3rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-weight: 700;
+            font-size: 1.2rem;
+            letter-spacing: 0.1em;
+            overflow: hidden;
+        }
+        
+        .enter-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .enter-btn:hover::before {
+            left: 100%;
+        }
+        
+        .enter-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(255, 107, 107, 0.4);
+        }
+        
+        .enter-text {
+            color: white;
+            font-weight: 700;
+        }
+        
+        .enter-arrow {
+            color: white;
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .enter-btn:hover .enter-arrow {
+            transform: translateX(5px);
+        }
+        
+        .particles-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(255, 107, 107, 0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.1); }
+        }
+        
+        /* Mobil Uyumluluk */
+        @media (max-width: 768px) {
+            .language-selection {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.8rem;
+            }
+            
+            .lang-select-btn {
+                min-width: 200px;
+                padding: 1.2rem 2rem;
+            }
+            
+            .enter-btn {
+                padding: 1.2rem 2.5rem;
+                font-size: 1.1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .main-title {
+                font-size: clamp(2.5rem, 10vw, 4rem);
+            }
+            
+            .subtitle {
+                font-size: clamp(0.9rem, 4vw, 1.2rem);
+            }
+            
+            .lang-select-btn {
+                min-width: 180px;
+                padding: 1rem 1.5rem;
+            }
+            
+            .enter-btn {
+                padding: 1rem 2rem;
+                font-size: 1rem;
+            }
+        }
+        
         canvas {
             display: block; 
             width: 100%; 
@@ -69,12 +277,21 @@
             z-index: -1;
         }
         
+        /* Ana uygulama kısmını giriş ekranından sonra göster */
+        body:not(.app-started) header,
+        body:not(.app-started) .category-bar,
+        body:not(.app-started) .product-grid,
+        body:not(.app-started) .action-bar,
+        body:not(.app-started) canvas {
+            display: none;
+        }
+        
         #loading {
             position: fixed;
             width: 100%;
             height: 100%;
             background: #000;
-            display: flex;
+            display: none;
             flex-direction: column; 
             justify-content: center;
             align-items: center;
@@ -1399,6 +1616,34 @@
 </head>
 <body>
 
+    <!-- Giriş Ekranı -->
+    <div id="welcomeScreen" class="welcome-screen">
+        <div class="welcome-content">
+            <div class="logo-container">
+                <h1 class="main-title">ADİSTOW</h1>
+                <div class="subtitle">Digital Menu System</div>
+            </div>
+            
+            <div class="language-selection">
+                <button class="lang-select-btn active" data-lang="tr">
+                    <span class="flag">🇹🇷</span>
+                    <span class="lang-text">Türkçe</span>
+                </button>
+                <button class="lang-select-btn" data-lang="en">
+                    <span class="flag">🇺🇸</span>
+                    <span class="lang-text">English</span>
+                </button>
+            </div>
+            
+            <button class="enter-btn" id="enterBtn">
+                <span class="enter-text">GEÇ</span>
+                <div class="enter-arrow">→</div>
+            </button>
+        </div>
+        
+        <div class="particles-bg"></div>
+    </div>
+
     <div id="loading">
         <span>Initializing Particles...</span>
         <div id="progress-container">
@@ -1534,6 +1779,17 @@
         document.addEventListener('DOMContentLoaded', function() {
             const supabase = window.supabase.createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.anonKey);
             
+            // Ses dosyaları
+            const turkeyAudio = new Audio('turkey-language.mp3');
+            const englishAudio = new Audio('english-language.mp3');
+            
+            // Ses ayarları
+            turkeyAudio.volume = 0.7;
+            englishAudio.volume = 0.7;
+            
+            // Başlangıçta Türkçe sesi çal
+            turkeyAudio.play().catch(e => console.log('Ses çalınamadı:', e));
+            
             const urlParams = new URLSearchParams(window.location.search);
             const RESTAURANT_ID = urlParams.get('restaurant_id');
             const TABLE_ID = urlParams.get('table_id');
@@ -1544,6 +1800,7 @@
             let categories = [];
             let cart = [];
             let currentLanguage = 'tr';
+            let isWelcomeScreenActive = true;
             
             // Dil çevirileri
             const translations = {
@@ -1615,14 +1872,84 @@
                     
                     createCategoryBar();
                     renderProducts();
-                    setupEventListeners();
                     
                     // Başlangıçta Türkçe dilini aktif et
                     document.querySelector('[data-lang="tr"]').classList.add('active');
                     
+                    // Giriş ekranı event listener'larını ekle
+                    setupWelcomeScreen();
+                    
+                    // Ana uygulama event listener'larını sadece giriş ekranından sonra ekle
+                    if (!isWelcomeScreenActive) {
+                        setupEventListeners();
+                    }
+                    
                 } catch (error) {
                     console.error('Uygulama başlatılamadı:', error);
                 }
+            }
+            
+            function setupWelcomeScreen() {
+                // Dil seçimi butonları
+                document.querySelectorAll('.lang-select-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const lang = this.getAttribute('data-lang');
+                        selectWelcomeLanguage(lang);
+                    });
+                });
+                
+                // Geç butonu
+                document.getElementById('enterBtn').addEventListener('click', function() {
+                    enterApp();
+                });
+            }
+            
+            function selectWelcomeLanguage(lang) {
+                // Aktif dil butonunu güncelle
+                document.querySelectorAll('.lang-select-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.querySelector(`.lang-select-btn[data-lang="${lang}"]`).classList.add('active');
+                
+                // Ses çal
+                if (lang === 'tr') {
+                    turkeyAudio.currentTime = 0;
+                    turkeyAudio.play().catch(e => console.log('Ses çalınamadı:', e));
+                } else {
+                    englishAudio.currentTime = 0;
+                    englishAudio.play().catch(e => console.log('Ses çalınamadı:', e));
+                }
+                
+                currentLanguage = lang;
+            }
+            
+            function enterApp() {
+                // Sesleri durdur
+                turkeyAudio.pause();
+                englishAudio.pause();
+                
+                // Giriş ekranını gizle
+                const welcomeScreen = document.getElementById('welcomeScreen');
+                welcomeScreen.classList.add('hidden');
+                
+                // Ana uygulamayı başlat
+                isWelcomeScreenActive = false;
+                document.body.classList.add('app-started');
+                
+                // Loading ekranını göster
+                const loading = document.getElementById('loading');
+                loading.style.display = 'flex';
+                
+                // Event listener'ları ekle
+                setupEventListeners();
+                
+                // 3 saniye sonra loading'i gizle
+                setTimeout(() => {
+                    loading.style.opacity = '0';
+                    setTimeout(() => {
+                        loading.style.display = 'none';
+                    }, 600);
+                }, 3000);
             }
             
             async function getRestaurantInfo() {
