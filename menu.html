@@ -95,6 +95,52 @@
             position: relative;
         }
         
+        .error-message {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+        }
+        
+        .error-content {
+            background: #1a1a1a;
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 400px;
+            margin: 0 1rem;
+        }
+        
+        .error-content h3 {
+            color: #ff4444;
+            margin-bottom: 1rem;
+        }
+        
+        .error-content p {
+            margin-bottom: 1.5rem;
+            color: #ccc;
+        }
+        
+        .error-content button {
+            background: #ff4444;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .error-content button:hover {
+            background: #ff6666;
+        }
+        
         .logo-container {
             margin-bottom: 3rem;
         }
@@ -1914,11 +1960,19 @@
             
             async function initializeApp() {
                 try {
+                    // URL parametrelerini kontrol et
+                    if (!RESTAURANT_ID || RESTAURANT_ID === 'null' || !TABLE_ID || TABLE_ID === 'null') {
+                        console.error('URL parametreleri eksik. restaurant_id ve table_id gerekli.');
+                        showErrorMessage('URL parametreleri eksik. Lütfen doğru linki kullanın.');
+                        return;
+                    }
+                    
                     restaurantInfo = await getRestaurantInfo();
                     tableInfo = await getTableInfo();
                     
                     if (!restaurantInfo || !tableInfo) {
                         console.error('Restoran veya masa bilgileri bulunamadı');
+                        showErrorMessage('Restoran veya masa bilgileri bulunamadı. Lütfen QR kodu tekrar tarayın.');
                         return;
                     }
                     
@@ -1979,6 +2033,20 @@
                 currentLanguage = lang;
             }
             
+            function showErrorMessage(message) {
+                const welcomeScreen = document.getElementById('welcomeScreen');
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error-message';
+                errorDiv.innerHTML = `
+                    <div class="error-content">
+                        <h3>Hata</h3>
+                        <p>${message}</p>
+                        <button onclick="location.reload()">Tekrar Dene</button>
+                    </div>
+                `;
+                welcomeScreen.appendChild(errorDiv);
+            }
+            
             function enterApp() {
                 // Sesleri durdur
                 turkeyAudio.pause();
@@ -2010,6 +2078,12 @@
             
             async function initWelcomeAnimation() {
                 try {
+                    const canvas = document.querySelector('#welcome-canvas');
+                    if (!canvas) {
+                        console.log('Canvas elementi bulunamadı, animasyon atlanıyor');
+                        return;
+                    }
+
                     const THREE = await import('https://cdn.skypack.dev/three@0.136.0/build/three.module.js');
                     const { OrbitControls } = await import('https://cdn.skypack.dev/three@0.136.0/examples/jsm/controls/OrbitControls.js');
                     const { EffectComposer } = await import('https://cdn.skypack.dev/three@0.136.0/examples/jsm/postprocessing/EffectComposer.js');
@@ -2017,7 +2091,6 @@
                     const { ShaderPass } = await import('https://cdn.skypack.dev/three@0.136.0/examples/jsm/postprocessing/ShaderPass.js');
                     const { UnrealBloomPass } = await import('https://cdn.skypack.dev/three@0.136.0/examples/jsm/postprocessing/UnrealBloomPass.js');
 
-                    const canvas = document.querySelector('#welcome-canvas');
                     const renderer = new THREE.default.WebGLRenderer({ canvas, alpha: true });
                     renderer.setSize(window.innerWidth, window.innerHeight);
                     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -2195,6 +2268,11 @@
             
             async function getRestaurantInfo() {
                 try {
+                    if (!RESTAURANT_ID || RESTAURANT_ID === 'null') {
+                        console.error('Restaurant ID bulunamadı');
+                        return null;
+                    }
+                    
                     const { data, error } = await supabase
                         .from('restaurants')
                         .select('*')
@@ -2211,6 +2289,11 @@
             
             async function getTableInfo() {
                 try {
+                    if (!TABLE_ID || TABLE_ID === 'null' || !RESTAURANT_ID || RESTAURANT_ID === 'null') {
+                        console.error('Table ID veya Restaurant ID bulunamadı');
+                        return null;
+                    }
+                    
                     const { data, error } = await supabase
                         .from('tables')
                         .select('*')
