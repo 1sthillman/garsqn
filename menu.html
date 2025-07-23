@@ -280,6 +280,81 @@
             border: 2px solid rgba(255, 255, 255, 0.1);
             animation: pulse 2s infinite;
         }
+
+        /* Language Selector */
+        .language-selector {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .lang-btn {
+            position: relative;
+            background: linear-gradient(
+                135deg,
+                rgba(255, 255, 255, 0.1),
+                rgba(255, 255, 255, 0.05)
+            );
+            border: none;
+            color: #fff;
+            padding: 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 
+                0 4px 16px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            font-size: 1rem;
+        }
+        
+        .lang-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 50%;
+            background: linear-gradient(
+                45deg,
+                transparent 30%,
+                rgba(255, 255, 255, 0.1) 50%,
+                transparent 70%
+            );
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .lang-btn:hover {
+            background: linear-gradient(
+                135deg,
+                rgba(255, 255, 255, 0.15),
+                rgba(255, 255, 255, 0.08)
+            );
+            transform: scale(1.05) translateY(-1px);
+            box-shadow: 
+                0 6px 20px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+        
+        .lang-btn:hover::before {
+            opacity: 1;
+        }
+        
+        .lang-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 
+                0 4px 16px rgba(102, 126, 234, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+        }
         
         @keyframes pulse {
             0%, 100% { transform: scale(1); }
@@ -962,6 +1037,15 @@
             font-weight: 600;
             font-size: 1.1rem;
         }
+        
+        .cart-total span:first-child {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .cart-total span:last-child {
+            color: #fff;
+            font-weight: 700;
+        }
 
         .order-btn {
             position: relative;
@@ -1188,7 +1272,7 @@
                 padding: 0.4rem 0.8rem;
             }
             
-            .cart-btn, .contact-btn {
+            .cart-btn, .contact-btn, .lang-btn {
                 width: 35px;
                 height: 35px;
             }
@@ -1257,7 +1341,7 @@
                 padding: 0.3rem 0.6rem;
             }
             
-            .cart-btn, .contact-btn {
+            .cart-btn, .contact-btn, .lang-btn {
                 width: 32px;
                 height: 32px;
             }
@@ -1334,6 +1418,14 @@
                 <div class="table-info">
                     <span>Masa <span id="tableId">--</span></span>
                 </div>
+                <div class="language-selector">
+                    <button class="lang-btn" data-lang="tr">
+                        <span>🇹🇷</span>
+                    </button>
+                    <button class="lang-btn" data-lang="en">
+                        <span>🇺🇸</span>
+                    </button>
+                </div>
                 <button class="contact-btn" id="contactBtn">
                     <i class="fas fa-envelope"></i>
                 </button>
@@ -1346,26 +1438,7 @@
     </header>
 
     <div class="category-bar" id="categoryBar">
-        <button class="category-btn active" data-category="all">
-            <i class="fas fa-th-large"></i>
-            Tüm Ürünler
-        </button>
-        <button class="category-btn" data-category="food">
-            <i class="fas fa-utensils"></i>
-            Yemekler
-        </button>
-        <button class="category-btn" data-category="drink">
-            <i class="fas fa-wine-glass-alt"></i>
-            İçecekler
-        </button>
-        <button class="category-btn" data-category="dessert">
-            <i class="fas fa-ice-cream"></i>
-            Tatlılar
-        </button>
-        <button class="category-btn" data-category="appetizer">
-            <i class="fas fa-cheese"></i>
-            Başlangıçlar
-        </button>
+        <!-- Dinamik olarak oluşturulacak -->
     </div>
 
     <div class="product-grid" id="product-grid">
@@ -1376,18 +1449,18 @@
         <div class="button-wrap">
             <button class="action-btn" id="callWaiterBtn">
                 <span>
-            <i class="fas fa-bell"></i>
-            Garson Çağır
+                    <i class="fas fa-bell"></i>
+                    Garson Çağır
                 </span>
-        </button>
+            </button>
         </div>
         <div class="button-wrap">
             <button class="action-btn" id="requestCharcoalBtn">
                 <span>
-            <i class="fas fa-fire"></i>
-            Köz İste
+                    <i class="fas fa-fire"></i>
+                    Köz İste
                 </span>
-        </button>
+            </button>
         </div>
     </div>
     
@@ -1419,8 +1492,8 @@
                                 <textarea id="orderNote" placeholder="Özel isteklerinizi buraya yazabilirsiniz..."></textarea>
                             </div>
                 <div class="cart-total">
-                                <span>Toplam:</span>
-                                <span id="cartTotal">0₺</span>
+                    <span>Toplam:</span>
+                    <span id="cartTotal">0₺</span>
                 </div>
                             <button class="order-btn" id="orderBtn" disabled>
                                 Sipariş Ver
@@ -1470,6 +1543,61 @@
             let products = [];
             let categories = [];
             let cart = [];
+            let currentLanguage = 'tr';
+            
+            // Dil çevirileri
+            const translations = {
+                tr: {
+                    allProducts: 'Tüm Ürünler',
+                    foods: 'Yemekler',
+                    drinks: 'İçecekler',
+                    desserts: 'Tatlılar',
+                    appetizers: 'Başlangıçlar',
+                    callWaiter: 'Garson Çağır',
+                    requestCharcoal: 'Köz İste',
+                    cart: 'Sepetim',
+                    total: 'Toplam:',
+                    orderNote: 'Sipariş Notu:',
+                    orderNotePlaceholder: 'Özel isteklerinizi buraya yazabilirsiniz...',
+                    placeOrder: 'Sipariş Ver',
+                    emptyCart: 'Sepetiniz boş',
+                    noProductsInCategory: 'Bu kategoride ürün bulunamadı.',
+                    addedToCart: 'sepetinize eklendi!',
+                    waiterCalled: 'Garson çağrıldı!',
+                    charcoalRequested: 'Köz isteğiniz iletildi!',
+                    orderSent: 'Siparişiniz başarıyla gönderildi!',
+                    orderFailed: 'Sipariş gönderilemedi. Lütfen tekrar deneyin.',
+                    callFailed: 'Çağrı oluşturulamadı. Lütfen tekrar deneyin.',
+                    emptyCartError: 'Sepetiniz boş!',
+                    preparingOrder: 'Siparişiniz hazırlanıyor...',
+                    table: 'Masa'
+                },
+                en: {
+                    allProducts: 'All Products',
+                    foods: 'Foods',
+                    drinks: 'Drinks',
+                    desserts: 'Desserts',
+                    appetizers: 'Appetizers',
+                    callWaiter: 'Call Waiter',
+                    requestCharcoal: 'Request Charcoal',
+                    cart: 'My Cart',
+                    total: 'Total:',
+                    orderNote: 'Order Note:',
+                    orderNotePlaceholder: 'Write your special requests here...',
+                    placeOrder: 'Place Order',
+                    emptyCart: 'Your cart is empty',
+                    noProductsInCategory: 'No products found in this category.',
+                    addedToCart: 'added to your cart!',
+                    waiterCalled: 'Waiter called!',
+                    charcoalRequested: 'Charcoal request sent!',
+                    orderSent: 'Your order has been sent successfully!',
+                    orderFailed: 'Order could not be sent. Please try again.',
+                    callFailed: 'Call could not be created. Please try again.',
+                    emptyCartError: 'Your cart is empty!',
+                    preparingOrder: 'Preparing your order...',
+                    table: 'Table'
+                }
+            };
             
             async function initializeApp() {
                 try {
@@ -1488,6 +1616,9 @@
                     createCategoryBar();
                     renderProducts();
                     setupEventListeners();
+                    
+                    // Başlangıçta Türkçe dilini aktif et
+                    document.querySelector('[data-lang="tr"]').classList.add('active');
                     
                 } catch (error) {
                     console.error('Uygulama başlatılamadı:', error);
@@ -1575,21 +1706,44 @@
                 const categoryBar = document.getElementById('categoryBar');
                 categoryBar.innerHTML = '';
                 
+                const t = translations[currentLanguage];
+                
                 const allBtn = document.createElement('button');
                 allBtn.className = 'category-btn active';
                 allBtn.setAttribute('data-category', 'all');
-                allBtn.textContent = 'Tüm Ürünler';
+                allBtn.innerHTML = `<i class="fas fa-th-large"></i> ${t.allProducts}`;
                 categoryBar.appendChild(allBtn);
                 
+                // Sabit kategoriler
+                const fixedCategories = [
+                    { name: 'food', icon: 'fas fa-utensils', text: t.foods },
+                    { name: 'drink', icon: 'fas fa-wine-glass-alt', text: t.drinks },
+                    { name: 'dessert', icon: 'fas fa-ice-cream', text: t.desserts },
+                    { name: 'appetizer', icon: 'fas fa-cheese', text: t.appetizers }
+                ];
+                
+                fixedCategories.forEach(category => {
+                    const productsInCategory = products.filter(product => product.category === category.name);
+                    
+                    if (productsInCategory.length > 0) {
+                        const btn = document.createElement('button');
+                        btn.className = 'category-btn';
+                        btn.setAttribute('data-category', category.name);
+                        btn.innerHTML = `<i class="${category.icon}"></i> ${category.text}`;
+                        categoryBar.appendChild(btn);
+                    }
+                });
+                
+                // Dinamik kategoriler
                 categories.forEach((category, index) => {
                     const productsInCategory = products.filter(product => product.category === category.name);
                     
                     if (productsInCategory.length > 0) {
-                    const btn = document.createElement('button');
-                    btn.className = 'category-btn';
+                        const btn = document.createElement('button');
+                        btn.className = 'category-btn';
                         btn.setAttribute('data-category', category.name);
-                    btn.textContent = category.name;
-                    categoryBar.appendChild(btn);
+                        btn.innerHTML = `<i class="fas fa-tag"></i> ${category.name}`;
+                        categoryBar.appendChild(btn);
                     }
                 });
                 
@@ -1618,7 +1772,8 @@
                 productGrid.innerHTML = '';
                 
                 if (filteredProducts.length === 0) {
-                    productGrid.innerHTML = '<div style="color: white; text-align: center; padding: 2rem; grid-column: 1 / -1;">Bu kategoride ürün bulunamadı.</div>';
+                    const t = translations[currentLanguage];
+                    productGrid.innerHTML = `<div style="color: white; text-align: center; padding: 2rem; grid-column: 1 / -1;">${t.noProductsInCategory}</div>`;
                     return;
                 }
                 
@@ -1686,7 +1841,8 @@
                 }
                 
                 updateCartDisplay();
-                showToast(`${product.name} sepetinize eklendi!`, 'success');
+                const t = translations[currentLanguage];
+                showToast(`${product.name} ${t.addedToCart}`, 'success');
             }
             
             function updateCartDisplay() {
@@ -1706,7 +1862,8 @@
                 cartItems.innerHTML = '';
                 
                 if (cart.length === 0) {
-                    cartItems.innerHTML = '<div style="text-align: center; color: rgba(255,255,255,0.7); padding: 2rem;">Sepetiniz boş</div>';
+                    const t = translations[currentLanguage];
+                    cartItems.innerHTML = `<div style="text-align: center; color: rgba(255,255,255,0.7); padding: 2rem;">${t.emptyCart}</div>`;
                     cartTotal.textContent = '0₺';
                     orderBtn.disabled = true;
                     return;
@@ -1736,7 +1893,8 @@
                     total += item.price * item.quantity;
                 });
                 
-                cartTotal.textContent = `${total}₺`;
+                const t = translations[currentLanguage];
+                cartTotal.innerHTML = `<span>${t.total}</span><span>${total}₺</span>`;
                 orderBtn.disabled = false;
             }
             
@@ -1788,12 +1946,85 @@
                     callWaiter('köz');
                 });
                 
+                // Dil değiştirme butonları
+                document.querySelectorAll('.lang-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const lang = this.getAttribute('data-lang');
+                        changeLanguage(lang);
+                    });
+                });
+                
                 // Close modal when clicking outside
                 document.getElementById('cartModal').addEventListener('click', function(e) {
                     if (e.target === this) {
                         closeCartModal();
                     }
                 });
+            }
+            
+            function changeLanguage(lang) {
+                currentLanguage = lang;
+                
+                // Aktif dil butonunu güncelle
+                document.querySelectorAll('.lang-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.querySelector(`[data-lang="${lang}"]`).classList.add('active');
+                
+                // UI'ı güncelle
+                updateUILanguage();
+            }
+            
+            function updateUILanguage() {
+                const t = translations[currentLanguage];
+                
+                // Kategori butonları
+                document.querySelectorAll('.category-btn').forEach(btn => {
+                    const category = btn.getAttribute('data-category');
+                    if (category === 'all') {
+                        btn.textContent = t.allProducts;
+                    } else if (category === 'food') {
+                        btn.textContent = t.foods;
+                    } else if (category === 'drink') {
+                        btn.textContent = t.drinks;
+                    } else if (category === 'dessert') {
+                        btn.textContent = t.desserts;
+                    } else if (category === 'appetizer') {
+                        btn.textContent = t.appetizers;
+                    }
+                });
+                
+                // Action butonları
+                document.getElementById('callWaiterBtn').querySelector('span').innerHTML = `
+                    <i class="fas fa-bell"></i>
+                    ${t.callWaiter}
+                `;
+                
+                document.getElementById('requestCharcoalBtn').querySelector('span').innerHTML = `
+                    <i class="fas fa-fire"></i>
+                    ${t.requestCharcoal}
+                `;
+                
+                // Modal içeriği
+                document.querySelector('.modal-title').textContent = t.cart;
+                document.querySelector('label[for="orderNote"]').textContent = t.orderNote;
+                document.getElementById('orderNote').placeholder = t.orderNotePlaceholder;
+                document.getElementById('orderBtn').textContent = t.placeOrder;
+                
+                // Masa bilgisi
+                const tableInfoDiv = document.querySelector('.table-info');
+                if (tableInfoDiv) {
+                    tableInfoDiv.innerHTML = `<span>${t.table} <span id="tableId">${tableInfo?.number || '--'}</span></span>`;
+                }
+                
+                // Loading text
+                const loadingText = document.querySelector('.loading-text');
+                if (loadingText) {
+                    loadingText.textContent = t.preparingOrder;
+                }
+                
+                // Cart modal'ı güncelle
+                updateCartModal();
             }
             
             async function callWaiter(type) {
@@ -1811,20 +2042,23 @@
                     
                     if (error) throw error;
                     
-                    const message = type === 'garson' ? 'Garson çağrıldı!' : 'Köz isteğiniz iletildi!';
+                    const t = translations[currentLanguage];
+                    const message = type === 'garson' ? t.waiterCalled : t.charcoalRequested;
                     showToast(message, 'info');
                     
                 } catch (error) {
                     console.error('Çağrı oluşturulamadı:', error);
-                    showToast('Çağrı oluşturulamadı. Lütfen tekrar deneyin.', 'error');
+                    const t = translations[currentLanguage];
+                    showToast(t.callFailed, 'error');
                 }
             }
             
             async function submitOrder() {
                 if (cart.length === 0) {
-                    showToast('Sepetiniz boş!', 'error');
-                        return;
-                    }
+                    const t = translations[currentLanguage];
+                    showToast(t.emptyCartError, 'error');
+                    return;
+                }
                     
                 // Show hamburger loading animation
                 const hamburgerLoading = document.getElementById('hamburgerLoading');
@@ -1878,7 +2112,8 @@
                     updateCartDisplay();
                     closeCartModal();
                     
-                    showToast('Siparişiniz başarıyla gönderildi!', 'success');
+                    const t = translations[currentLanguage];
+                    showToast(t.orderSent, 'success');
                     
                 } catch (error) {
                     console.error('Sipariş gönderilemedi:', error);
@@ -1886,7 +2121,8 @@
                     // Hide hamburger loading animation
                     hamburgerLoading.classList.remove('show');
                     
-                    showToast('Sipariş gönderilemedi. Lütfen tekrar deneyin.', 'error');
+                    const t = translations[currentLanguage];
+                    showToast(t.orderFailed, 'error');
                 }
             }
             
