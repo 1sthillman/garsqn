@@ -1723,12 +1723,9 @@
                 // Reset carousel position and initialize
                 theta = 0;
                 currentIndex = 0;
-                isDragging = false;
                 
-                // Initialize carousel
-                setTimeout(() => {
-                    setupCarousel();
-                }, 50);
+                // Initialize carousel immediately
+                setupCarousel();
             }
             
             function setupCarousel() {
@@ -1753,27 +1750,20 @@
                 // Position cards correctly
                 arrangeCards();
                 
-                // Setup buttons
-                prevBtn.onclick = prevCard;
-                nextBtn.onclick = nextCard;
+                // Setup buttons with simple functions
+                prevBtn.onclick = function() {
+                    if (totalCards > 1) {
+                        theta += 360 / totalCards;
+                        rotateCarousel();
+                    }
+                };
                 
-                // Setup carousel touch/mouse events
-                carousel.onmousedown = dragStart;
-                carousel.ontouchstart = dragStart;
-                carousel.ontouchmove = drag;
-                carousel.ontouchend = dragEnd;
-                
-                // Setup document events
-                document.onmousemove = drag;
-                document.onmouseup = dragEnd;
-                document.ontouchmove = drag;
-                document.ontouchend = dragEnd;
-                
-                // Setup keyboard
-                document.onkeydown = handleKeyDown;
-                
-                // Setup resize
-                window.onresize = handleResize;
+                nextBtn.onclick = function() {
+                    if (totalCards > 1) {
+                        theta -= 360 / totalCards;
+                        rotateCarousel();
+                    }
+                };
                 
                 // Initial position
                 carousel.style.transform = 'rotateY(0deg)';
@@ -1855,96 +1845,9 @@
                 });
             }
             
-            function nextCard() {
-                const carousel = document.getElementById('product-carousel');
-                const cards = carousel.querySelectorAll('.product-card');
-                const totalCards = cards.length;
-                
-                if (totalCards <= 1) return;
-                
-                theta -= 360 / totalCards;
-                rotateCarousel();
-            }
+
             
-            function prevCard() {
-                const carousel = document.getElementById('product-carousel');
-                const cards = carousel.querySelectorAll('.product-card');
-                const totalCards = cards.length;
-                
-                if (totalCards <= 1) return;
-                
-                theta += 360 / totalCards;
-                rotateCarousel();
-            }
-            
-            function dragStart(e) {
-                if (e.type === 'touchstart') {
-                    e.preventDefault();
-                }
-                
-                isDragging = true;
-                startX = e.pageX || e.touches[0].pageX;
-                startY = e.pageY || e.touches[0].pageY;
-                lastTouchTime = Date.now();
-            }
-            
-            function drag(e) {
-                if (!isDragging) return;
-                
-                if (e.type === 'touchmove') {
-                    e.preventDefault();
-                }
-                
-                const currentX = e.pageX || (e.touches ? e.touches[0].pageX : startX);
-                const currentY = e.pageY || (e.touches ? e.touches[0].pageY : startY);
-                const diffX = currentX - startX;
-                const diffY = currentY - startY;
-                
-                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 3) {
-                    theta += diffX * 0.8;
-                    rotateCarousel();
-                }
-                
-                startX = currentX;
-                startY = currentY;
-            }
-            
-            function dragEnd(e) {
-                if (!isDragging) return;
-                
-                const currentX = e.pageX || (e.changedTouches ? e.changedTouches[0].pageX : startX);
-                const currentY = e.pageY || (e.changedTouches ? e.changedTouches[0].pageY : startY);
-                const diffX = currentX - startX;
-                const diffY = currentY - startY;
-                
-                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 10) {
-                    if (diffX > 0) {
-                        prevCard();
-                    } else {
-                        nextCard();
-                    }
-                } else {
-                    const carousel = document.getElementById('product-carousel');
-                    const cards = carousel.querySelectorAll('.product-card');
-                    const totalCards = cards.length;
-                    if (totalCards > 1) {
-                        const anglePerCard = 360 / totalCards;
-                        const snapAngle = Math.round(theta / anglePerCard) * anglePerCard;
-                        theta = snapAngle;
-                        rotateCarousel();
-                    }
-                }
-                
-                isDragging = false;
-            }
-            
-            function handleKeyDown(e) {
-                if (e.key === 'ArrowLeft') {
-                    nextCard();
-                } else if (e.key === 'ArrowRight') {
-                    prevCard();
-                }
-            }
+
             
             function showToast(message, type = 'success') {
                 const toastContainer = document.getElementById('toastContainer');
