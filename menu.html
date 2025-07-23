@@ -37,7 +37,7 @@
             initial-value: 0;
             inherits: false;
         }
-
+        
         :root {
             --global--size: clamp(2rem, 4vw, 5rem);
             --anim--hover-time: 400ms;
@@ -380,7 +380,7 @@
             background: linear-gradient(
                 45deg,
                 transparent 30%,
-                rgba(255, 255, 255, 0.2) 50%,
+                rgba(255, 255, 255, 0.2) 50%, 
                 transparent 70%
             );
             opacity: 1;
@@ -421,7 +421,7 @@
             margin-left: -150px;
             margin-top: -100px;
             transform-style: preserve-3d;
-            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             cursor: pointer;
             background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(20px);
@@ -438,8 +438,9 @@
             -ms-user-select: none;
             z-index: 5;
             text-align: center;
+            filter: brightness(0.8);
         }
-
+        
         .product-card:hover {
             transform: translateZ(20px) scale(1.05);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
@@ -745,7 +746,7 @@
         .action-btn:hover::after {
             --angle-1: -125deg;
         }
-
+        
         .action-btn:active::after {
             --angle-1: -75deg;
         }
@@ -941,7 +942,7 @@
             background: linear-gradient(
                 45deg,
                 transparent 30%,
-                rgba(255, 255, 255, 0.1) 50%,
+                rgba(255, 255, 255, 0.1) 50%, 
                 transparent 70%
             );
             opacity: 0;
@@ -951,7 +952,7 @@
         .modal-close:hover::before {
             opacity: 1;
         }
-
+        
         .cart-items {
             margin-bottom: 1.5rem;
         }
@@ -1504,19 +1505,19 @@
         <div class="button-wrap">
             <button class="action-btn" id="callWaiterBtn">
                 <span>
-                    <i class="fas fa-bell"></i>
-                    Garson Çağır
+            <i class="fas fa-bell"></i>
+            Garson Çağır
                 </span>
-            </button>
+        </button>
             <div class="button-shadow"></div>
         </div>
         <div class="button-wrap">
             <button class="action-btn" id="requestCharcoalBtn">
                 <span>
-                    <i class="fas fa-fire"></i>
-                    Köz İste
+            <i class="fas fa-fire"></i>
+            Köz İste
                 </span>
-            </button>
+        </button>
             <div class="button-shadow"></div>
         </div>
     </div>
@@ -1531,7 +1532,7 @@
         </div>
         <div class="loading-text">Siparişiniz hazırlanıyor...</div>
     </div>
-
+    
     <!-- Cart Modal -->
     <div class="modal-overlay" id="cartModal">
         <div class="modal-content">
@@ -1785,6 +1786,18 @@
                     const carousel = document.getElementById('product-carousel');
                     carousel.style.transform = 'rotateY(0deg)';
                     rotateCarousel();
+                    
+                    // Ortadaki ürünü vurgula
+                    const cards = carousel.querySelectorAll('.product-card');
+                    cards.forEach((card, index) => {
+                        if (index === 0) {
+                            card.style.zIndex = '10';
+                            card.style.filter = 'brightness(1.1)';
+                        } else {
+                            card.style.zIndex = '5';
+                            card.style.filter = 'brightness(0.8)';
+                        }
+                    });
                 }, 50);
             }
             
@@ -1865,7 +1878,7 @@
                 
                 cards.forEach((card, index) => {
                     const cardAngle = angle * index;
-                    // İlk ürünü öne getir (0 derece) - offset'i kaldırdık
+                    // Her ürünü kendi pozisyonuna yerleştir
                     card.style.transform = `rotateY(${cardAngle}deg) translateZ(${radius}px)`;
                     card.dataset.index = index;
                 });
@@ -1887,9 +1900,20 @@
                 
                 carousel.style.transform = `rotateY(${theta}deg)`;
                 
-                // Update current card index - offset'i kaldırdık
+                // Update current card index
                 currentIndex = Math.round(Math.abs(theta / (360 / totalCards)) % totalCards);
                 if (currentIndex >= totalCards) currentIndex = 0;
+                
+                // Her zaman ortadaki ürünü vurgula
+                cards.forEach((card, index) => {
+                    if (index === currentIndex) {
+                        card.style.zIndex = '10';
+                        card.style.filter = 'brightness(1.1)';
+                    } else {
+                        card.style.zIndex = '5';
+                        card.style.filter = 'brightness(0.8)';
+                    }
+                });
             }
             
             function nextCard() {
@@ -1957,20 +1981,8 @@
                 const diffX = currentX - startX;
                 const diffY = currentY - startY;
                 
-                // Check if it was a tap (small movement) or swipe
-                if (Math.abs(diffX) < 10 && Math.abs(diffY) < 10) {
-                    // It was a tap - check if we tapped on a product card
-                    const target = e.target.closest('.product-card');
-                    if (target) {
-                        // Find the product data and add to cart
-                        const productName = target.querySelector('.product-name').textContent;
-                        const productPrice = target.querySelector('.product-price').textContent;
-                        const product = products.find(p => p.name === productName && p.price + '₺' === productPrice);
-                        if (product) {
-                            addToCart(product);
-                        }
-                    }
-                } else if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 15) {
+                // Only handle horizontal swipes, ignore taps
+                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 20) {
                     // It was a horizontal swipe
                     if (diffX > 0) {
                         prevCard();
@@ -2431,7 +2443,7 @@
                 progress += increment;
                 progressBar.style.width = `${Math.min(100, progress)}%`;
                 if (progress >= 100) {
-                    setTimeout(() => {
+                setTimeout(() => {
                         loadingScreen.style.opacity = '0';
                         setTimeout(() => { loadingScreen.style.display = 'none'; }, 600);
                     }, 200);
