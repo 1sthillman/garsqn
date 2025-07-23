@@ -1772,6 +1772,35 @@
                         e.stopPropagation();
                         addToCart(product);
                     });
+                    
+                    // Add touch events for mobile compatibility
+                    let touchStartTime = 0;
+                    let touchStartX = 0;
+                    let touchStartY = 0;
+                    
+                    card.addEventListener('touchstart', (e) => {
+                        touchStartTime = Date.now();
+                        touchStartX = e.touches[0].clientX;
+                        touchStartY = e.touches[0].clientY;
+                    });
+                    
+                    card.addEventListener('touchend', (e) => {
+                        const touchEndTime = Date.now();
+                        const touchDuration = touchEndTime - touchStartTime;
+                        const touchEndX = e.changedTouches[0].clientX;
+                        const touchEndY = e.changedTouches[0].clientY;
+                        const touchDistance = Math.sqrt(
+                            Math.pow(touchEndX - touchStartX, 2) + 
+                            Math.pow(touchEndY - touchStartY, 2)
+                        );
+                        
+                        // If it's a short tap with minimal movement, add to cart
+                        if (touchDuration < 300 && touchDistance < 10) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            addToCart(product);
+                        }
+                    });
                     carousel.appendChild(card);
                 });
                 
@@ -1939,6 +1968,7 @@
             }
             
             function dragStart(e) {
+                // Prevent default only for touch events
                 if (e.type === 'touchstart') {
                     e.preventDefault();
                 }
@@ -1947,6 +1977,14 @@
                 isDragging = true;
                 startX = e.pageX || e.touches[0].pageX;
                 startY = e.pageY || e.touches[0].pageY;
+                
+                // Set a small timeout to detect if it's a tap
+                setTimeout(() => {
+                    if (isDragging) {
+                        // If still dragging after timeout, it's a drag
+                        isDragging = true;
+                    }
+                }, 50);
             }
             
             function drag(e) {
@@ -2001,6 +2039,9 @@
                         rotateCarousel();
                     }
                 }
+                
+                // Reset dragging state
+                isDragging = false;
             }
             
             function handleKeyDown(e) {
