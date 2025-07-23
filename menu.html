@@ -93,10 +93,14 @@
             text-align: center;
             z-index: 10;
             position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
         }
         
         .logo-container {
-            margin-bottom: 3rem;
+            margin-bottom: 0;
         }
         
         .main-title {
@@ -127,29 +131,31 @@
         
         .language-selection {
             display: flex;
-            gap: 1rem;
+            gap: 1.5rem;
             justify-content: center;
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
             flex-wrap: wrap;
         }
         
         .lang-select-btn {
             position: relative;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 1.5rem;
-            padding: 1.2rem 2.5rem;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.08));
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 2rem;
+            padding: 1.5rem 3rem;
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-            backdrop-filter: blur(20px);
+            backdrop-filter: blur(25px);
             display: flex;
             align-items: center;
-            gap: 0.8rem;
-            min-width: 160px;
+            gap: 1rem;
+            min-width: 180px;
             justify-content: center;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            box-shadow: 
+                0 10px 40px rgba(0, 0, 0, 0.3),
+                0 0 20px rgba(255, 255, 255, 0.1);
         }
         
         .lang-select-btn::before {
@@ -166,10 +172,12 @@
         }
         
         .lang-select-btn:hover {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.08));
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
-            border-color: rgba(255, 255, 255, 0.5);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.12));
+            transform: translateY(-8px) scale(1.08);
+            box-shadow: 
+                0 20px 50px rgba(0, 0, 0, 0.4),
+                0 0 30px rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.6);
         }
         
         .lang-select-btn:hover::before {
@@ -178,11 +186,12 @@
         
         .lang-select-btn.active {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-color: rgba(102, 126, 234, 0.6);
+            border-color: rgba(102, 126, 234, 0.8);
             box-shadow: 
-                0 12px 40px rgba(102, 126, 234, 0.5),
-                0 0 20px rgba(102, 126, 234, 0.3);
-            transform: translateY(-2px);
+                0 15px 45px rgba(102, 126, 234, 0.6),
+                0 0 25px rgba(102, 126, 234, 0.4),
+                0 0 15px rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
         }
         
         .lang-select-btn.active::before {
@@ -191,35 +200,37 @@
         }
         
         .flag {
-            font-size: 1.8rem;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+            font-size: 2rem;
+            filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.4));
         }
         
         .lang-text {
-            font-weight: 700;
-            font-size: 1.1rem;
+            font-weight: 800;
+            font-size: 1.2rem;
             color: #fff;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            text-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
         }
         
         .enter-btn {
             position: relative;
             background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
             border: none;
-            border-radius: 2.5rem;
-            padding: 1.8rem 4rem;
+            border-radius: 2rem;
+            padding: 1.5rem 3rem;
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
             display: flex;
             align-items: center;
-            gap: 1.2rem;
+            gap: 1rem;
             font-weight: 800;
-            font-size: 1.4rem;
-            letter-spacing: 0.2em;
+            font-size: 1.2rem;
+            letter-spacing: 0.8px;
             overflow: hidden;
             box-shadow: 
-                0 10px 30px rgba(255, 107, 107, 0.3),
+                0 10px 40px rgba(255, 107, 107, 0.3),
                 0 0 20px rgba(78, 205, 196, 0.3);
+            min-width: 180px;
+            justify-content: center;
         }
         
         .enter-btn::before {
@@ -241,21 +252,23 @@
             transform: translateY(-8px) scale(1.08);
             box-shadow: 
                 0 20px 50px rgba(255, 107, 107, 0.5),
-                0 0 30px rgba(78, 205, 196, 0.4);
+                0 0 30px rgba(78, 205, 196, 0.4),
+                0 0 20px rgba(255, 255, 255, 0.2);
             background: linear-gradient(135deg, #ff7b7b 0%, #5eddd4 100%);
         }
         
         .enter-text {
             color: white;
             font-weight: 800;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            font-size: 1.2rem;
+            text-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
         }
         
         .enter-arrow {
             color: white;
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             transition: transform 0.4s ease;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            text-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
         }
         
         .enter-btn:hover .enter-arrow {
@@ -269,7 +282,37 @@
             .language-selection {
                 flex-direction: column;
                 align-items: center;
-                gap: 1rem;
+                gap: 1.5rem;
+            }
+            
+            .lang-select-btn {
+                min-width: 240px;
+                padding: 1.8rem 3.5rem;
+                font-size: 1.3rem;
+            }
+            
+            .flag {
+                font-size: 2.2rem;
+            }
+            
+            .lang-text {
+                font-size: 1.4rem;
+            }
+            
+            .enter-btn {
+                min-width: 240px;
+                padding: 1.8rem 3.5rem;
+                font-size: 1.3rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .main-title {
+                font-size: clamp(2.5rem, 10vw, 4rem);
+            }
+            
+            .subtitle {
+                font-size: clamp(0.9rem, 4vw, 1.2rem);
             }
             
             .lang-select-btn {
@@ -287,36 +330,8 @@
             }
             
             .enter-btn {
+                min-width: 220px;
                 padding: 1.5rem 3rem;
-                font-size: 1.3rem;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .main-title {
-                font-size: clamp(2.5rem, 10vw, 4rem);
-            }
-            
-            .subtitle {
-                font-size: clamp(0.9rem, 4vw, 1.2rem);
-            }
-            
-            .lang-select-btn {
-                min-width: 200px;
-                padding: 1.3rem 2.5rem;
-                font-size: 1.1rem;
-            }
-            
-            .flag {
-                font-size: 1.8rem;
-            }
-            
-            .lang-text {
-                font-size: 1.2rem;
-            }
-            
-            .enter-btn {
-                padding: 1.3rem 2.5rem;
                 font-size: 1.2rem;
             }
         }
@@ -2018,6 +2033,10 @@
                     const { UnrealBloomPass } = await import('https://cdn.skypack.dev/three@0.136.0/examples/jsm/postprocessing/UnrealBloomPass.js');
 
                     const canvas = document.querySelector('#welcome-canvas');
+                    if (!canvas) {
+                        console.error('Canvas bulunamadı');
+                        return;
+                    }
                     const renderer = new THREE.default.WebGLRenderer({ canvas, alpha: true });
                     renderer.setSize(window.innerWidth, window.innerHeight);
                     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
