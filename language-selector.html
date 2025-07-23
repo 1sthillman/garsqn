@@ -308,14 +308,21 @@
                 English
             </button>
         </div>
+        
+        <!-- Test button to clear localStorage -->
+        <div style="margin-top: 2rem;">
+            <button onclick="clearLanguage()" style="background: rgba(255,0,0,0.2); color: white; border: 1px solid red; padding: 0.5rem 1rem; border-radius: 0.5rem; cursor: pointer;">
+                Test: Dil Seçimini Sıfırla
+            </button>
+        </div>
     </div>
     
     <!-- Audio Elements -->
     <audio id="audio-tr" preload="auto">
-        <source src="turkey-language.mp3" type="audio/mpeg">
+        <source src="./turkey-language.mp3" type="audio/mpeg">
     </audio>
     <audio id="audio-en" preload="auto">
-        <source src="english-language.mp3" type="audio/mpeg">
+        <source src="./english-language.mp3" type="audio/mpeg">
     </audio>
     
     <script>
@@ -328,21 +335,31 @@
         
         // Language selection function
         function selectLanguage(lang) {
+            console.log('Language selected:', lang);
+            
             // Play audio
             const audio = document.getElementById(`audio-${lang}`);
             if (audio) {
-                audio.play();
+                console.log('Playing audio for:', lang);
+                audio.play().catch(error => {
+                    console.error('Audio play error:', error);
+                });
+            } else {
+                console.error('Audio element not found for:', lang);
             }
             
             // Add click effect to button
             const btn = event.target.closest('.lang-btn');
-            btn.style.transform = 'scale(0.95)';
-            setTimeout(() => {
-                btn.style.transform = '';
-            }, 150);
+            if (btn) {
+                btn.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    btn.style.transform = '';
+                }, 150);
+            }
             
             // Store language preference
             localStorage.setItem('selectedLanguage', lang);
+            console.log('Language saved to localStorage:', lang);
             
             // Redirect to main menu
             setTimeout(() => {
@@ -353,11 +370,23 @@
         // Check if user already selected language
         window.addEventListener('load', function() {
             const savedLang = localStorage.getItem('selectedLanguage');
+            console.log('Saved language:', savedLang);
             if (savedLang) {
                 // User already selected language, redirect directly
+                console.log('Redirecting to menu.html');
                 window.location.href = 'menu.html';
+            } else {
+                console.log('No saved language, showing language selector');
             }
         });
+        
+        // Test function to clear language selection
+        function clearLanguage() {
+            localStorage.removeItem('selectedLanguage');
+            console.log('Language selection cleared');
+            alert('Dil seçimi sıfırlandı! Sayfa yenilenecek.');
+            location.reload();
+        }
     </script>
 </body>
 </html> 
