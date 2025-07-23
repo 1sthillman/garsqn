@@ -370,8 +370,8 @@ body {
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
     padding: 20px;
-  }
-  
+}
+
   .menu-card {
     height: 200px;
     padding: 16px;
@@ -519,7 +519,7 @@ body {
 /* Tablet için text boyutu */
 @media (min-width: 768px) {
   .menu-info h3 {
-    font-size: 0.9rem;
+  font-size: 0.9rem;
     margin-bottom: 8px;
     line-height: 1.3;
   }
@@ -537,8 +537,8 @@ body {
     font-size: 1rem;
     margin-bottom: 8px;
     line-height: 1.3;
-  }
-  
+}
+
   .menu-info p {
     font-size: 0.85rem;
     margin-bottom: 12px;
@@ -583,10 +583,10 @@ body {
 /* Desktop için fiyat ve buton boyutu */
 @media (min-width: 1024px) {
   .menu-price {
-    font-size: 1.1rem;
-    text-shadow: 0 0 10px var(--neon-accent);
-  }
-  
+  font-size: 1.1rem;
+  text-shadow: 0 0 10px var(--neon-accent);
+}
+
   .menu-bottom .neon-btn {
     padding: 8px 12px;
     font-size: 0.85rem;

@@ -3,57 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Restoran Menü</title>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+    <title>RetoQR - Ürün Galerisi</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="icons.js?v=2"></script>
-    <script type="importmap">
-      {
-        "imports": {
-          "three": "https://cdn.skypack.dev/three@0.136.0/build/three.module.js",
-          "three/addons/": "https://cdn.skypack.dev/three@0.136.0/examples/jsm/",
-          "animejs": "https://cdn.jsdelivr.net/npm/animejs@3.2.2/lib/anime.es.js",
-          "simplex-noise": "https://cdn.skypack.dev/simplex-noise@4.0.1"
-        }
-      }
-    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Defs */
-        @property --angle-1 {
-            syntax: "<angle>";
-            inherits: false;
-            initial-value: -75deg;
-        }
-
-        @property --angle-2 {
-            syntax: "<angle>";
-            inherits: false;
-            initial-value: -45deg;
-        }
-
-        @property --sprite-fs {
-            syntax: "<integer>";
-            initial-value: 0;
-            inherits: false;
-        }
-        
-        @property --slider-complete {
-            initial-value: 0;
-            inherits: true;
-            syntax: '<integer>';
-        }
-
-        @property --slider-offset {
-            initial-value: 5;
-            inherits: true;
-            syntax: '<integer>';
-        }
-        
         :root {
-            --global--size: clamp(2rem, 4vw, 5rem);
-            --anim--hover-time: 400ms;
-            --anim--hover-ease: cubic-bezier(0.25, 1, 0.5, 1);
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #f59e0b;
+            --accent: #ec4899;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --dark: #1f2937;
+            --darker: #111827;
+            --light: #f9fafb;
+            --gray: #6b7280;
+            --gray-light: #e5e7eb;
+            --border: #e5e7eb;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --radius: 12px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * {
@@ -61,3877 +32,756 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
-        body {
-            margin: 0;
-            overflow-x: hidden;
-            overflow-y: auto;
-            background-color: #000000; 
-            color: white; 
-            font-family: 'Nunito', sans-serif;
-        }
-        
-        /* Giriş Ekranı Stilleri */
-        .welcome-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-            transition: opacity 0.8s ease-out, visibility 0.8s ease-out;
-            overflow: hidden;
-        }
-        
-        #welcome-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-        }
-        
-        .welcome-screen.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
-        
-        .welcome-content {
-            text-align: center;
-            z-index: 10;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2rem;
-        }
-        
-        .logo-container {
-            margin-bottom: 0;
-        }
-        
-        .main-title {
-            font-size: clamp(3rem, 8vw, 6rem);
-            font-weight: 800;
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57);
-            background-size: 300% 300%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: gradientShift 3s ease-in-out infinite;
-            margin-bottom: 0.5rem;
-            letter-spacing: 0.2em;
-            text-shadow: 0 0 30px rgba(255, 107, 107, 0.5);
-        }
-        
-        @keyframes gradientShift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-        
-        .subtitle {
-            font-size: clamp(1rem, 3vw, 1.5rem);
-            color: rgba(255, 255, 255, 0.7);
-            font-weight: 300;
-            letter-spacing: 0.1em;
-        }
-        
-        .language-selection {
-            display: flex;
-            gap: 1.5rem;
-            justify-content: center;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-        }
-        
-        .lang-select-btn {
-            position: relative;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.08));
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 2rem;
-            padding: 1.5rem 3rem;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-            backdrop-filter: blur(25px);
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            min-width: 180px;
-            justify-content: center;
-            font-weight: 700;
-            letter-spacing: 0.8px;
-            box-shadow: 
-                0 10px 40px rgba(0, 0, 0, 0.3),
-                0 0 20px rgba(255, 255, 255, 0.1);
-        }
-        
-        .lang-select-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 1.5rem;
-            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        .lang-select-btn:hover {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.12));
-            transform: translateY(-8px) scale(1.08);
-            box-shadow: 
-                0 20px 50px rgba(0, 0, 0, 0.4),
-                0 0 30px rgba(255, 255, 255, 0.2);
-            border-color: rgba(255, 255, 255, 0.6);
-        }
-        
-        .lang-select-btn:hover::before {
-            opacity: 1;
-        }
-        
-        .lang-select-btn.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-color: rgba(102, 126, 234, 0.8);
-            box-shadow: 
-                0 15px 45px rgba(102, 126, 234, 0.6),
-                0 0 25px rgba(102, 126, 234, 0.4),
-                0 0 15px rgba(255, 255, 255, 0.2);
-            transform: translateY(-3px);
-        }
-        
-        .lang-select-btn.active::before {
-            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.2) 50%, transparent 70%);
-            opacity: 1;
-        }
-        
-        .flag {
-            font-size: 2rem;
-            filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.4));
-        }
-        
-        .lang-text {
-            font-weight: 800;
-            font-size: 1.2rem;
-            color: #fff;
-            text-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
-        }
-        
-        .enter-btn {
-            position: relative;
-            background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
-            border: none;
-            border-radius: 2rem;
-            padding: 1.5rem 3rem;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            font-weight: 800;
-            font-size: 1.2rem;
-            letter-spacing: 0.8px;
-            overflow: hidden;
-            box-shadow: 
-                0 10px 40px rgba(255, 107, 107, 0.3),
-                0 0 20px rgba(78, 205, 196, 0.3);
-            min-width: 180px;
-            justify-content: center;
-        }
-        
-        .enter-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-            transition: left 0.6s ease;
-        }
-        
-        .enter-btn:hover::before {
-            left: 100%;
-        }
-        
-        .enter-btn:hover {
-            transform: translateY(-8px) scale(1.08);
-            box-shadow: 
-                0 20px 50px rgba(255, 107, 107, 0.5),
-                0 0 30px rgba(78, 205, 196, 0.4),
-                0 0 20px rgba(255, 255, 255, 0.2);
-            background: linear-gradient(135deg, #ff7b7b 0%, #5eddd4 100%);
-        }
-        
-        .enter-text {
-            color: white;
-            font-weight: 800;
-            font-size: 1.2rem;
-            text-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
-        }
-        
-        .enter-arrow {
-            color: white;
-            font-size: 1.5rem;
-            transition: transform 0.4s ease;
-            text-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
-        }
-        
-        .enter-btn:hover .enter-arrow {
-            transform: translateX(8px);
-        }
-        
 
-        
-        /* Mobil Uyumluluk */
-        @media (max-width: 768px) {
-            .language-selection {
-                flex-direction: column;
-                align-items: center;
-                gap: 1.5rem;
-            }
-            
-            .lang-select-btn {
-                min-width: 240px;
-                padding: 1.8rem 3.5rem;
-                font-size: 1.3rem;
-            }
-            
-            .flag {
-                font-size: 2.2rem;
-            }
-            
-            .lang-text {
-                font-size: 1.4rem;
-            }
-            
-            .enter-btn {
-                min-width: 240px;
-                padding: 1.8rem 3.5rem;
-                font-size: 1.3rem;
-            }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--dark);
+            overflow-x: hidden;
         }
-        
-        @media (max-width: 480px) {
-            .main-title {
-                font-size: clamp(2.5rem, 10vw, 4rem);
-            }
-            
-            .subtitle {
-                font-size: clamp(0.9rem, 4vw, 1.2rem);
-            }
-            
-            .lang-select-btn {
-                min-width: 220px;
-                padding: 1.5rem 3rem;
-                font-size: 1.2rem;
-            }
-            
-            .flag {
-                font-size: 2rem;
-            }
-            
-            .lang-text {
-                font-size: 1.3rem;
-            }
-            
-            .enter-btn {
-                min-width: 220px;
-                padding: 1.5rem 3rem;
-                font-size: 1.2rem;
-            }
-        }
-        
-        canvas {
-            display: block; 
-            width: 100%; 
-            height: 100vh;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: -1;
-        }
-        
-        /* Ana uygulama kısmını giriş ekranından sonra göster */
-        body:not(.app-started) header,
-        body:not(.app-started) .category-bar,
-        body:not(.app-started) .product-grid,
-        body:not(.app-started) .action-bar,
-        body:not(.app-started) canvas {
-            display: none;
-        }
-        
-        #loading {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            display: none;
-            flex-direction: column; 
-            justify-content: center;
-            align-items: center;
-            z-index: 1000; 
-            transition: opacity 0.6s ease-out; 
-        }
-        
-        #loading span {
-            font-size: 24px;
-            letter-spacing: 2px;
-            margin-bottom: 15px; 
-        }
-        
-        #progress-container {
-             width: 60%;
-             max-width: 300px;
-             height: 6px;
-             background-color: rgba(255, 255, 255, 0.1);
-             border-radius: 3px;
-             overflow: hidden; 
-        }
-        
-        #progress {
-            height: 100%;
-            width: 0%; 
-            background: linear-gradient(90deg, #00a2ff, #00ffea); 
-            transition: width 0.3s ease; 
-            border-radius: 3px;
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
         }
 
         /* Header */
-        header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 1rem;
-            z-index: 1000;
-            height: 70px;
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
         }
-        
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
             margin: 0 auto;
         }
-        
-        .logo {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-        }
-        
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-        
-        /* Modern Table Info */
-        .table-info {
-            position: relative;
-            background: linear-gradient(
-                135deg,
-                rgba(255, 255, 255, 0.1),
-                rgba(255, 255, 255, 0.05)
-            );
-            color: #fff;
-            padding: 0.75rem 1.5rem;
-            border-radius: 2rem;
-            font-weight: 600;
-            font-size: 0.9rem;
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 
-                0 8px 32px rgba(0, 0, 0, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-            cursor: pointer;
-            letter-spacing: 0.5px;
-        }
-        
-        .table-info:hover {
-            background: linear-gradient(
-                135deg,
-                rgba(255, 255, 255, 0.15),
-                rgba(255, 255, 255, 0.08)
-            );
-            transform: translateY(-2px);
-            box-shadow: 
-                0 12px 40px rgba(0, 0, 0, 0.15),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3);
-        }
-        
-        .table-info::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 2rem;
-            background: linear-gradient(
-                45deg,
-                transparent 30%,
-                rgba(255, 255, 255, 0.1) 50%,
-                transparent 70%
-            );
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        .table-info:hover::before {
-            opacity: 1;
-        }
 
-        /* Modern Cart and Contact Buttons */
-        .cart-btn, .contact-btn {
-            position: relative;
-            background: linear-gradient(
-                135deg,
-                rgba(255, 255, 255, 0.1),
-                rgba(255, 255, 255, 0.05)
-            );
-            border: none;
-            color: #fff;
-            padding: 0.75rem;
-            border-radius: 50%;
-            cursor: pointer;
-            width: 45px;
-            height: 45px;
+        /* Search and Filter */
+        .controls {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-lg);
             display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
             align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 
-                0 8px 32px rgba(0, 0, 0, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-        }
-        
-        .cart-btn:hover, .contact-btn:hover {
-            background: linear-gradient(
-                135deg,
-                rgba(255, 255, 255, 0.15),
-                rgba(255, 255, 255, 0.08)
-            );
-            transform: scale(1.05) translateY(-2px);
-            box-shadow: 
-                0 12px 40px rgba(0, 0, 0, 0.15),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3);
-        }
-        
-        .cart-btn::before, .contact-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 50%;
-            background: linear-gradient(
-                45deg,
-                transparent 30%,
-                rgba(255, 255, 255, 0.1) 50%,
-                transparent 70%
-            );
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        .cart-btn:hover::before, .contact-btn:hover::before {
-            opacity: 1;
-        }
-        
-        .cart-badge {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            background: linear-gradient(135deg, #ff4757, #ff3742);
-            color: white;
-            font-size: 0.75rem;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            box-shadow: 
-                0 4px 12px rgba(255, 71, 87, 0.4),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            animation: pulse 2s infinite;
-        }
-
-        /* Language Selector */
-        .language-selector {
-            display: flex;
-            gap: 0.5rem;
-            align-items: center;
-        }
-
-        .lang-btn {
-            position: relative;
-            background: linear-gradient(
-                135deg,
-                rgba(255, 255, 255, 0.1),
-                rgba(255, 255, 255, 0.05)
-            );
-            border: none;
-            color: #fff;
-            padding: 0.5rem;
-            border-radius: 50%;
-            cursor: pointer;
-            width: 35px;
-            height: 35px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 
-                0 4px 16px rgba(0, 0, 0, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-            font-size: 1rem;
-        }
-        
-        .lang-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 50%;
-            background: linear-gradient(
-                45deg,
-                transparent 30%,
-                rgba(255, 255, 255, 0.1) 50%,
-                transparent 70%
-            );
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        .lang-btn:hover {
-            background: linear-gradient(
-                135deg,
-                rgba(255, 255, 255, 0.15),
-                rgba(255, 255, 255, 0.08)
-            );
-            transform: scale(1.05) translateY(-1px);
-            box-shadow: 
-                0 6px 20px rgba(0, 0, 0, 0.15),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3);
-        }
-        
-        .lang-btn:hover::before {
-            opacity: 1;
-        }
-        
-        .lang-btn.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            box-shadow: 
-                0 4px 16px rgba(102, 126, 234, 0.4),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3);
-            border: 1px solid rgba(102, 126, 234, 0.3);
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        /* Category Bar */
-        .category-bar {
-            position: fixed;
-            top: 80px;
-            left: 0;
-            right: 0;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            padding: 1rem;
-            z-index: 999;
-            display: flex;
-            gap: 0.75rem;
-            overflow-x: auto;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
-        
-        .category-bar::-webkit-scrollbar {
-            display: none;
-        }
-        
-        /* Modern Category Buttons */
-        .category-btn {
-            position: relative;
-            background: linear-gradient(
-                135deg,
-                rgba(255, 255, 255, 0.1),
-                rgba(255, 255, 255, 0.05)
-            );
-            border: none;
-            color: #fff;
-            padding: 0.875rem 1.75rem;
-            border-radius: 2rem;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-            font-size: 0.9rem;
-            font-weight: 600;
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 
-                0 8px 32px rgba(0, 0, 0, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            letter-spacing: 0.3px;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .category-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 2rem;
-            background: linear-gradient(
-                45deg,
-                transparent 30%,
-                rgba(255, 255, 255, 0.1) 50%,
-                transparent 70%
-            );
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        .category-btn:hover {
-            background: linear-gradient(
-                135deg,
-                rgba(255, 255, 255, 0.15),
-                rgba(255, 255, 255, 0.08)
-            );
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 
-                0 12px 40px rgba(0, 0, 0, 0.15),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3);
-        }
-        
-        .category-btn:hover::before {
-            opacity: 1;
-        }
-        
-        .category-btn.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            box-shadow: 
-                0 8px 25px rgba(102, 126, 234, 0.4),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3);
-            border: 1px solid rgba(102, 126, 234, 0.3);
-            transform: translateY(-2px);
-        }
-        
-        .category-btn.active::before {
-            background: linear-gradient(
-                45deg,
-                transparent 30%,
-                rgba(255, 255, 255, 0.2) 50%, 
-                transparent 70%
-            );
-            opacity: 1;
-        }
-
-                /* Product Grid - Mobil Uyumlu */
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-            padding: 16px;
-            width: 100%;
-            max-width: 1200px;
-            margin: 160px auto 120px auto;
-            position: relative;
-            z-index: 1;
-            min-height: auto;
-            overflow: visible;
-        }
-
-        .product-card {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 1rem;
-            padding: 1rem;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
             justify-content: space-between;
-            user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            text-align: center;
-            height: 180px;
-            transition: all 0.3s ease;
-        }
-        
-        .product-card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-        }
-        
-        .product-card:active {
-            transform: scale(0.98);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-        }
-        
-        .product-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        .product-card:hover::before {
-            opacity: 1;
         }
 
-        .product-name {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: #fff;
-            margin-bottom: 0.8rem;
-            text-align: center;
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
         }
 
-        .product-price {
-            background: rgba(255, 255, 255, 0.2);
-            color: #fff;
-            padding: 0.5rem 1rem;
-            border-radius: 2rem;
-            font-weight: 600;
-            font-size: 1.1rem;
-            text-align: center;
-            align-self: center;
-        }
-
-        .card-glow {
-            position: absolute;
-            top: 0;
-            left: 0;
+        .search-box input {
             width: 100%;
-            height: 100%;
-            border-radius: 1rem;
-            pointer-events: none;
-            background: radial-gradient(
-                circle at 50% 50%,
-                rgba(255, 255, 255, 0.1),
-                transparent 70%
-            );
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        .product-card:hover .card-glow {
-            opacity: 1;
+            padding: 12px 16px 12px 45px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 1rem;
+            transition: var(--transition);
+            background: white;
         }
 
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
 
+        .search-box i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
 
-        /* Action Bar */
-        .action-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: transparent;
-            padding: 1rem 0.5rem;
+        .filter-buttons {
             display: flex;
-            gap: 1rem;
-            z-index: 1000;
-            box-sizing: border-box;
-            max-width: 100vw;
-            overflow: hidden;
-            justify-content: center;
-            align-items: center;
+            gap: 10px;
             flex-wrap: wrap;
         }
 
-        /* Button Wrap Container */
-        .button-wrap {
-            position: relative;
-            z-index: 2;
-            background: transparent;
-            pointer-events: none;
-            transition: all 400ms cubic-bezier(0.25, 1, 0.5, 1);
-            flex: 0 1 auto;
-        }
-
-        /* Button Shadow Container - Hidden */
-        .button-shadow {
-            display: none;
-        }
-
-        /* Action Button Base Styles - Product Card Style */
-        .action-btn {
-            all: unset;
+        .filter-btn {
+            padding: 8px 16px;
+            border: 2px solid var(--border);
+            background: white;
+            border-radius: 20px;
             cursor: pointer;
-            position: relative;
-            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-            pointer-events: auto;
-            z-index: 3;
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            -moz-backdrop-filter: blur(20px);
-            -ms-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 0.8rem;
-            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.4rem;
-            color: #fff;
-            font-family: "Inter", sans-serif;
-            font-weight: 500;
-            font-size: 1rem;
-            width: auto;
-            height: auto;
-            overflow: hidden;
-            padding: 0.8rem 1.2rem;
-        }
-
-        .action-btn:hover {
-            transform: translateZ(20px) scale(1.05);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-        }
-
-        /* Button Text */
-        .action-btn span {
-            position: relative;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-            user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            font-family: "Inter", sans-serif;
-            letter-spacing: -0.05em;
-            font-weight: 500;
-            font-size: 1rem;
-            color: #fff;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            text-shadow: 0em 0.25em 0.05em rgba(0, 0, 0, 0.1);
-            transition: all 400ms cubic-bezier(0.25, 1, 0.5, 1);
-            z-index: 2;
-            white-space: nowrap;
-        }
-
-        .action-btn:hover span {
-            text-shadow: 0.025em 0.025em 0.025em rgba(0, 0, 0, 0.12);
-        }
-
-        /* Text Shine Effect */
-        .action-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            z-index: 1;
-        }
-        
-        .action-btn:hover::before {
-            opacity: 1;
-        }
-        
-        .action-btn span::after {
-            content: "";
-            display: block;
-            position: absolute;
-            z-index: 1;
-            width: calc(100% - var(--border-width));
-            height: calc(100% - var(--border-width));
-            top: calc(0% + var(--border-width) / 2);
-            left: calc(0% + var(--border-width) / 2);
-            box-sizing: border-box;
-            border-radius: 999vw;
-            overflow: clip;
-            background: linear-gradient(
-                -45deg,
-                rgba(255, 255, 255, 0) 0%,
-                rgba(255, 255, 255, 0.5) 40% 50%,
-                rgba(255, 255, 255, 0) 55%
-            );
-            z-index: 3;
-            mix-blend-mode: screen;
-            pointer-events: none;
-            background-size: 200% 200%;
-            background-position: 0% 50%;
-            background-repeat: no-repeat;
-            transition: background-position 500ms cubic-bezier(0.25, 1, 0.5, 1);
-        }
-
-        .action-btn:hover span::after {
-            background-position: 25% 50%;
-        }
-
-        .action-btn:active span::after {
-            background-position: 50% 15%;
-        }
-
-        /* Button Outline */
-        .action-btn::after {
-            content: "";
-            position: absolute;
-            z-index: 1;
-            inset: 0;
-            border-radius: 999vw;
-            width: calc(100% + var(--border-width));
-            height: calc(100% + var(--border-width));
-            top: calc(0% - var(--border-width) / 2);
-            left: calc(0% - var(--border-width) / 2);
-            padding: var(--border-width);
-            box-sizing: border-box;
-            background: conic-gradient(
-                    from -75deg at 50% 50%,
-                    rgba(0, 0, 0, 0.5),
-                    rgba(0, 0, 0, 0) 5% 40%,
-                    rgba(0, 0, 0, 0.5) 50%,
-                    rgba(0, 0, 0, 0) 60% 95%,
-                    rgba(0, 0, 0, 0.5)
-                ),
-                linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5));
-            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-            mask-composite: exclude;
-            transition: all 400ms cubic-bezier(0.25, 1, 0.5, 1);
-            box-shadow: inset 0 0 0 calc(var(--border-width) / 2) rgba(255, 255, 255, 0.5);
-        }
-
-        .action-btn:hover::after {
-            --angle-1: -125deg;
-        }
-        
-        .action-btn:active::after {
-            --angle-1: -75deg;
-        }
-
-        /* Shadow Hover - Removed */
-        .button-wrap:has(.action-btn:hover) .button-shadow {
-            display: none;
-        }
-
-        /* Active State - Transparent Glass */
-        .button-wrap:has(.action-btn:active) {
-            transform: scale(0.98);
-        }
-
-        .button-wrap:has(.action-btn:active) .action-btn {
-            transform: translateZ(10px) scale(0.98);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        .button-wrap:has(.action-btn:active) .button-shadow {
-            display: none;
-        }
-
-        .button-wrap:has(.action-btn:active) span {
-            text-shadow: 0.025em 0.25em 0.05em rgba(0, 0, 0, 0.12);
-        }
-
-        /* Toast Notifications */
-        .toast-container {
-            position: fixed;
-            top: 100px;
-            right: 20px;
-            z-index: 10000;
-            pointer-events: none;
-        }
-
-        .toast {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 1rem;
-            padding: 1rem 1.5rem;
-            margin-bottom: 1rem;
-            color: #fff;
-            font-weight: 500;
-            transform: translateX(100%);
-            transition: all 0.3s ease;
-            pointer-events: auto;
-            max-width: 300px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        .toast.show {
-            transform: translateX(0);
-        }
-
-        .toast.success {
-            border-left: 4px solid #00ff88;
-        }
-
-        .toast.info {
-            border-left: 4px solid #00a2ff;
-        }
-
-        .toast.error {
-            border-left: 4px solid #ff4757;
-        }
-
-        /* Cart Modal */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(10px);
-            z-index: 10000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-        }
-
-        .modal-overlay.show {
-            display: flex;
-        }
-        
-        .modal-content {
-            background: linear-gradient(
-                135deg,
-                rgba(255, 255, 255, 0.1),
-                rgba(255, 255, 255, 0.05)
-            );
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 1.5rem;
-            padding: 2rem;
-            max-width: 500px;
-            width: 100%;
-            max-height: 80vh;
-            overflow-y: auto;
-            color: #fff;
-            box-shadow: 
-                0 20px 60px rgba(0, 0, 0, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-        }
-        
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        .modal-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #fff;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        .modal-close {
-            position: relative;
-            background: linear-gradient(
-                135deg,
-                rgba(255, 255, 255, 0.1),
-                rgba(255, 255, 255, 0.05)
-            );
-            border: none;
-            color: #fff;
-            font-size: 1.5rem;
-            cursor: pointer;
-            padding: 0.75rem;
-            border-radius: 50%;
-            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 
-                0 8px 32px rgba(0, 0, 0, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            width: 45px;
-            height: 45px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-close:hover {
-            background: linear-gradient(
-                135deg,
-                rgba(255, 255, 255, 0.15),
-                rgba(255, 255, 255, 0.08)
-            );
-            transform: scale(1.05) translateY(-2px);
-            box-shadow: 
-                0 12px 40px rgba(0, 0, 0, 0.15),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3);
-        }
-        
-        .modal-close::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 50%;
-            background: linear-gradient(
-                45deg,
-                transparent 30%,
-                rgba(255, 255, 255, 0.1) 50%, 
-                transparent 70%
-            );
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        .modal-close:hover::before {
-            opacity: 1;
-        }
-        
-        .cart-items {
-            margin-bottom: 1.5rem;
-        }
-        
-        .cart-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 0.5rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .cart-item-info {
-            flex: 1;
-        }
-        
-        .cart-item-name {
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-        }
-        
-        .cart-item-price {
-            color: rgba(255, 255, 255, 0.7);
+            transition: var(--transition);
             font-size: 0.9rem;
-        }
-
-        .cart-item-controls {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .quantity-btn {
-            position: relative;
-            background: linear-gradient(
-                135deg,
-                rgba(255, 255, 255, 0.1),
-                rgba(255, 255, 255, 0.05)
-            );
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #fff;
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-            backdrop-filter: blur(15px);
-            box-shadow: 
-                0 4px 16px rgba(0, 0, 0, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-        }
-        
-        .quantity-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 50%;
-            background: linear-gradient(
-                45deg,
-                transparent 30%,
-                rgba(255, 255, 255, 0.1) 50%,
-                transparent 70%
-            );
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        .quantity-btn:hover {
-            background: linear-gradient(
-                135deg,
-                rgba(255, 255, 255, 0.15),
-                rgba(255, 255, 255, 0.08)
-            );
-            transform: scale(1.1) translateY(-1px);
-            box-shadow: 
-                0 6px 20px rgba(0, 0, 0, 0.15),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3);
-        }
-        
-        .quantity-btn:hover::before {
-            opacity: 1;
-        }
-        
-        .quantity-display {
-            min-width: 30px;
-            text-align: center;
-            font-weight: 600;
-        }
-        
-        .cart-total {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 0.5rem;
-            margin-bottom: 1.5rem;
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
-        
-        .cart-total span:first-child {
-            color: rgba(255, 255, 255, 0.8);
-        }
-        
-        .cart-total span:last-child {
-            color: #fff;
-            font-weight: 700;
-        }
-
-        .order-btn {
-            position: relative;
-            width: 100%;
-            padding: 1.25rem;
-            background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);
-            border: none;
-            border-radius: 1rem;
-            color: #000;
-            font-weight: 700;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-            backdrop-filter: blur(15px);
-            box-shadow: 
-                0 8px 32px rgba(0, 255, 136, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3);
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            font-size: 1rem;
-        }
-        
-        .order-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 1rem;
-            background: linear-gradient(
-                45deg,
-                transparent 30%,
-                rgba(255, 255, 255, 0.2) 50%,
-                transparent 70%
-            );
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .order-btn:hover {
-            background: linear-gradient(135deg, #00ffaa 0%, #00dd7a 100%);
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 
-                0 12px 40px rgba(0, 255, 136, 0.4),
-                inset 0 1px 0 rgba(255, 255, 255, 0.4);
-        }
-        
-        .order-btn:hover::before {
-            opacity: 1;
-        }
-
-        .order-btn:disabled {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-            color: rgba(255, 255, 255, 0.5);
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: 
-                0 4px 16px rgba(0, 0, 0, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
-        }
-        
-        .order-btn:disabled::before {
-            opacity: 0;
-        }
-
-        /* Hamburger Loading Animation */
-        .hamburger-loading {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
-            z-index: 20000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-        }
-
-        .hamburger-loading.show {
-            display: flex;
-        }
-
-        .hamburger-container {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            margin: 0 auto;
-            padding: 6rem 1rem;
-            background: transparent;
-            border-radius: 1rem;
-            box-sizing: border-box;
-            display: grid;
-            place-items: center;
-            max-width: 400px;
-            max-height: 400px;
-        }
-
-        .hamburger-sprite {
-            --sprite-image: url("https://assets.codepen.io/36869/burger2.webp");
-            --sprite-c: 5;
-            --sprite-h: 2160;
-            --sprite-w: 1950;
-            --sprite-f: 30;
-            --sprite-fr: 30;
-            --sprite-th: 128;
-            --sprite-r: round(up, calc(var(--sprite-f) / var(--sprite-c)), 1);
-            --sprite-sh: calc(var(--sprite-h) / var(--sprite-r));
-            --sprite-ar: calc(var(--sprite-th) / var(--sprite-sh));
-            --sprite-uh: calc(var(--sprite-h) * var(--sprite-ar));
-            --sprite-uw: calc(var(--sprite-w) * var(--sprite-ar));
-            --sprite-tw: calc(var(--sprite-uw) / var(--sprite-c));
-            --sprite-fe: calc(var(--sprite-f) - 1);
-            --sprite-as: calc(var(--sprite-f) / var(--sprite-fr) * 1s);
-
-            display: block;
-            position: relative;
-            top: 0;
-            transform-style: preserve-3d;
-            cursor: pointer;
-            height: calc(1px * var(--sprite-th));
-            width: calc(1px * var(--sprite-tw));
-            background-image: var(--sprite-image);
-            transform-origin: center center;
-            background-size: calc(1px * var(--sprite-uw)) calc(1px * var(--sprite-uh));
-            animation: hamburger-frame var(--sprite-as) linear 0s infinite alternate;
-
-            --row: calc(round(down, calc(calc(var(--sprite-tw) * var(--sprite-fs)) / var(--sprite-uw)), 1) * var(--sprite-th));
-            --col: mod(calc(var(--sprite-tw) * var(--sprite-fs)), var(--sprite-uw));
-            background-position: calc(-1px * var(--col)) calc(-1px * var(--row));
-        }
-
-        .hamburger-sprite:before {
-            content: "";
-            display: block;
-            position: relative;
-            height: calc(1px * var(--sprite-th));
-            width: calc(1px * var(--sprite-tw));
-            background-image: var(--sprite-image);
-            background-size: calc(1px * var(--sprite-uw)) calc(1px * var(--sprite-uh));
-            background-position: calc(-1px * var(--col)) calc(-1px * var(--row));
-            animation: hamburger-frame var(--sprite-as) linear 0s infinite alternate;
-            filter: contrast(0) brightness(0.15) blur(5px);
-            transform: rotateX(45deg) translateZ(-3em);
-            bottom: calc(-25% - 50px);
-            scale: .75;
-            z-index: -1;
-            pointer-events: none;
-        }
-
-        @keyframes hamburger-frame {
-            from {
-                --sprite-fs: 0;
-            }
-            to {
-                --sprite-fs: var(--sprite-fe);
-            }
-        }
-
-        .loading-text {
-            color: #fff;
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-top: 2rem;
-            text-align: center;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-        }
-
-        .cart-note {
-            margin: 15px 0;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .cart-note label {
-            display: block;
-            color: #fff;
-            font-size: 0.9rem;
-            margin-bottom: 8px;
             font-weight: 500;
         }
 
-        .cart-note textarea {
-            width: 100%;
-            min-height: 80px;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 6px;
-            color: #fff;
-            font-family: inherit;
-            font-size: 0.9rem;
-            resize: vertical;
-            backdrop-filter: blur(10px);
-        }
-        
-        .cart-note textarea:focus {
-            outline: none;
-            border-color: rgba(255, 255, 255, 0.4);
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
-        }
-
-        .cart-note textarea::placeholder {
-            color: rgba(255, 255, 255, 0.5);
-        }
-        
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .header-content {
-                padding: 0 1rem;
-            }
-            
-            .logo {
-                font-size: 1rem;
-            }
-            
-            .table-info {
-                font-size: 0.8rem;
-                padding: 0.4rem 0.8rem;
-            }
-            
-            .cart-btn, .contact-btn, .lang-btn {
-                width: 35px;
-                height: 35px;
-            }
-            
-            .category-bar {
-                top: 70px;
-                padding: 0.8rem;
-            }
-            
-            .category-btn {
-                font-size: 0.8rem;
-                padding: 0.4rem 0.8rem;
-            }
-            
-            .product-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 20px;
-                padding: 20px;
-                margin-top: 140px;
-                margin-bottom: 100px;
-            }
-            
-            .product-card {
-                height: 200px;
-                padding: 1.2rem;
-            }
-            
-            .product-name {
-                font-size: 1.2rem;
-                margin-bottom: 0.8rem;
-            }
-            
-            .product-price {
-                font-size: 1rem;
-                padding: 0.5rem 0.8rem;
-            }
-            
-            .action-bar {
-                padding: 0.5rem;
-                gap: 0.4rem;
-            }
-            
-            .action-btn {
-                padding: 0.6rem 1rem;
-                font-size: 0.8rem;
-                border-radius: 0.7rem;
-            }
-            
-            .action-btn span {
-                font-size: 0.8rem;
-                gap: 0.3rem;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .header-content {
-                padding: 0 0.5rem;
-            }
-            
-            .header-right {
-                gap: 0.5rem;
-            }
-            
-            .table-info {
-                font-size: 0.7rem;
-                padding: 0.3rem 0.6rem;
-            }
-            
-            .cart-btn, .contact-btn, .lang-btn {
-                width: 32px;
-                height: 32px;
-            }
-            
-            .category-bar {
-                top: 65px;
-                padding: 0.6rem;
-            }
-            
-            .category-btn {
-                font-size: 0.7rem;
-                padding: 0.3rem 0.6rem;
-            }
-            
-            .product-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 12px;
-                padding: 12px;
-                margin-top: 130px;
-                margin-bottom: 90px;
-            }
-            
-            .product-card {
-                height: 160px;
-                padding: 1rem;
-            }
-            
-            .product-name {
-                font-size: 1.1rem;
-                margin-bottom: 0.6rem;
-            }
-            
-            .product-price {
-                font-size: 0.9rem;
-                padding: 0.4rem 0.7rem;
-            }
-            
-            .action-bar {
-                padding: 0.4rem;
-                gap: 0.3rem;
-            }
-            
-            .action-btn {
-                padding: 0.5rem 0.8rem;
-                font-size: 0.7rem;
-                border-radius: 0.6rem;
-            }
-            
-            .action-btn span {
-                font-size: 0.7rem;
-                gap: 0.2rem;
-            }
-        }
-
-        /* Slider Styles */
-        .slider-container {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex: 1;
-            max-width: 300px;
-            margin: 0 1rem;
-        }
-
-        .instruction {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            font-family: 'Gloria Hallelujah', cursive;
-            translate: -100px 40%;
-            color: color-mix(in lch, canvas, canvasText 80%);
-            z-index: 10;
-            pointer-events: none;
-            opacity: 0.8;
-            transition: opacity 0.3s ease;
-
-            @media (min-width: 768px) {
-                translate: -200px 20%;
-            }
-
-            span {
-                display: inline-block;
-                translate: -50% 15%;
-                rotate: 10deg;
-                font-size: 0.8rem;
-            }
-
-            svg {
-                width: 1.5rem;
-                height: 1.5rem;
-                margin-right: 0.5rem;
-            }
-        }
-
-        .slider {
-            --width: 230;
-            --height: 2.625rem;
-            --size: 182%;
-            --accent: oklch(0.72 0.28 349.83);
-            display: flex;
-            border-radius: 100px;
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--primary);
             color: white;
-            width: calc(var(--width) * 1px);
-            max-width: calc(100vw - 2rem);
-            align-items: center;
-            position: relative;
+            border-color: var(--primary);
         }
 
-        .slider__track {
-            flex: 1;
-            height: var(--height);
-            position: relative;
-            container-type: inline-size;
-        }
-
-        .slider__fill {
-            height: 100%;
-            border-radius: 100px;
-            position: absolute;
-            left: 0;
-            width: 100%;
-            top: 50%;
+        /* Grid Layout */
+        .products-grid {
             display: grid;
-            place-items: center;
-            translate: 0 -50%;
-            clip-path: inset(0 0 0 0 round 120px);
-            pointer-events: none;
-            background: linear-gradient(
-                90deg,
-                oklch(0.32 0.15 259.94),
-                oklch(0.61 0.2 247.14),
-                oklch(0.71 0.24 313.75),
-                oklch(0.72 0.28 349.83),
-                oklch(0.72 0.23 3.74)
-            );
-            transition: clip-path 0.625s linear(
-                0 0%,
-                0.5007 7.21%,
-                0.7803 12.29%,
-                0.8883 14.93%,
-                0.9724 17.63%,
-                1.0343 20.44%,
-                1.0754 23.44%,
-                1.0898 25.22%,
-                1.0984 27.11%,
-                1.1014 29.15%,
-                1.0989 31.4%,
-                1.0854 35.23%,
-                1.0196 48.86%,
-                1.0043 54.06%,
-                0.9956 59.6%,
-                0.9925 68.11%,
-                1 100%
-            );
-
-            span {
-                font-family: 'Grand Hotel', cursive;
-                font-size: calc(var(--height) * 0.65);
-                letter-spacing: 0.1ch;
-                font-weight: 400;
-                font-style: italic;
-                line-height: 1;
-            }
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
         }
 
-        .slider__indicator {
-            border-radius: 50%;
-            pointer-events: none;
-            height: 144%;
-            aspect-ratio: 1;
-            background: hsl(0 0% 0%);
-            position: absolute;
-            top: 50%;
-            left: 0;
-            translate: calc(
-                (((var(--slider-complete, 0) / 100) * (100cqi - 54%)) - 28%) +
-                (var(--slider-touch, 0) * 1%)
-            ) -56%;
-            box-shadow: 0 12px 8px -2px light-dark(hsl(0 0% 10% / 0.25), hsl(0 0% 1% / 0.25)),
-                0 8px 12px -4px light-dark(hsl(0 0% 20% / 0.45), hsl(0 0% 2% / 0.45)),
-                0 16px 16px -10px light-dark(hsl(0 0% 30% / 0.45), hsl(0 0% 3% / 0.45)),
-                0 24px 24px -8px light-dark(hsl(0 0% 40% / 0.45), hsl(0 0% 4% / 0.45)),
-                0 32px 32px -2px light-dark(hsl(0 0% 50% / 0.45), hsl(0 0% 5% / 0.45)),
-                0 -6px 10px 0 hsl(0 0% 100% / 0.6) inset;
-            transition: translate 0.625s linear(
-                0 0%,
-                0.5007 7.21%,
-                0.7803 12.29%,
-                0.8883 14.93%,
-                0.9724 17.63%,
-                1.0343 20.44%,
-                1.0754 23.44%,
-                1.0898 25.22%,
-                1.0984 27.11%,
-                1.1014 29.15%,
-                1.0989 31.4%,
-                1.0854 35.23%,
-                1.0196 48.86%,
-                1.0043 54.06%,
-                0.9956 59.6%,
-                0.9925 68.11%,
-                1 100%
-            );
-
-            .shines {
-                position: absolute;
-                inset: 0;
-                overflow: hidden;
-                border-radius: 50%;
-                z-index: 3;
-
-                &::before {
-                    content: '';
-                    position: absolute;
-                    width: 70%;
-                    height: 50%;
-                    background: linear-gradient(#fff, hsl(222 53% 93% / 0.9));
-                    filter: blur(20px);
-                    top: 12%;
-                    left: 50%;
-                    translate: -50% 0;
-                }
-
-                &::after {
-                    content: '';
-                    width: 60%;
-                    aspect-ratio: 1;
-                    background: radial-gradient(
-                        circle at 50% 0,
-                        #fff 50%,
-                        hsl(0 0% 100% / 1)
-                    );
-                    filter: blur(7px);
-                    position: absolute;
-                    top: 10%;
-                    left: 50%;
-                    translate: -50% 0;
-                    border-radius: 50%;
-                }
-            }
-
-            .noise-holder {
-                position: absolute;
-                inset: 0;
-                overflow: hidden;
-                border-radius: 50%;
-                mask: radial-gradient(circle at 50% 40%, #0000 0%, #fff 75%);
-                pointer-events: none;
-            }
-
-            .noise {
-                height: var(--size);
-                aspect-ratio: 1;
-                border-radius: 50%;
-                left: 50%;
-                position: absolute;
-                translate: -50% 0;
-                display: grid;
-                opacity: 0.3;
-
-                div {
-                    grid-area: 1 / 1;
-                }
-
-                div:nth-of-type(1) {
-                    background: black;
-                    filter: url(#noiseshow) contrast(2);
-                }
-                div:nth-of-type(2) {
-                    background: hsl(0 0% 50%);
-                    mix-blend-mode: saturation;
-                }
-            }
-
-            .arrows-holder {
-                position: absolute;
-                inset: 0;
-                z-index: 4;
-                mask: radial-gradient(circle at 50% 30%, #fff 25%, #0000 65%);
-                transition: clip-path 0.625s linear(
-                    0 0%,
-                    0.5007 7.21%,
-                    0.7803 12.29%,
-                    0.8883 14.93%,
-                    0.9724 17.63%,
-                    1.0343 20.44%,
-                    1.0754 23.44%,
-                    1.0898 25.22%,
-                    1.0984 27.11%,
-                    1.1014 29.15%,
-                    1.0989 31.4%,
-                    1.0854 35.23%,
-                    1.0196 48.86%,
-                    1.0043 54.06%,
-                    0.9956 59.6%,
-                    0.9925 68.11%,
-                    1 100%
-                );
-            }
-
-            .arrows {
-                position: absolute;
-                height: var(--size);
-                aspect-ratio: 1;
-                border-radius: 50%;
-                outline: 2px dashed var(--accent);
-                left: 50%;
-                top: 0;
-                translate: -50% 0;
-                transition: transform 0.625s linear(
-                    0 0%,
-                    0.5007 7.21%,
-                    0.7803 12.29%,
-                    0.8883 14.93%,
-                    0.9724 17.63%,
-                    1.0343 20.44%,
-                    1.0754 23.44%,
-                    1.0898 25.22%,
-                    1.0984 27.11%,
-                    1.1014 29.15%,
-                    1.0989 31.4%,
-                    1.0854 35.23%,
-                    1.0196 48.86%,
-                    1.0043 54.06%,
-                    0.9956 59.6%,
-                    0.9925 68.11%,
-                    1 100%
-                );
-
-                svg {
-                    filter: drop-shadow(0 0 1px hsl(0 0% 50%));
-                    width: 1.35rem;
-                    position: absolute;
-                    color: hsl(0 0% 30%);
-                    left: 50%;
-                    top: 50%;
-                    transform: translate(-50%, -50%) rotate(calc(var(--i, 0) * 90deg))
-                        translate(10%, -2.25rem);
-
-                    path {
-                        stroke-width: 8;
-                    }
-
-                    &:nth-of-type(1) {
-                        --i: 0;
-                    }
-                    &:nth-of-type(2) {
-                        --i: 1;
-                    }
-                    &:nth-of-type(3) {
-                        --i: 2;
-                    }
-                    &:nth-of-type(4) {
-                        --i: 3;
-                    }
-                }
-            }
-        }
-
-        .slider input {
-            width: 100%;
-            height: var(--height);
-            outline: none;
-            opacity: 0;
+        /* Product Card */
+        .product-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
             cursor: pointer;
         }
 
-        .slider:hover:not(:active) {
-            --slider-touch: 5;
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
         }
 
-        .slider__indicator {
-            translate: calc(
-                (((var(--slider-complete, 0) / 100) * (100cqi - 54%)) - 28%) +
-                (var(--slider-touch, 0) * 1%)
-            ) -56%;
-        }
-
-        .slider__indicator .arrows,
-        .slider__indicator .noise {
-            transform: rotate(
-                calc(((var(--slider-complete, 0) + var(--slider-touch, 0)) / 100) * 360deg)
-            );
-        }
-
-        .slider__fill {
-            --inset: calc(90% - ((var(--slider-complete, 0) / 100) * 90%));
-            clip-path: inset(0 var(--inset) 0 0 round 120px);
-            transition: clip-path 0.625s linear(
-                0 0%,
-                0.5007 7.21%,
-                0.7803 12.29%,
-                0.8883 14.93%,
-                0.9724 17.63%,
-                1.0343 20.44%,
-                1.0754 23.44%,
-                1.0898 25.22%,
-                1.0984 27.11%,
-                1.1014 29.15%,
-                1.0989 31.4%,
-                1.0854 35.23%,
-                1.0196 48.86%,
-                1.0043 54.06%,
-                0.9956 59.6%,
-                0.9925 68.11%,
-                1 100%
-            );
-        }
-
-        /* Slider reveal states */
-        [data-reveal='true'] .instruction {
-            opacity: 0;
-        }
-
-        [data-reveal='true'] .slider input {
-            opacity: 1;
-            translate: 0 -150%;
-            outline-color: var(--accent);
-            background: color-mix(in oklch, var(--accent), #0000);
-        }
-
-        .slider input {
-            outline: 2px dashed #0000;
-            transition-property: opacity, outline-color, background, translate;
-            transition-duration: 0.5s;
-        }
-
-        .slider [type='range']::-webkit-slider-runnable-track {
-            height: 100%;
-            width: 100%;
-            background: color-mix(in oklch, var(--accent), #0000 75%);
-        }
-
-        .slider [type='range']::-moz-range-track {
-            height: 100%;
-            width: 100%;
-            background: color-mix(in oklch, var(--accent), #0000 75%);
-        }
-
-        .slider ::-webkit-slider-thumb {
-            width: var(--height);
-            height: var(--height);
-        }
-
-        .slider ::-moz-range-thumb {
-            width: var(--height);
-            height: var(--height);
-        }
-
-        /* Test stack for debug */
-        .test-stack {
-            height: 20vmin;
-            aspect-ratio: 1;
-            outline-offset: 4px;
-            outline: 2px dashed var(--accent);
+        .product-image {
+            position: relative;
+            height: 200px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
             overflow: hidden;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
+        }
+
+        .product-badge {
             position: absolute;
-            top: 50%;
-            left: calc(100% + 4rem);
-            opacity: 0;
-            transition: opacity 0.625s linear(
-                0 0%,
-                0.5007 7.21%,
-                0.7803 12.29%,
-                0.8883 14.93%,
-                0.9724 17.63%,
-                1.0343 20.44%,
-                1.0754 23.44%,
-                1.0898 25.22%,
-                1.0984 27.11%,
-                1.1014 29.15%,
-                1.0989 31.4%,
-                1.0854 35.23%,
-                1.0196 48.86%,
-                1.0043 54.06%,
-                0.9956 59.6%,
-                0.9925 68.11%,
-                1 100%
-            );
-            display: grid;
-            pointer-events: none;
-
-            div {
-                grid-area: 1 / 1;
-            }
-
-            div:nth-of-type(1) {
-                background: black;
-                filter: url(#noiseshow) contrast(2);
-            }
-            div:nth-of-type(2) {
-                background: hsl(0 0% 50%);
-                mix-blend-mode: saturation;
-            }
+            top: 10px;
+            right: 10px;
+            background: var(--accent);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
         }
 
-        [data-reveal='true'] .test-stack {
-            opacity: 1;
+        .product-info {
+            padding: 20px;
         }
 
-        [data-reveal='true'] .arrows-holder {
-            clip-path: circle(250%);
-            mask: unset;
+        .product-category {
+            color: var(--primary);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
         }
 
-        /* Mobile responsive adjustments */
+        .product-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--dark);
+            line-height: 1.3;
+        }
+
+        .product-description {
+            color: var(--gray);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .product-price {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .price {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--success);
+        }
+
+        .old-price {
+            font-size: 0.9rem;
+            color: var(--gray);
+            text-decoration: line-through;
+            margin-left: 8px;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 10px 16px;
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--gray-light);
+            color: var(--dark);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray);
+            color: white;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 40px;
+        }
+
+        .page-btn {
+            padding: 10px 16px;
+            border: 2px solid var(--border);
+            background: white;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .page-btn:hover,
+        .page-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: white;
+        }
+
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
-            .action-bar {
+            .container {
+                padding: 15px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .controls {
                 flex-direction: column;
-                gap: 0.8rem;
-                padding: 1rem 0.5rem;
-            }
-            
-            .slider-container {
-                max-width: 280px;
-                margin: 0;
-                order: 2;
+                align-items: stretch;
             }
 
-            .slider {
-                --width: 250;
-                --height: 2.5rem;
+            .search-box {
+                min-width: auto;
             }
 
-            .instruction {
-                font-size: 0.8rem;
-                
-                svg {
-                    width: 1.3rem;
-                    height: 1.3rem;
-                }
+            .filter-buttons {
+                justify-content: center;
             }
-            
-            .button-wrap {
-                order: 1;
+
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 20px;
+            }
+
+            .product-info {
+                padding: 15px;
+            }
+
+            .product-actions {
+                flex-direction: column;
             }
         }
 
         @media (max-width: 480px) {
-            .action-bar {
-                flex-direction: column;
-                gap: 0.6rem;
-                padding: 0.8rem 0.3rem;
-            }
-            
-            .slider-container {
-                max-width: 240px;
-                margin: 0;
-                order: 2;
+            .header h1 {
+                font-size: 1.5rem;
             }
 
-            .slider {
-                --width: 220;
-                --height: 2.2rem;
+            .products-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
             }
 
-            .instruction {
-                font-size: 0.7rem;
-                
-                svg {
-                    width: 1.1rem;
-                    height: 1.1rem;
-                }
+            .pagination {
+                flex-wrap: wrap;
             }
-            
-            .button-wrap {
-                order: 1;
-            }
+        }
+
+        /* Animation */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: white;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.7;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            opacity: 0.8;
         }
     </style>
 </head>
 <body>
-
-    <!-- Giriş Ekranı -->
-    <div id="welcomeScreen" class="welcome-screen">
-        <canvas id="welcome-canvas"></canvas>
-        <div class="welcome-content">
-            <div class="logo-container">
-                <h1 class="main-title">ADİSTOW</h1>
-                <div class="subtitle">Digital Menu System</div>
-            </div>
-            
-            <div class="language-selection">
-                <button class="lang-select-btn active" data-lang="tr">
-                    <span class="flag">🇹🇷</span>
-                    <span class="lang-text">Türkçe</span>
-                </button>
-                <button class="lang-select-btn" data-lang="en">
-                    <span class="flag">🇺🇸</span>
-                    <span class="lang-text">English</span>
-                </button>
-            </div>
-            
-            <button class="enter-btn" id="enterBtn">
-                <span class="enter-text">GEÇ</span>
-                <div class="enter-arrow">→</div>
-            </button>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>RetoQR Ürün Galerisi</h1>
+            <p>Modern ve şık tasarımlı ürünlerimizi keşfedin</p>
         </div>
-    </div>
 
-    <div id="loading">
-        <span>Initializing Particles...</span>
-        <div id="progress-container">
-             <div id="progress"></div>
-        </div>
-    </div>
-
-    <canvas id="webglCanvas"></canvas>
-
-    <header>
-        <div class="header-content">
-            <div class="logo">
-                <i class="fas fa-utensils"></i>
-                <span id="restaurantName">QR Menü</span>
+        <!-- Controls -->
+        <div class="controls">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Ürün ara...">
             </div>
-            <div class="header-right">
-                <div class="table-info">
-                    <span>Masa <span id="tableId">--</span></span>
-                </div>
-                <div class="language-selector">
-                    <button class="lang-btn" data-lang="tr">
-                        <span>🇹🇷</span>
-                    </button>
-                    <button class="lang-btn" data-lang="en">
-                        <span>🇺🇸</span>
-                    </button>
-                </div>
-                <button class="contact-btn" id="contactBtn">
-                    <i class="fas fa-envelope"></i>
-                </button>
-                <button class="cart-btn" id="cartBtn">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span class="cart-badge" id="cartBadge">0</span>
-                </button>
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-category="all">Tümü</button>
+                <button class="filter-btn" data-category="electronics">Elektronik</button>
+                <button class="filter-btn" data-category="clothing">Giyim</button>
+                <button class="filter-btn" data-category="home">Ev & Yaşam</button>
+                <button class="filter-btn" data-category="sports">Spor</button>
             </div>
         </div>
-    </header>
 
-    <div class="category-bar" id="categoryBar">
-        <!-- Dinamik olarak oluşturulacak -->
-    </div>
-
-    <div class="product-grid" id="product-grid">
-        <!-- Dinamik olarak oluşturulacak ürün kartları -->
-    </div>
-
-    <!-- Slider SVG Defs -->
-    <svg class="sr-only" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <!-- Noise & Distortion -->
-        <filter id="noiseshow">
-          <feTurbulence
-            type="turbulence"
-            baseFrequency="0.6"
-            numOctaves="10"
-            result="noise"
-          ></feTurbulence>
-        </filter>
-      </defs>
-    </svg>
-
-    <div class="action-bar">
-        <div class="button-wrap">
-            <button class="action-btn" id="callWaiterBtn">
-                <span>
-                    <i class="fas fa-bell"></i>
-                    Garson Çağır
-                </span>
-            </button>
+        <!-- Products Grid -->
+        <div class="products-grid" id="productsGrid">
+            <!-- Products will be loaded here -->
         </div>
-        
-        <!-- Slider Container -->
-        <div class="slider-container">
-            <div class="instruction">
-                <svg viewBox="0 0 144 141" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        fill-rule="evenodd"
-                        clip-rule="evenodd"
-                        d="M129.189 0.0490494C128.744 0.119441 126.422 0.377545 124.03 0.635648C114.719 1.6446 109.23 2.4893 108.058 3.09936C107.119 3.56864 106.674 4.34295 106.674 5.44576C106.674 6.71281 107.424 7.51058 109.043 7.97986C110.403 8.37875 110.825 8.42567 118.87 9.52847C121.778 9.92736 124.288 10.3028 124.475 10.3732C124.663 10.4436 122.951 11.1006 120.676 11.8749C110.028 15.4414 100.412 20.7677 91.7339 27.9242C88.38 30.7164 81.6957 37.4271 79.2096 40.5009C73.8387 47.2116 69.6874 54.8139 66.5681 63.7302C65.9348 65.4665 65.3484 66.8978 65.2546 66.8978C65.1374 66.8978 63.7771 66.7336 62.2291 66.5693C52.9649 65.5134 43.1847 68.1649 34.1316 74.2186C24.7735 80.46 18.5349 87.7338 10.5371 101.742C2.53943 115.726 -1.0959 127.482 0.287874 135.014C0.89767 138.463 2.0469 140.035 3.97011 140.082C5.28352 140.105 5.37733 139.659 4.20465 139.049C3.05541 138.463 2.6567 137.9 2.32835 136.281C0.616228 128.021 6.24512 113.028 17.4325 96.1104C23.2725 87.241 28.362 81.9147 35.5622 77.1046C43.8649 71.5437 52.7069 69.033 61.1737 69.8308C64.9967 70.1828 64.6917 69.9247 64.1992 72.4822C62.2525 82.5013 63.8005 92.6378 67.9753 97.354C73.1116 103.079 81.9771 102 85.0027 95.2657C86.3395 92.2858 86.3864 87.7103 85.1434 83.9796C83.1498 78.0901 80.007 73.8197 75.4335 70.8163C73.8152 69.7604 70.4848 68.1883 69.875 68.1883C69.359 68.1883 69.4294 67.6487 70.2268 65.3257C72.3377 59.2486 75.457 52.7021 78.4122 48.244C83.2436 40.9232 91.4524 32.5701 99.1687 27.103C105.806 22.4102 113.241 18.5386 120.512 16.0045C123.772 14.8548 129.87 13.1889 130.081 13.3766C130.128 13.447 129.541 14.362 128.791 15.4414C124.78 21.0258 122.716 26.0706 122.388 30.998C122.224 33.7198 122.341 34.588 122.88 34.2595C122.998 34.1891 123.678 32.969 124.405 31.5611C126.281 27.8069 131.722 20.6738 139.579 11.6402C141.127 9.85697 142.652 7.86254 143.027 7.08823C144.552 4.03792 143.52 1.48035 140.377 0.471397C139.439 0.166366 138.102 0.0490408 134.584 0.0255769C132.074 -0.021351 129.635 0.00212153 129.189 0.0490494ZM137.117 4.92955C137.187 5.0234 136.718 5.63346 136.061 6.29045L134.865 7.48712L131.042 6.73627C128.931 6.33739 126.727 5.9385 126.14 5.8681C124.827 5.68039 124.123 5.32843 124.968 5.28151C125.296 5.28151 126.868 5.11725 128.486 4.953C131.3 4.64797 136.812 4.62451 137.117 4.92955ZM71.5168 72.5292C76.2075 74.899 79.4441 78.8175 81.3204 84.355C83.6189 91.1361 81.2266 96.8378 76.0433 96.8847C73.3227 96.9082 70.9773 95.2188 69.5936 92.2389C68.2802 89.4232 67.6938 86.5606 67.5765 82.1259C67.4593 78.3248 67.6 76.4242 68.2333 72.7403L68.4912 71.2856L69.359 71.5906C69.8515 71.7548 70.8132 72.1772 71.5168 72.5292Z"
-                        fill="currentColor"
-                    />
-                </svg>
-                <span>Sürükle!</span>
-            </div>
-            
-            <div class="slider">
-                <div class="test-stack">
-                    <div></div>
-                    <div></div>
-                </div>
-                <div class="slider__track">
-                    <label for="slider" class="sr-only">Slider</label>
-                    <input
-                        aria-label="Slide to 100 to unlock premium"
-                        tabindex="0"
-                        type="range"
-                        id="slider"
-                        min="0"
-                        value="0"
-                        max="100"
-                        step="1"
-                    />
-                    <div class="slider__fill">
-                        <span>Garson Çağır</span>
-                    </div>
-                    <div class="slider__indicator">
-                        <div class="shines"></div>
-                        <div class="noise-holder">
-                            <div class="noise">
-                                <div></div>
-                                <div></div>
-                            </div>
-                        </div>
-                        <div class="arrows-holder">
-                            <div class="arrows">
-                                <svg viewBox="0 0 120 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M71.5542 7.10156C71.5542 7.10156 91.68 18.4986 100.553 26.104C111.053 35.104 112.553 39.104 112.053 42.604C111.553 46.104 104.614 51.1058 97.6141 55.6058C89 61.1435 72.5003 72.1101 72.5003 72.1101M7 42.6126C7 42.6126 36.3395 36.643 56 36.6103C75.9938 36.5771 109 40.6102 109 40.6102" stroke="currentColor" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-                                <svg viewBox="0 0 120 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M71.5542 7.10156C71.5542 7.10156 91.68 18.4986 100.553 26.104C111.053 35.104 112.553 39.104 112.053 42.604C111.553 46.104 104.614 51.1058 97.6141 55.6058C89 61.1435 72.5003 72.1101 72.5003 72.1101M7 42.6126C7 42.6126 36.3395 36.643 56 36.6103C75.9938 36.5771 109 40.6102 109 40.6102" stroke="currentColor" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-                                <svg viewBox="0 0 120 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M71.5542 7.10156C71.5542 7.10156 91.68 18.4986 100.553 26.104C111.053 35.104 112.553 39.104 112.053 42.604C111.553 46.104 104.614 51.1058 97.6141 55.6058C89 61.1435 72.5003 72.1101 72.5003 72.1101M7 42.6126C7 42.6126 36.3395 36.643 56 36.6103C75.9938 36.5771 109 40.6102 109 40.6102" stroke="currentColor" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-                                <svg viewBox="0 0 120 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M71.5542 7.10156C71.5542 7.10156 91.68 18.4986 100.553 26.104C111.053 35.104 112.553 39.104 112.053 42.604C111.553 46.104 104.614 51.1058 97.6141 55.6058C89 61.1435 72.5003 72.1101 72.5003 72.1101M7 42.6126C7 42.6126 36.3395 36.643 56 36.6103C75.9938 36.5771 109 40.6102 109 40.6102" stroke="currentColor" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="button-wrap">
-            <button class="action-btn" id="requestCharcoalBtn">
-                <span>
-                    <i class="fas fa-fire"></i>
-                    Köz İste
-                </span>
-            </button>
-        </div>
-    </div>
-    
-    <!-- Toast Container -->
-    <div class="toast-container" id="toastContainer"></div>
 
-    <!-- Hamburger Loading Animation -->
-    <div class="hamburger-loading" id="hamburgerLoading">
-        <div class="hamburger-container">
-            <div class="hamburger-sprite"></div>
-        </div>
-        <div class="loading-text">Siparişiniz hazırlanıyor...</div>
-    </div>
-    
-    <!-- Cart Modal -->
-    <div class="modal-overlay" id="cartModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-title">Sepetim</div>
-                <button class="modal-close" id="closeCartModal">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-                <div class="cart-items" id="cartItems">
-                                <!-- Cart items will be dynamically added here -->
-                </div>
-                            <div class="cart-note">
-                                <label for="orderNote">Sipariş Notu:</label>
-                                <textarea id="orderNote" placeholder="Özel isteklerinizi buraya yazabilirsiniz..."></textarea>
-                            </div>
-                <div class="cart-total">
-                    <span>Toplam:</span>
-                    <span id="cartTotal">0₺</span>
-                </div>
-                            <button class="order-btn" id="orderBtn" disabled>
-                                Sipariş Ver
-                </button>
+        <!-- Pagination -->
+        <div class="pagination" id="pagination">
+            <!-- Pagination will be generated here -->
         </div>
     </div>
 
     <script>
-        // Güvenli API Konfigürasyonu
-        (function() {
-          'use strict';
-          
-          const _0x4a2b = {
-            _0x7c1d: 'aHR0cHM6Ly9lZ2NrbHpmaXl4eG52eXh3b293cS5zdXBhYmFzZS5jbw==',
-            _0x8e3f: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVnY2tsemZpeXh4bnZ5eHdvb3dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0NjQxMTcsImV4cCI6MjA2NDA0MDExN30.dfRQv3lYFCaI1T5ydOw4HyoEJ0I1wOSIUcG8ueEbxKQ'
-          };
-          
-          function _0x2d8e(_0x5f1a) {
-            return atob(_0x5f1a);
-          }
-          
-          Object.defineProperty(window, 'SUPABASE_CONFIG', {
-            get: function() {
-              return {
-                url: _0x2d8e(_0x4a2b._0x7c1d),
-                anonKey: _0x4a2b._0x8e3f
-              };
+        // Sample product data - 100 products
+        const products = [
+            {
+                id: 1,
+                name: "Akıllı Telefon Pro",
+                category: "electronics",
+                price: 12999,
+                oldPrice: 14999,
+                description: "En son teknoloji ile donatılmış akıllı telefon. 128GB depolama, 6.7 inç ekran.",
+                image: "https://via.placeholder.com/300x200/6366f1/ffffff?text=Phone",
+                badge: "Yeni"
             },
-            set: function() {
-              console.warn('⚠️ API konfigürasyonu korunuyor');
-              return false;
+            {
+                id: 2,
+                name: "Kablosuz Kulaklık",
+                category: "electronics",
+                price: 899,
+                oldPrice: 1299,
+                description: "Aktif gürültü engelleme özellikli kablosuz kulaklık. 30 saat pil ömrü.",
+                image: "https://via.placeholder.com/300x200/f59e0b/ffffff?text=Headphones",
+                badge: "İndirim"
             },
-            configurable: false,
-            enumerable: false
-          });
-        })();
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const supabase = window.supabase.createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.anonKey);
-            
-            // Ses dosyaları
-            const turkeyAudio = new Audio('turkey-language.mp3');
-            const englishAudio = new Audio('english-language.mp3');
-            
-            // Ses ayarları
-            turkeyAudio.volume = 0.7;
-            englishAudio.volume = 0.7;
-            
-            // Başlangıçta Türkçe sesi çal
-            turkeyAudio.play().catch(e => console.log('Ses çalınamadı:', e));
-            
-            // Giriş ekranı animasyonunu başlat
-            initWelcomeAnimation();
-            
-            const urlParams = new URLSearchParams(window.location.search);
-            const RESTAURANT_ID = urlParams.get('restaurant_id');
-            const TABLE_ID = urlParams.get('table_id');
-            
-            let restaurantInfo = null;
-            let tableInfo = null;
-            let products = [];
-            let categories = [];
-            let cart = [];
-            let currentLanguage = 'tr';
-            let isWelcomeScreenActive = true;
-            
-            // Dil çevirileri
-            const translations = {
-                tr: {
-                    allProducts: 'Tüm Ürünler',
-                    foods: 'Yemekler',
-                    drinks: 'İçecekler',
-                    desserts: 'Tatlılar',
-                    appetizers: 'Başlangıçlar',
-                    callWaiter: 'Garson Çağır',
-                    requestCharcoal: 'Köz İste',
-                    cart: 'Sepetim',
-                    total: 'Toplam:',
-                    orderNote: 'Sipariş Notu:',
-                    orderNotePlaceholder: 'Özel isteklerinizi buraya yazabilirsiniz...',
-                    placeOrder: 'Sipariş Ver',
-                    emptyCart: 'Sepetiniz boş',
-                    noProductsInCategory: 'Bu kategoride ürün bulunamadı.',
-                    addedToCart: 'sepetinize eklendi!',
-                    waiterCalled: 'Garson çağrıldı!',
-                    charcoalRequested: 'Köz isteğiniz iletildi!',
-                    orderSent: 'Siparişiniz başarıyla gönderildi!',
-                    orderFailed: 'Sipariş gönderilemedi. Lütfen tekrar deneyin.',
-                    callFailed: 'Çağrı oluşturulamadı. Lütfen tekrar deneyin.',
-                    emptyCartError: 'Sepetiniz boş!',
-                    preparingOrder: 'Siparişiniz hazırlanıyor...',
-                    table: 'Masa'
-                },
-                en: {
-                    allProducts: 'All Products',
-                    foods: 'Foods',
-                    drinks: 'Drinks',
-                    desserts: 'Desserts',
-                    appetizers: 'Appetizers',
-                    callWaiter: 'Call Waiter',
-                    requestCharcoal: 'Request Charcoal',
-                    cart: 'My Cart',
-                    total: 'Total:',
-                    orderNote: 'Order Note:',
-                    orderNotePlaceholder: 'Write your special requests here...',
-                    placeOrder: 'Place Order',
-                    emptyCart: 'Your cart is empty',
-                    noProductsInCategory: 'No products found in this category.',
-                    addedToCart: 'added to your cart!',
-                    waiterCalled: 'Waiter called!',
-                    charcoalRequested: 'Charcoal request sent!',
-                    orderSent: 'Your order has been sent successfully!',
-                    orderFailed: 'Order could not be sent. Please try again.',
-                    callFailed: 'Call could not be created. Please try again.',
-                    emptyCartError: 'Your cart is empty!',
-                    preparingOrder: 'Preparing your order...',
-                    table: 'Table'
-                }
-            };
-            
-            async function initializeApp() {
-                try {
-                    restaurantInfo = await getRestaurantInfo();
-                    tableInfo = await getTableInfo();
-                    
-                    if (!restaurantInfo || !tableInfo) {
-                        console.error('Restoran veya masa bilgileri bulunamadı');
-                        return;
-                    }
-                    
-                    updateUI();
-                    products = await getProducts();
-                    categories = await getCategories();
-                    
-                    createCategoryBar();
-                    renderProducts();
-                    
-                    // Başlangıçta Türkçe dilini aktif et
-                    document.querySelector('[data-lang="tr"]').classList.add('active');
-                    
-                    // Giriş ekranı event listener'larını ekle
-                    setupWelcomeScreen();
-                    
-                    // Ana uygulama event listener'larını sadece giriş ekranından sonra ekle
-                    if (!isWelcomeScreenActive) {
-                        setupEventListeners();
-                    }
-                    
-                } catch (error) {
-                    console.error('Uygulama başlatılamadı:', error);
-                }
+            {
+                id: 3,
+                name: "Spor Ayakkabı",
+                category: "sports",
+                price: 599,
+                oldPrice: null,
+                description: "Rahat ve dayanıklı spor ayakkabı. Hafif ve esnek taban.",
+                image: "https://via.placeholder.com/300x200/10b981/ffffff?text=Shoes",
+                badge: null
+            },
+            {
+                id: 4,
+                name: "Kahve Makinesi",
+                category: "home",
+                price: 2499,
+                oldPrice: 2999,
+                description: "Programlanabilir kahve makinesi. 10 bardak kapasite.",
+                image: "https://via.placeholder.com/300x200/ec4899/ffffff?text=Coffee",
+                badge: "Popüler"
+            },
+            {
+                id: 5,
+                name: "Laptop Ultra",
+                category: "electronics",
+                price: 25999,
+                oldPrice: null,
+                description: "Yüksek performanslı laptop. 16GB RAM, 512GB SSD.",
+                image: "https://via.placeholder.com/300x200/6366f1/ffffff?text=Laptop",
+                badge: "Premium"
+            },
+            {
+                id: 6,
+                name: "Yoga Matı",
+                category: "sports",
+                price: 199,
+                oldPrice: 299,
+                description: "Anti-kayma özellikli yoga matı. 6mm kalınlık.",
+                image: "https://via.placeholder.com/300x200/10b981/ffffff?text=Yoga",
+                badge: "İndirim"
+            },
+            {
+                id: 7,
+                name: "Akıllı Saat",
+                category: "electronics",
+                price: 3999,
+                oldPrice: 4999,
+                description: "Fitness takibi ve bildirimler için akıllı saat.",
+                image: "https://via.placeholder.com/300x200/6366f1/ffffff?text=Watch",
+                badge: "Yeni"
+            },
+            {
+                id: 8,
+                name: "Bluetooth Hoparlör",
+                category: "electronics",
+                price: 799,
+                oldPrice: null,
+                description: "Taşınabilir bluetooth hoparlör. 20 saat pil ömrü.",
+                image: "https://via.placeholder.com/300x200/f59e0b/ffffff?text=Speaker",
+                badge: null
+            },
+            {
+                id: 9,
+                name: "Spor T-Shirt",
+                category: "clothing",
+                price: 149,
+                oldPrice: 199,
+                description: "Nefes alabilir kumaştan yapılmış spor t-shirt.",
+                image: "https://via.placeholder.com/300x200/ec4899/ffffff?text=T-Shirt",
+                badge: "İndirim"
+            },
+            {
+                id: 10,
+                name: "Akıllı Ev Asistanı",
+                category: "electronics",
+                price: 899,
+                oldPrice: null,
+                description: "Sesli komutlarla evinizi kontrol edin.",
+                image: "https://via.placeholder.com/300x200/6366f1/ffffff?text=Assistant",
+                badge: "Popüler"
             }
+        ];
+
+        // Generate 90 more products
+        for (let i = 11; i <= 100; i++) {
+            const categories = ["electronics", "clothing", "home", "sports"];
+            const category = categories[Math.floor(Math.random() * categories.length)];
+            const names = [
+                "Akıllı Cihaz", "Spor Ekipmanı", "Ev Aleti", "Giyim Ürünü",
+                "Teknoloji Ürünü", "Fitness Ekipmanı", "Mutfak Aleti", "Aksesuar"
+            ];
+            const name = names[Math.floor(Math.random() * names.length)] + " " + i;
             
-            function setupWelcomeScreen() {
-                // Dil seçimi butonları
-                document.querySelectorAll('.lang-select-btn').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const lang = this.getAttribute('data-lang');
-                        selectWelcomeLanguage(lang);
-                    });
-                });
-                
-                // Geç butonu
-                document.getElementById('enterBtn').addEventListener('click', function() {
-                    enterApp();
-                });
+            products.push({
+                id: i,
+                name: name,
+                category: category,
+                price: Math.floor(Math.random() * 10000) + 100,
+                oldPrice: Math.random() > 0.7 ? Math.floor(Math.random() * 10000) + 100 : null,
+                description: "Kaliteli ve dayanıklı ürün. Uzun ömürlü kullanım için tasarlanmıştır.",
+                image: `https://via.placeholder.com/300x200/${Math.floor(Math.random()*16777215).toString(16)}/ffffff?text=Product+${i}`,
+                badge: Math.random() > 0.8 ? ["Yeni", "İndirim", "Popüler"][Math.floor(Math.random() * 3)] : null
+            });
+        }
+
+        // App state
+        let currentPage = 1;
+        let itemsPerPage = 12;
+        let filteredProducts = [...products];
+        let currentCategory = 'all';
+
+        // DOM elements
+        const productsGrid = document.getElementById('productsGrid');
+        const searchInput = document.getElementById('searchInput');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const pagination = document.getElementById('pagination');
+
+        // Initialize
+        function init() {
+            renderProducts();
+            renderPagination();
+            setupEventListeners();
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            searchInput.addEventListener('input', handleSearch);
+            filterButtons.forEach(btn => {
+                btn.addEventListener('click', handleFilter);
+            });
+        }
+
+        // Handle search
+        function handleSearch(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            filterProducts(searchTerm, currentCategory);
+        }
+
+        // Handle filter
+        function handleFilter(e) {
+            const category = e.target.dataset.category;
+            currentCategory = category;
+            
+            // Update active button
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            e.target.classList.add('active');
+            
+            filterProducts(searchInput.value.toLowerCase(), category);
+        }
+
+        // Filter products
+        function filterProducts(searchTerm, category) {
+            filteredProducts = products.filter(product => {
+                const matchesSearch = product.name.toLowerCase().includes(searchTerm) ||
+                                   product.description.toLowerCase().includes(searchTerm);
+                const matchesCategory = category === 'all' || product.category === category;
+                return matchesSearch && matchesCategory;
+            });
+            
+            currentPage = 1;
+            renderProducts();
+            renderPagination();
+        }
+
+        // Render products
+        function renderProducts() {
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const productsToShow = filteredProducts.slice(startIndex, endIndex);
+
+            if (productsToShow.length === 0) {
+                productsGrid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-search"></i>
+                        <h3>Ürün bulunamadı</h3>
+                        <p>Arama kriterlerinize uygun ürün bulunamadı.</p>
+                    </div>
+                `;
+                return;
             }
-            
-            function selectWelcomeLanguage(lang) {
-                // Aktif dil butonunu güncelle
-                document.querySelectorAll('.lang-select-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                document.querySelector(`.lang-select-btn[data-lang="${lang}"]`).classList.add('active');
-                
-                // Ses çal
-                if (lang === 'tr') {
-                    turkeyAudio.currentTime = 0;
-                    turkeyAudio.play().catch(e => console.log('Ses çalınamadı:', e));
-                } else {
-                    englishAudio.currentTime = 0;
-                    englishAudio.play().catch(e => console.log('Ses çalınamadı:', e));
-                }
-                
-                currentLanguage = lang;
-            }
-            
-            function enterApp() {
-                // Sesleri durdur
-                turkeyAudio.pause();
-                englishAudio.pause();
-                
-                // Giriş ekranını gizle
-                const welcomeScreen = document.getElementById('welcomeScreen');
-                welcomeScreen.classList.add('hidden');
-                
-                // Ana uygulamayı başlat
-                isWelcomeScreenActive = false;
-                document.body.classList.add('app-started');
-                
-                // Loading ekranını göster
-                const loading = document.getElementById('loading');
-                loading.style.display = 'flex';
-                
-                // Event listener'ları ekle
-                setupEventListeners();
-                
-                // 3 saniye sonra loading'i gizle
-                setTimeout(() => {
-                    loading.style.opacity = '0';
-                    setTimeout(() => {
-                        loading.style.display = 'none';
-                    }, 600);
-                }, 3000);
-            }
-            
-            async function initWelcomeAnimation() {
-                try {
-                    const THREE = await import('https://cdn.skypack.dev/three@0.136.0/build/three.module.js');
-                    const { OrbitControls } = await import('https://cdn.skypack.dev/three@0.136.0/examples/jsm/controls/OrbitControls.js');
-                    const { EffectComposer } = await import('https://cdn.skypack.dev/three@0.136.0/examples/jsm/postprocessing/EffectComposer.js');
-                    const { RenderPass } = await import('https://cdn.skypack.dev/three@0.136.0/examples/jsm/postprocessing/RenderPass.js');
-                    const { ShaderPass } = await import('https://cdn.skypack.dev/three@0.136.0/examples/jsm/postprocessing/ShaderPass.js');
-                    const { UnrealBloomPass } = await import('https://cdn.skypack.dev/three@0.136.0/examples/jsm/postprocessing/UnrealBloomPass.js');
 
-                    const canvas = document.querySelector('#welcome-canvas');
-                    if (!canvas) {
-                        console.error('Canvas bulunamadı');
-                        return;
-                    }
-                    const renderer = new THREE.default.WebGLRenderer({ canvas, alpha: true });
-                    renderer.setSize(window.innerWidth, window.innerHeight);
-                    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-                    const scene = new THREE.default.Scene();
-                    const camera = new THREE.default.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
-                    camera.position.z = 5;
-
-                    const controls = new OrbitControls(camera, renderer.domElement);
-                    controls.enableDamping = true;
-                    controls.enableZoom = false;
-                    controls.enablePan = false;
-
-                    const light = new THREE.default.PointLight(0xffffff, 1);
-                    light.position.set(5, 5, 5);
-                    scene.add(light);
-
-                    const rotatingGroup = new THREE.default.Group();
-                    scene.add(rotatingGroup);
-
-                    const starGeometry = new THREE.default.BufferGeometry();
-                    const starCount = 1000;
-                    const starsPositions = new Float32Array(starCount * 3);
-                    for (let i = 0; i < starCount * 3; i++) {
-                        starsPositions[i] = (Math.random() - 0.5) * 200;
-                    }
-                    starGeometry.setAttribute('position', new THREE.default.BufferAttribute(starsPositions, 3));
-                    const starMaterial = new THREE.default.PointsMaterial({
-                        color: 0xff00ff,
-                        size: 0.1,
-                        sizeAttenuation: true
-                    });
-                    const stars = new THREE.default.Points(starGeometry, starMaterial);
-                    scene.add(stars);
-
-                    const innerGeometry = new THREE.default.IcosahedronGeometry(1, 1);
-                    const innerMaterial = new THREE.default.MeshStandardMaterial({
-                        color: 0x222222,
-                        roughness: 0.5,
-                        metalness: 1,
-                        flatShading: true,
-                        transparent: true,
-                        opacity: 0.7
-                    });
-                    const innerMesh = new THREE.default.Mesh(innerGeometry, innerMaterial);
-                    rotatingGroup.add(innerMesh);
-
-                    const outerGeometry = new THREE.default.IcosahedronGeometry(1.15, 1);
-                    const wireframeMaterial = new THREE.default.MeshBasicMaterial({
-                        color: 0xffffff,
-                        wireframe: true,
-                        transparent: true,
-                        opacity: 0.1
-                    });
-                    const wireframeMesh = new THREE.default.Mesh(outerGeometry, wireframeMaterial);
-                    rotatingGroup.add(wireframeMesh);
-
-                    const positions = [];
-                    const posAttr = outerGeometry.attributes.position;
-                    for (let i = 0; i < posAttr.count; i++) {
-                        positions.push(posAttr.getX(i), posAttr.getY(i), posAttr.getZ(i));
-                    }
-
-                    const particleGeometry = new THREE.default.BufferGeometry();
-                    particleGeometry.setAttribute('position', new THREE.default.Float32BufferAttribute(positions, 3));
-                    const particleMaterial = new THREE.default.PointsMaterial({
-                        color: 0xff00ff,
-                        size: 0.025
-                    });
-                    const particles = new THREE.default.Points(particleGeometry, particleMaterial);
-                    rotatingGroup.add(particles);
-
-                    const composer = new EffectComposer(renderer);
-                    composer.addPass(new RenderPass(scene, camera));
-
-                    const bloomPass = new UnrealBloomPass(
-                        new THREE.default.Vector2(window.innerWidth, window.innerHeight),
-                        1.5,
-                        0.4,
-                        0.05
-                    );
-                    composer.addPass(bloomPass);
-
-                    const ShockwaveShader = {
-                        uniforms: {
-                            tDiffuse: { value: null },
-                            center: { value: new THREE.default.Vector2(0.5, 0.5) },
-                            time: { value: 0.0 },
-                            maxRadius: { value: 1.0 },
-                            amplitude: { value: 0.1 },
-                            speed: { value: 0.3 },
-                            width: { value: 0.3 },
-                            aspect: { value: window.innerWidth / window.innerHeight },
-                            smoothing: { value: 1.0 }
-                        },
-                        vertexShader: `
-                            varying vec2 vUv;
-                            void main() {
-                                vUv = uv;
-                                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-                            }
-                        `,
-                        fragmentShader: `
-                            #define PI 3.14159265359
-                            uniform sampler2D tDiffuse;
-                            uniform vec2 center;
-                            uniform float time;
-                            uniform float maxRadius;
-                            uniform float amplitude;
-                            uniform float speed;
-                            uniform float width;
-                            uniform float aspect;
-                            uniform float smoothing;
-                            varying vec2 vUv;
-
-                            void main() {
-                                vec2 uv = vUv;
-                                vec2 aspectUV = vec2((uv.x - center.x) * aspect, uv.y - center.y);
-                                float dist = length(aspectUV);
-                                float wave = 0.0;
-                                float t = mod(time * speed, maxRadius + width);
-                                if (dist < t && dist > t - width) {
-                                    float edgeDist = abs(dist - (t - width / 2.0)) / (width / 2.0);
-                                    float smoothFactor = smoothstep(1.0 - smoothing, 1.0, edgeDist);
-                                    wave = amplitude * sin((dist - t + width) / width * PI * 2.0) * (1.0 - smoothFactor);
-                                }
-                                uv += normalize(aspectUV) * wave;
-                                gl_FragColor = texture2D(tDiffuse, uv);
-                            }
-                        `
-                    };
-
-                    const shockwavePass = new ShaderPass(ShockwaveShader);
-                    shockwavePass.renderToScreen = true;
-                    composer.addPass(shockwavePass);
-
-                    let shockwaveActive = false;
-                    let shockwaveStartTime = 0;
-                    let shockwaveDuration = 10;
-
-                    window.addEventListener('resize', () => {
-                        camera.aspect = window.innerWidth / window.innerHeight;
-                        camera.updateProjectionMatrix();
-                        renderer.setSize(window.innerWidth, window.innerHeight);
-                        composer.setSize(window.innerWidth, window.innerHeight);
-                        bloomPass.setSize(window.innerWidth, window.innerHeight);
-                        shockwavePass.uniforms.aspect.value = window.innerWidth / window.innerHeight;
-                    });
-
-                    function animate() {
-                        requestAnimationFrame(animate);
-                        controls.update();
-
-                        rotatingGroup.rotation.x += 0.002;
-                        rotatingGroup.rotation.y += 0.003;
-
-                        if (shockwaveActive) {
-                            const elapsedTime = performance.now() / 1000 - shockwaveStartTime;
-                            if (elapsedTime < shockwaveDuration) {
-                                shockwavePass.uniforms.time.value = elapsedTime;
-                            } else {
-                                shockwaveActive = false;
-                                shockwavePass.uniforms.time.value = 0.0;
-                            }
-                        }
-                        composer.render();
-                    }
-
-                    animate();
-
-                } catch (error) {
-                    console.error('Giriş animasyonu yüklenemedi:', error);
-                }
-            }
-            
-            async function getRestaurantInfo() {
-                try {
-                    const { data, error } = await supabase
-                        .from('restaurants')
-                        .select('*')
-                        .eq('id', RESTAURANT_ID)
-                        .single();
-                    
-                    if (error) throw error;
-                    return data;
-                } catch (error) {
-                    console.error('Restoran bilgileri alınamadı:', error);
-                    return null;
-                }
-            }
-            
-            async function getTableInfo() {
-                try {
-                    const { data, error } = await supabase
-                        .from('tables')
-                        .select('*')
-                        .eq('id', TABLE_ID)
-                        .eq('restaurant_id', RESTAURANT_ID)
-                        .single();
-                    
-                    if (error) throw error;
-                    return data;
-                } catch (error) {
-                    console.error('Masa bilgileri alınamadı:', error);
-                    return null;
-                }
-            }
-            
-            async function getProducts() {
-                try {
-                    const { data, error } = await supabase
-                        .from('products')
-                        .select('*')
-                        .eq('restaurant_id', RESTAURANT_ID)
-                        .eq('is_active', true)
-                        .order('sort_order', { ascending: true });
-                    
-                    if (error) throw error;
-                    return data || [];
-                } catch (error) {
-                    console.error('Ürünler alınamadı:', error);
-                    return [];
-                }
-            }
-            
-            async function getCategories() {
-                try {
-                    const { data, error } = await supabase
-                        .from('product_categories')
-                        .select('*')
-                        .eq('restaurant_id', RESTAURANT_ID)
-                        .order('sort_order', { ascending: true });
-                    
-                    if (error) throw error;
-                    return data || [];
-                } catch (error) {
-                    console.error('Kategoriler alınamadı:', error);
-                    return [];
-                }
-            }
-            
-            function updateUI() {
-                if (restaurantInfo) {
-                    document.getElementById('restaurantName').textContent = restaurantInfo.name || 'QR Menü';
-                    document.title = restaurantInfo.name || 'QR Menü';
-                }
-                
-                if (tableInfo) {
-                    document.getElementById('tableId').textContent = tableInfo.number || '--';
-                }
-            }
-            
-            function createCategoryBar() {
-                const categoryBar = document.getElementById('categoryBar');
-                categoryBar.innerHTML = '';
-                
-                const t = translations[currentLanguage];
-                
-                const allBtn = document.createElement('button');
-                allBtn.className = 'category-btn active';
-                allBtn.setAttribute('data-category', 'all');
-                allBtn.innerHTML = `<i class="fas fa-th-large"></i> ${t.allProducts}`;
-                categoryBar.appendChild(allBtn);
-                
-                // Sabit kategoriler
-                const fixedCategories = [
-                    { name: 'food', icon: 'fas fa-utensils', text: t.foods },
-                    { name: 'drink', icon: 'fas fa-wine-glass-alt', text: t.drinks },
-                    { name: 'dessert', icon: 'fas fa-ice-cream', text: t.desserts },
-                    { name: 'appetizer', icon: 'fas fa-cheese', text: t.appetizers }
-                ];
-                
-                fixedCategories.forEach(category => {
-                    const productsInCategory = products.filter(product => product.category === category.name);
-                    
-                    if (productsInCategory.length > 0) {
-                        const btn = document.createElement('button');
-                        btn.className = 'category-btn';
-                        btn.setAttribute('data-category', category.name);
-                        btn.innerHTML = `<i class="${category.icon}"></i> ${category.text}`;
-                        categoryBar.appendChild(btn);
-                    }
-                });
-                
-                // Dinamik kategoriler
-                categories.forEach((category, index) => {
-                    const productsInCategory = products.filter(product => product.category === category.name);
-                    
-                    if (productsInCategory.length > 0) {
-                        const btn = document.createElement('button');
-                        btn.className = 'category-btn';
-                        btn.setAttribute('data-category', category.name);
-                        btn.innerHTML = `<i class="fas fa-tag"></i> ${category.name}`;
-                        categoryBar.appendChild(btn);
-                    }
-                });
-                
-                categoryBar.addEventListener('click', function(e) {
-                    if (e.target.classList.contains('category-btn')) {
-                        document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-                        e.target.classList.add('active');
-                        
-                        const categoryId = e.target.getAttribute('data-category');
-                        
-                        if (categoryId === 'all') {
-                            renderProducts();
-                        } else {
-                            const filteredProducts = products.filter(product => product.category === categoryId);
-                            renderProducts(filteredProducts);
-                        }
-                    }
-                });
-            }
-            
-
-
-
-            function renderProducts(filteredProducts = products) {
-                const productGrid = document.getElementById('product-grid');
-                productGrid.innerHTML = '';
-                
-                if (filteredProducts.length === 0) {
-                    const t = translations[currentLanguage];
-                    productGrid.innerHTML = `<div style="color: white; text-align: center; padding: 2rem; grid-column: 1 / -1;">${t.noProductsInCategory}</div>`;
-                    return;
-                }
-                
-                filteredProducts.forEach((product, index) => {
-                    const card = document.createElement('div');
-                    card.className = 'product-card';
-                    card.innerHTML = `
-                        <div class="product-name">${product.name}</div>
-                        <div class="product-price">${product.price}₺</div>
-                        <div class="card-glow"></div>
-                    `;
-                    
-                    // Simple click handler
-                    card.onclick = function(e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        addToCart(product);
-                    };
-                    
-                    productGrid.appendChild(card);
-                });
-            }
-            
-
-            
-
-            
-
-            
-
-            
-
-            
-            function showToast(message, type = 'success') {
-                const toastContainer = document.getElementById('toastContainer');
-                const toast = document.createElement('div');
-                toast.className = `toast ${type}`;
-                toast.textContent = message;
-                
-                toastContainer.appendChild(toast);
-                
-                // Trigger animation
-                setTimeout(() => {
-                    toast.classList.add('show');
-                }, 100);
-                
-                // Remove toast after 3 seconds
-                setTimeout(() => {
-                    toast.classList.remove('show');
-                    setTimeout(() => {
-                        if (toast.parentNode) {
-                            toast.parentNode.removeChild(toast);
-                        }
-                    }, 300);
-                }, 3000);
-            }
-            
-            function addToCart(product) {
-                const existingItem = cart.find(item => item.id === product.id);
-                
-                if (existingItem) {
-                    existingItem.quantity += 1;
-                } else {
-                    cart.push({ ...product, quantity: 1 });
-                }
-                
-                updateCartDisplay();
-                const t = translations[currentLanguage];
-                showToast(`${product.name} ${t.addedToCart}`, 'success');
-            }
-            
-            function updateCartDisplay() {
-                const cartBadge = document.getElementById('cartBadge');
-                const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
-                cartBadge.textContent = totalQuantity;
-                
-                // Update cart modal content
-                updateCartModal();
-            }
-            
-            function updateCartModal() {
-                const cartItems = document.getElementById('cartItems');
-                const cartTotal = document.getElementById('cartTotal');
-                const orderBtn = document.getElementById('orderBtn');
-                
-                cartItems.innerHTML = '';
-                
-                if (cart.length === 0) {
-                    const t = translations[currentLanguage];
-                    cartItems.innerHTML = `<div style="text-align: center; color: rgba(255,255,255,0.7); padding: 2rem;">${t.emptyCart}</div>`;
-                    cartTotal.textContent = '0₺';
-                    orderBtn.disabled = true;
-                    return;
-                }
-                
-                let total = 0;
-                
-                cart.forEach((item, index) => {
-                    const cartItem = document.createElement('div');
-                    cartItem.className = 'cart-item';
-                    cartItem.innerHTML = `
-                        <div class="cart-item-info">
-                            <div class="cart-item-name">${item.name}</div>
-                            <div class="cart-item-price">${item.price}₺</div>
+            productsGrid.innerHTML = productsToShow.map(product => `
+                <div class="product-card fade-in" data-id="${product.id}">
+                    <div class="product-image">
+                        <img src="${product.image}" alt="${product.name}">
+                        ${product.badge ? `<div class="product-badge">${product.badge}</div>` : ''}
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">${getCategoryName(product.category)}</div>
+                        <h3 class="product-title">${product.name}</h3>
+                        <p class="product-description">${product.description}</p>
+                        <div class="product-price">
+                            <div>
+                                <span class="price">₺${product.price.toLocaleString()}</span>
+                                ${product.oldPrice ? `<span class="old-price">₺${product.oldPrice.toLocaleString()}</span>` : ''}
+                            </div>
                         </div>
-                        <div class="cart-item-controls">
-                            <button class="quantity-btn" onclick="updateQuantity(${index}, -1)">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                            <div class="quantity-display">${item.quantity}</div>
-                            <button class="quantity-btn" onclick="updateQuantity(${index}, 1)">
-                                    <i class="fas fa-plus"></i>
+                        <div class="product-actions">
+                            <button class="btn btn-primary">
+                                <i class="fas fa-shopping-cart"></i>
+                                Sepete Ekle
+                            </button>
+                            <button class="btn btn-secondary">
+                                <i class="fas fa-heart"></i>
+                                Favori
                             </button>
                         </div>
-                    `;
-                    cartItems.appendChild(cartItem);
-                    total += item.price * item.quantity;
-                });
-                
-                const t = translations[currentLanguage];
-                cartTotal.innerHTML = `<span>${t.total}</span><span>${total}₺</span>`;
-                orderBtn.disabled = false;
-            }
-            
-            function updateQuantity(index, change) {
-                const item = cart[index];
-                const newQuantity = item.quantity + change;
-                
-                if (newQuantity <= 0) {
-                    cart.splice(index, 1);
-                    } else {
-                    item.quantity = newQuantity;
-                }
-                
-                        updateCartDisplay();
-                    }
-            
-            function openCartModal() {
-                const modal = document.getElementById('cartModal');
-                modal.classList.add('show');
-            }
-            
-            function closeCartModal() {
-                const modal = document.getElementById('cartModal');
-                modal.classList.remove('show');
-            }
-            
-            function setupEventListeners() {
-                document.getElementById('contactBtn').addEventListener('click', function() {
-                    window.open('mailto:sthillmanbusiness@gmail.com', '_blank');
-                });
-                
-                document.getElementById('cartBtn').addEventListener('click', function() {
-                    openCartModal();
-                });
-                
-                document.getElementById('closeCartModal').addEventListener('click', function() {
-                    closeCartModal();
-                });
-                
-                document.getElementById('orderBtn').addEventListener('click', function() {
-                    submitOrder();
-                });
-                
-                document.getElementById('callWaiterBtn').addEventListener('click', function() {
-                    callWaiter('garson');
-                });
-                
-                document.getElementById('requestCharcoalBtn').addEventListener('click', function() {
-                    callWaiter('köz');
-                });
-                
-                // Dil değiştirme butonları
-                document.querySelectorAll('.lang-btn').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const lang = this.getAttribute('data-lang');
-                        changeLanguage(lang);
-                    });
-                });
-                
-                // Close modal when clicking outside
-                document.getElementById('cartModal').addEventListener('click', function(e) {
-                    if (e.target === this) {
-                        closeCartModal();
+                    </div>
+                </div>
+            `).join('');
+
+            // Add click events to product cards
+            document.querySelectorAll('.product-card').forEach(card => {
+                card.addEventListener('click', (e) => {
+                    if (!e.target.closest('.btn')) {
+                        const productId = card.dataset.id;
+                        showProductDetail(productId);
                     }
                 });
-            }
-            
-            function changeLanguage(lang) {
-                currentLanguage = lang;
-                
-                // Aktif dil butonunu güncelle
-                document.querySelectorAll('.lang-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                document.querySelector(`[data-lang="${lang}"]`).classList.add('active');
-                
-                // UI'ı güncelle
-                updateUILanguage();
-            }
-            
-            function updateUILanguage() {
-                const t = translations[currentLanguage];
-                
-                // Kategori butonları
-                document.querySelectorAll('.category-btn').forEach(btn => {
-                    const category = btn.getAttribute('data-category');
-                    if (category === 'all') {
-                        btn.textContent = t.allProducts;
-                    } else if (category === 'food') {
-                        btn.textContent = t.foods;
-                    } else if (category === 'drink') {
-                        btn.textContent = t.drinks;
-                    } else if (category === 'dessert') {
-                        btn.textContent = t.desserts;
-                    } else if (category === 'appetizer') {
-                        btn.textContent = t.appetizers;
-                    }
-                });
-                
-                // Action butonları
-                document.getElementById('callWaiterBtn').querySelector('span').innerHTML = `
-                    <i class="fas fa-bell"></i>
-                    ${t.callWaiter}
-                `;
-                
-                document.getElementById('requestCharcoalBtn').querySelector('span').innerHTML = `
-                    <i class="fas fa-fire"></i>
-                    ${t.requestCharcoal}
-                `;
-                
-                // Modal içeriği
-                document.querySelector('.modal-title').textContent = t.cart;
-                document.querySelector('label[for="orderNote"]').textContent = t.orderNote;
-                document.getElementById('orderNote').placeholder = t.orderNotePlaceholder;
-                document.getElementById('orderBtn').textContent = t.placeOrder;
-                
-                // Masa bilgisi
-                const tableInfoDiv = document.querySelector('.table-info');
-                if (tableInfoDiv) {
-                    tableInfoDiv.innerHTML = `<span>${t.table} <span id="tableId">${tableInfo?.number || '--'}</span></span>`;
-                }
-                
-                // Loading text
-                const loadingText = document.querySelector('.loading-text');
-                if (loadingText) {
-                    loadingText.textContent = t.preparingOrder;
-                }
-                
-                // Cart modal'ı güncelle
-                updateCartModal();
-            }
-            
-            async function callWaiter(type) {
-                try {
-                    const { data, error } = await supabase
-                        .from('calls')
-                        .insert([{
-                            restaurant_id: RESTAURANT_ID,
-                            table_id: TABLE_ID,
-                            type: type,
-                            status: 'pending'
-                        }])
-                        .select()
-                        .single();
-                    
-                    if (error) throw error;
-                    
-                    const t = translations[currentLanguage];
-                    const message = type === 'garson' ? t.waiterCalled : t.charcoalRequested;
-                    showToast(message, 'info');
-                    
-                } catch (error) {
-                    console.error('Çağrı oluşturulamadı:', error);
-                    const t = translations[currentLanguage];
-                    showToast(t.callFailed, 'error');
-                }
-            }
-            
-            async function submitOrder() {
-                if (cart.length === 0) {
-                    const t = translations[currentLanguage];
-                    showToast(t.emptyCartError, 'error');
-                    return;
-                }
-                    
-                // Show hamburger loading animation
-                const hamburgerLoading = document.getElementById('hamburgerLoading');
-                hamburgerLoading.classList.add('show');
-                
-                try {
-                    const orderNote = document.getElementById('orderNote').value.trim();
-                    
-                    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-                    
-                    // Simulate loading time for better UX
-                    await new Promise(resolve => setTimeout(resolve, 3000));
-                    
-                    // Önce order'ı oluştur
-                    const { data: orderData, error: orderError } = await supabase
-                        .from('orders')
-                        .insert([{
-                            restaurant_id: RESTAURANT_ID,
-                            table_id: TABLE_ID,
-                            total_price: total,
-                            note: orderNote,
-                            status: 'pending'
-                        }])
-                        .select()
-                        .single();
-                    
-                    if (orderError) throw orderError;
-                    
-                    // Sonra order_items'ları ekle
-                    const orderItemsData = cart.map(item => ({
-                        order_id: orderData.id,
-                        product_id: item.id,
-                        quantity: item.quantity,
-                        unit_price: item.price,
-                        product_name: item.name,
-                        total_price: item.price * item.quantity
-                    }));
-                    
-                    const { error: itemsError } = await supabase
-                        .from('order_items')
-                        .insert(orderItemsData);
-                    
-                    if (itemsError) throw itemsError;
-                    
-                    // Hide hamburger loading animation
-                    hamburgerLoading.classList.remove('show');
-                    
-                    // Clear cart and note
-                    cart = [];
-                    document.getElementById('orderNote').value = '';
-                    updateCartDisplay();
-                    closeCartModal();
-                    
-                    const t = translations[currentLanguage];
-                    showToast(t.orderSent, 'success');
-                    
-                } catch (error) {
-                    console.error('Sipariş gönderilemedi:', error);
-                    
-                    // Hide hamburger loading animation
-                    hamburgerLoading.classList.remove('show');
-                    
-                    const t = translations[currentLanguage];
-                    showToast(t.orderFailed, 'error');
-                }
-            }
-            
-            // Make functions globally available
-            window.updateQuantity = updateQuantity;
-            window.openCartModal = openCartModal;
-            window.closeCartModal = closeCartModal;
-            
-            // Slider functionality
-            function initSlider() {
-                const slider = document.querySelector('.slider');
-                const input = slider.querySelector('[type=range]');
-                const sliderContainer = document.querySelector('.slider-container');
-                
-                if (!slider || !input) return;
-                
-                // Set initial state
-                slider.style.setProperty('--slider-complete', '0');
-                
-                // Handle input changes
-                const syncSlider = () => {
-                    const val = (input.value - input.min) / (input.max - input.min);
-                    slider.style.setProperty('--slider-complete', Math.round(val * 100));
-                    
-                    // Show reveal state when slider is moved
-                    if (val > 0) {
-                        sliderContainer.setAttribute('data-reveal', 'true');
-                    } else {
-                        sliderContainer.removeAttribute('data-reveal');
-                    }
-                    
-                    // Trigger actions when slider reaches 100%
-                    if (val >= 1) {
-                        handleSliderComplete();
-                    }
-                };
-                
-                // Handle slider completion
-                const handleSliderComplete = () => {
-                    // Reset slider after a short delay
-                    setTimeout(() => {
-                        input.value = 0;
-                        syncSlider();
-                        sliderContainer.removeAttribute('data-reveal');
-                        
-                        // Trigger garson çağır action
-                        callWaiter('garson');
-                        
-                        // Show success message
-                        const t = translations[currentLanguage];
-                        showToast(t.waiterCalled, 'success');
-                    }, 500);
-                };
-                
-                // Add event listeners
-                input.addEventListener('input', syncSlider);
-                input.addEventListener('pointerdown', ({ x, y }) => {
-                    const { left, top, height, width } = input.getBoundingClientRect();
-                    const vertical = height > width;
-                    const range = Number.parseInt(input.max, 10) - Number.parseInt(input.min, 10);
-                    const ratio = vertical ? (y - top) / height : (x - left) / width;
-                    const val = Number.parseInt(input.min, 10) + Math.floor(range * ratio);
-                    input.value = val;
-                    syncSlider();
-                });
-                
-                // Initialize
-                syncSlider();
-            }
-            
-            // Initialize slider when app starts
-            if (!isWelcomeScreenActive) {
-                initSlider();
-            }
-            
-            // Re-initialize slider after welcome screen
-            const originalEnterApp = enterApp;
-            enterApp = function() {
-                originalEnterApp.call(this);
-                setTimeout(() => {
-                    initSlider();
-                }, 3500); // After loading screen
+            });
+        }
+
+        // Get category name
+        function getCategoryName(category) {
+            const names = {
+                'electronics': 'Elektronik',
+                'clothing': 'Giyim',
+                'home': 'Ev & Yaşam',
+                'sports': 'Spor'
             };
+            return names[category] || category;
+        }
+
+        // Show product detail (placeholder)
+        function showProductDetail(productId) {
+            const product = products.find(p => p.id == productId);
+            if (product) {
+                alert(`${product.name} detayları görüntüleniyor...`);
+            }
+        }
+
+        // Render pagination
+        function renderPagination() {
+            const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
             
-            // Also initialize slider when DOM is ready
-            document.addEventListener('DOMContentLoaded', function() {
-                if (!isWelcomeScreenActive) {
-                    setTimeout(() => {
-                        initSlider();
-                    }, 100);
-                }
-            });
+            if (totalPages <= 1) {
+                pagination.innerHTML = '';
+                return;
+            }
+
+            let paginationHTML = '';
             
-            initializeApp();
-        });
-    </script>
+            // Previous button
+            paginationHTML += `
+                <button class="page-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+            `;
 
-    <script type="module">
-        import * as THREE from 'three';
-        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-        import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
-        import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
-        import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
-        import anime from 'animejs';
-        import { createNoise3D, createNoise4D } from 'simplex-noise';
+            // Page numbers
+            const maxVisiblePages = 5;
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
 
-        let scene, camera, renderer, controls, clock;
-        let composer, bloomPass; 
-
-        let particlesGeometry, particlesMaterial, particleSystem;
-        let currentPositions, sourcePositions, targetPositions, swarmPositions; 
-        let particleSizes, particleOpacities, particleEffectStrengths; 
-        let noise3D, noise4D; 
-
-        let morphTimeline = null; 
-        let isInitialized = false;
-        let isMorphing = false;
-
-        const CONFIG = {
-            particleCount: 8000,
-            shapeSize: 12,
-            swarmDistanceFactor: 1.5,
-            swirlFactor: 4.0,
-            noiseFrequency: 0.1,
-            noiseTimeScale: 0.04,
-            noiseMaxStrength: 2.8,
-            colorScheme: 'fire',
-            morphDuration: 4000,
-            particleSizeRange: [0.08, 0.25],
-            starCount: 12000,
-            bloomStrength: 1.3,
-            bloomRadius: 0.5,
-            bloomThreshold: 0.05,
-            idleFlowStrength: 0.25,
-            idleFlowSpeed: 0.08,
-            idleRotationSpeed: 0.02,
-            morphSizeFactor: 0.5, 
-            morphBrightnessFactor: 0.6 
-        };
-
-        const SHAPES = [
-            { name: 'Sphere', generator: generateSphere },
-            { name: 'Cube', generator: generateCube },
-            { name: 'Pyramid', generator: generatePyramid },
-            { name: 'Torus', generator: generateTorus },
-            { name: 'Galaxy', generator: generateGalaxy },
-            { name: 'Wave', generator: generateWave }
-        ];
-        let currentShapeIndex = 0;
-        let currentColorScheme = 'fire';
-        let autoChangeTimer = 0;
-        let autoChangeInterval = 8000; // 8 saniyede bir değişim
-
-        const morphState = { progress: 0.0 };
-
-        const COLOR_SCHEMES = {
-            fire: { startHue: 0, endHue: 45, saturation: 0.95, lightness: 0.6 },
-            neon: { startHue: 300, endHue: 180, saturation: 1.0, lightness: 0.65 },
-            nature: { startHue: 90, endHue: 160, saturation: 0.85, lightness: 0.55 },
-            rainbow: { startHue: 0, endHue: 360, saturation: 0.9, lightness: 0.6 }
-        };
-
-        const tempVec = new THREE.Vector3();
-        const sourceVec = new THREE.Vector3();
-        const targetVec = new THREE.Vector3();
-        const swarmVec = new THREE.Vector3();
-        const noiseOffset = new THREE.Vector3();
-        const flowVec = new THREE.Vector3();
-        const bezPos = new THREE.Vector3();
-        const swirlAxis = new THREE.Vector3();
-        const currentVec = new THREE.Vector3();
-
-        function generateSphere(count, size) {
-            const points = new Float32Array(count * 3);
-            const phi = Math.PI * (Math.sqrt(5) - 1);
-            for (let i = 0; i < count; i++) {
-                const y = 1 - (i / (count - 1)) * 2;
-                const radius = Math.sqrt(1 - y * y);
-                const theta = phi * i;
-                const x = Math.cos(theta) * radius;
-                const z = Math.sin(theta) * radius;
-                points[i * 3] = x * size;
-                points[i * 3 + 1] = y * size;
-                points[i * 3 + 2] = z * size;
-            }
-            return points;
-        }
-
-        function generateCube(count, size) {
-            const points = new Float32Array(count * 3);
-            const halfSize = size / 2;
-            for (let i = 0; i < count; i++) {
-                const face = Math.floor(Math.random() * 6);
-                const u = Math.random() * size - halfSize;
-                const v = Math.random() * size - halfSize;
-                switch (face) {
-                    case 0: points.set([halfSize, u, v], i * 3); break;
-                    case 1: points.set([-halfSize, u, v], i * 3); break;
-                    case 2: points.set([u, halfSize, v], i * 3); break;
-                    case 3: points.set([u, -halfSize, v], i * 3); break;
-                    case 4: points.set([u, v, halfSize], i * 3); break;
-                    case 5: points.set([u, v, -halfSize], i * 3); break;
-                }
-            }
-            return points;
-        }
-
-        function generatePyramid(count, size) {
-            const points = new Float32Array(count * 3);
-            const halfBase = size / 2;
-            const height = size * 1.2;
-            const apex = new THREE.Vector3(0, height / 2, 0);
-            const baseVertices = [
-                new THREE.Vector3(-halfBase, -height / 2, -halfBase), new THREE.Vector3(halfBase, -height / 2, -halfBase),
-                new THREE.Vector3(halfBase, -height / 2, halfBase), new THREE.Vector3(-halfBase, -height / 2, halfBase)
-            ];
-            const baseArea = size * size;
-            const sideFaceHeight = Math.sqrt(Math.pow(height, 2) + Math.pow(halfBase, 2));
-            const sideFaceArea = 0.5 * size * sideFaceHeight;
-            const totalArea = baseArea + 4 * sideFaceArea;
-            const baseWeight = baseArea / totalArea;
-            const sideWeight = sideFaceArea / totalArea;
-            for (let i = 0; i < count; i++) {
-                const r = Math.random();
-                let p = new THREE.Vector3(); let u, v;
-                if (r < baseWeight) {
-                    u = Math.random(); v = Math.random();
-                    p.lerpVectors(baseVertices[0], baseVertices[1], u);
-                    const p2 = new THREE.Vector3().lerpVectors(baseVertices[3], baseVertices[2], u);
-                    p.lerp(p2, v);
-                } else {
-                    const faceIndex = Math.floor((r - baseWeight) / sideWeight);
-                    const v1 = baseVertices[faceIndex]; const v2 = baseVertices[(faceIndex + 1) % 4];
-                    u = Math.random(); v = Math.random();
-                    if (u + v > 1) { u = 1 - u; v = 1 - v; }
-                    p.addVectors(v1, tempVec.subVectors(v2, v1).multiplyScalar(u));
-                    p.add(tempVec.subVectors(apex, v1).multiplyScalar(v));
-                }
-                points.set([p.x, p.y, p.z], i * 3);
-            }
-            return points;
-        }
-
-        function generateTorus(count, size) {
-            const points = new Float32Array(count * 3);
-            const R = size * 0.7; const r = size * 0.3;
-            for (let i = 0; i < count; i++) {
-                const theta = Math.random() * Math.PI * 2; const phi = Math.random() * Math.PI * 2;
-                const x = (R + r * Math.cos(phi)) * Math.cos(theta);
-                const y = r * Math.sin(phi);
-                const z = (R + r * Math.cos(phi)) * Math.sin(theta);
-                points[i * 3] = x; points[i * 3 + 1] = y; points[i * 3 + 2] = z;
-            }
-            return points;
-        }
-
-        function generateGalaxy(count, size) {
-            const points = new Float32Array(count * 3);
-            const arms = 4; const armWidth = 0.6; const bulgeFactor = 0.3;
-            for (let i = 0; i < count; i++) {
-                const t = Math.pow(Math.random(), 1.5); const radius = t * size;
-                const armIndex = Math.floor(Math.random() * arms);
-                const armOffset = (armIndex / arms) * Math.PI * 2;
-                const rotationAmount = radius / size * 6; const angle = armOffset + rotationAmount;
-                const spread = (Math.random() - 0.5) * armWidth * (1 - radius / size);
-                const theta = angle + spread;
-                const x = radius * Math.cos(theta); const z = radius * Math.sin(theta);
-                const y = (Math.random() - 0.5) * size * 0.1 * (1 - radius / size * bulgeFactor);
-                points[i * 3] = x; points[i * 3 + 1] = y; points[i * 3 + 2] = z;
-            }
-            return points;
-        }
-
-        function generateWave(count, size) {
-            const points = new Float32Array(count * 3);
-            const waveScale = size * 0.4; const frequency = 3;
-            for (let i = 0; i < count; i++) {
-                const u = Math.random() * 2 - 1; const v = Math.random() * 2 - 1;
-                const x = u * size; const z = v * size;
-                const dist = Math.sqrt(u * u + v * v); const angle = Math.atan2(v, u);
-                const y = Math.sin(dist * Math.PI * frequency) * Math.cos(angle * 2) * waveScale * (1 - dist);
-                points[i * 3] = x; points[i * 3 + 1] = y; points[i * 3 + 2] = z;
-            }
-            return points;
-        }
-
-        function init() {
-            let progress = 0;
-            const progressBar = document.getElementById('progress');
-            const loadingScreen = document.getElementById('loading');
-            function updateProgress(increment) {
-                progress += increment;
-                progressBar.style.width = `${Math.min(100, progress)}%`;
-                if (progress >= 100) {
-                setTimeout(() => {
-                        loadingScreen.style.opacity = '0';
-                        setTimeout(() => { loadingScreen.style.display = 'none'; }, 600);
-                    }, 200);
-                }
+            if (endPage - startPage + 1 < maxVisiblePages) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
             }
 
-            clock = new THREE.Clock();
-            noise3D = createNoise3D(() => Math.random());
-            noise4D = createNoise4D(() => Math.random());
-            scene = new THREE.Scene();
-            scene.fog = new THREE.FogExp2(0x000308, 0.03);
-            updateProgress(5);
-
-            camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.set(0, 8, 28); 
-            camera.lookAt(scene.position);
-            updateProgress(5);
-
-            const canvas = document.getElementById('webglCanvas');
-            renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-            renderer.toneMapping = THREE.ACESFilmicToneMapping;
-            renderer.toneMappingExposure = 1.1;
-            updateProgress(10);
-
-            controls = new OrbitControls(camera, renderer.domElement);
-            controls.enableDamping = true; controls.dampingFactor = 0.05;
-            controls.minDistance = 5; controls.maxDistance = 80;
-            controls.autoRotate = true; controls.autoRotateSpeed = 0.3;
-            updateProgress(5);
-
-            scene.add(new THREE.AmbientLight(0x404060));
-            const dirLight1 = new THREE.DirectionalLight(0xffffff, 1.5);
-            dirLight1.position.set(15, 20, 10); scene.add(dirLight1);
-            const dirLight2 = new THREE.DirectionalLight(0x88aaff, 0.9);
-            dirLight2.position.set(-15, -10, -15); scene.add(dirLight2);
-            updateProgress(10);
-
-            setupPostProcessing(); updateProgress(10);
-            createStarfield(); updateProgress(15);
-            setupParticleSystem(); updateProgress(25);
-
-            window.addEventListener('resize', onWindowResize);
-            updateProgress(15);
-
-            isInitialized = true;
-            animate();
-            console.log("Initialization complete.");
-        }
-
-        function setupPostProcessing() {
-            composer = new EffectComposer(renderer);
-            composer.addPass(new RenderPass(scene, camera));
-            bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), CONFIG.bloomStrength, CONFIG.bloomRadius, CONFIG.bloomThreshold);
-            composer.addPass(bloomPass);
-        }
-
-        function createStarfield() {
-            const starVertices = []; const starSizes = []; const starColors = [];
-            const starGeometry = new THREE.BufferGeometry();
-            for (let i = 0; i < CONFIG.starCount; i++) {
-                tempVec.set( THREE.MathUtils.randFloatSpread(400), THREE.MathUtils.randFloatSpread(400), THREE.MathUtils.randFloatSpread(400) );
-                if (tempVec.length() < 100) tempVec.setLength(100 + Math.random() * 300);
-                starVertices.push(tempVec.x, tempVec.y, tempVec.z);
-                starSizes.push(Math.random() * 0.15 + 0.05);
-                const color = new THREE.Color();
-                if (Math.random() < 0.1) { color.setHSL(Math.random(), 0.7, 0.65); } else { color.setHSL(0.6, Math.random() * 0.1, 0.8 + Math.random() * 0.2); }
-                starColors.push(color.r, color.g, color.b);
+            for (let i = startPage; i <= endPage; i++) {
+                paginationHTML += `
+                    <button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">
+                        ${i}
+                    </button>
+                `;
             }
-            starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
-            starGeometry.setAttribute('color', new THREE.Float32BufferAttribute(starColors, 3));
-            starGeometry.setAttribute('size', new THREE.Float32BufferAttribute(starSizes, 1));
-            const starMaterial = new THREE.ShaderMaterial({
-                 uniforms: { pointTexture: { value: createStarTexture() } },
-                 vertexShader: `
-                      attribute float size; varying vec3 vColor; varying float vSize;
-                      void main() {
-                           vColor = color; vSize = size; vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-                           gl_PointSize = size * (400.0 / -mvPosition.z); gl_Position = projectionMatrix * mvPosition;
-                      }`,
-                 fragmentShader: `
-                      uniform sampler2D pointTexture; varying vec3 vColor; varying float vSize;
-                      void main() {
-                           float alpha = texture2D(pointTexture, gl_PointCoord).a; if (alpha < 0.1) discard;
-                           gl_FragColor = vec4(vColor, alpha * 0.9);
-                      }`,
-                 blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, vertexColors: true
-             });
-            scene.add(new THREE.Points(starGeometry, starMaterial));
+
+            // Next button
+            paginationHTML += `
+                <button class="page-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            `;
+
+            pagination.innerHTML = paginationHTML;
         }
 
-        function createStarTexture() {
-            const size = 64; const canvas = document.createElement('canvas');
-            canvas.width = size; canvas.height = size; const context = canvas.getContext('2d');
-            const gradient = context.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
-            gradient.addColorStop(0, 'rgba(255,255,255,1)'); gradient.addColorStop(0.2, 'rgba(255,255,255,0.8)');
-            gradient.addColorStop(0.5, 'rgba(255,255,255,0.3)'); gradient.addColorStop(1, 'rgba(255,255,255,0)');
-            context.fillStyle = gradient; context.fillRect(0, 0, size, size);
-            return new THREE.CanvasTexture(canvas);
-        }
-
-        function setupParticleSystem() {
-            targetPositions = SHAPES.map(shape => shape.generator(CONFIG.particleCount, CONFIG.shapeSize));
-            particlesGeometry = new THREE.BufferGeometry();
-
-            currentPositions = new Float32Array(targetPositions[0]);
-            sourcePositions = new Float32Array(targetPositions[0]);
-            swarmPositions = new Float32Array(CONFIG.particleCount * 3);
-            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(currentPositions, 3));
-
-            particleSizes = new Float32Array(CONFIG.particleCount);
-            particleOpacities = new Float32Array(CONFIG.particleCount);
-            particleEffectStrengths = new Float32Array(CONFIG.particleCount);
-            for (let i = 0; i < CONFIG.particleCount; i++) {
-                particleSizes[i] = THREE.MathUtils.randFloat(CONFIG.particleSizeRange[0], CONFIG.particleSizeRange[1]);
-                particleOpacities[i] = 1.0;
-                particleEffectStrengths[i] = 0.0;
-            }
-            particlesGeometry.setAttribute('size', new THREE.BufferAttribute(particleSizes, 1));
-            particlesGeometry.setAttribute('opacity', new THREE.BufferAttribute(particleOpacities, 1));
-            particlesGeometry.setAttribute('aEffectStrength', new THREE.BufferAttribute(particleEffectStrengths, 1));
-
-            const colors = new Float32Array(CONFIG.particleCount * 3);
-            updateColorArray(colors, currentPositions);
-            particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-
-            particlesMaterial = new THREE.ShaderMaterial({
-                 uniforms: {
-                      pointTexture: { value: createStarTexture() }
-                 },
-                 vertexShader: `
-                      attribute float size;
-                      attribute float opacity;
-                      attribute float aEffectStrength;
-                      varying vec3 vColor;
-                      varying float vOpacity;
-                      varying float vEffectStrength;
-
-                      void main() {
-                           vColor = color;
-                           vOpacity = opacity;
-                           vEffectStrength = aEffectStrength;
-
-                           vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-
-                           float sizeScale = 1.0 - vEffectStrength * ${CONFIG.morphSizeFactor.toFixed(2)};
-                           gl_PointSize = size * sizeScale * (400.0 / -mvPosition.z);
-
-                           gl_Position = projectionMatrix * mvPosition;
-                      }
-                 `,
-                 fragmentShader: `
-                      uniform sampler2D pointTexture;
-                      varying vec3 vColor;
-                      varying float vOpacity;
-                      varying float vEffectStrength;
-
-                      void main() {
-                           float alpha = texture2D(pointTexture, gl_PointCoord).a;
-                           if (alpha < 0.05) discard;
-
-                           vec3 finalColor = vColor * (1.0 + vEffectStrength * ${CONFIG.morphBrightnessFactor.toFixed(2)});
-
-                           gl_FragColor = vec4(finalColor, alpha * vOpacity);
-                      }
-                 `,
-                 blending: THREE.AdditiveBlending,
-                 depthTest: true,
-                 depthWrite: false,
-                 transparent: true,
-                 vertexColors: true
-            });
-
-            particleSystem = new THREE.Points(particlesGeometry, particlesMaterial);
-            scene.add(particleSystem);
-        }
-
-        function updateColorArray(colors, positionsArray) {
-            const colorScheme = COLOR_SCHEMES[CONFIG.colorScheme];
-            const center = new THREE.Vector3(0, 0, 0);
-            const maxRadius = CONFIG.shapeSize * 1.1;
-            for (let i = 0; i < CONFIG.particleCount; i++) {
-                const i3 = i * 3;
-                tempVec.fromArray(positionsArray, i3);
-                const dist = tempVec.distanceTo(center);
-                let hue;
-                if (CONFIG.colorScheme === 'rainbow') {
-                    const normX = (tempVec.x / maxRadius + 1) / 2; const normY = (tempVec.y / maxRadius + 1) / 2; const normZ = (tempVec.z / maxRadius + 1) / 2;
-                    hue = (normX * 120 + normY * 120 + normZ * 120) % 360;
-                } else {
-                    hue = THREE.MathUtils.mapLinear( dist, 0, maxRadius, colorScheme.startHue, colorScheme.endHue );
-                }
-                const noiseValue = (noise3D(tempVec.x * 0.2, tempVec.y * 0.2, tempVec.z * 0.2) + 1) * 0.5;
-                const saturation = THREE.MathUtils.clamp(colorScheme.saturation * (0.9 + noiseValue * 0.2), 0, 1);
-                const lightness = THREE.MathUtils.clamp(colorScheme.lightness * (0.85 + noiseValue * 0.3), 0.1, 0.9);
-                const color = new THREE.Color().setHSL(hue / 360, saturation, lightness);
-                color.toArray(colors, i3);
-            }
-        }
-
-        function updateColors() {
-            const colors = particlesGeometry.attributes.color.array;
-            updateColorArray(colors, particlesGeometry.attributes.position.array);
-            particlesGeometry.attributes.color.needsUpdate = true;
-        }
-
-        function autoChangeShapeAndColor() {
-            // Yeni şekil seç
-            const newShapeIndex = Math.floor(Math.random() * SHAPES.length);
-            const newColorScheme = Object.keys(COLOR_SCHEMES)[Math.floor(Math.random() * Object.keys(COLOR_SCHEMES).length)];
-            
-            // Şekil değişimi
-            if (newShapeIndex !== currentShapeIndex) {
-                currentShapeIndex = newShapeIndex;
-                const newShape = SHAPES[currentShapeIndex];
-                targetPositions = newShape.generator(CONFIG.particleCount, CONFIG.shapeSize);
+        // Change page
+        function changePage(page) {
+            const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+            if (page >= 1 && page <= totalPages) {
+                currentPage = page;
+                renderProducts();
+                renderPagination();
                 
-                // Morph animasyonu başlat
-                if (morphTimeline) {
-                    morphTimeline.kill();
-                }
-                
-                morphTimeline = anime({
-                    targets: morphState,
-                    progress: 1,
-                    duration: CONFIG.morphDuration,
-                    easing: 'easeInOutCubic',
-                    update: function() {
-                        const positions = particlesGeometry.attributes.position.array;
-                        for (let i = 0; i < CONFIG.particleCount; i++) {
-                            const i3 = i * 3;
-                            sourceVec.fromArray(sourcePositions, i3);
-                            targetVec.fromArray(targetPositions, i3);
-                            currentVec.lerpVectors(sourceVec, targetVec, morphState.progress);
-                            positions[i3] = currentVec.x;
-                            positions[i3 + 1] = currentVec.y;
-                            positions[i3 + 2] = currentVec.z;
-                        }
-                        particlesGeometry.attributes.position.needsUpdate = true;
-                    },
-                    complete: function() {
-                        sourcePositions = targetPositions.slice();
-                        morphState.progress = 0;
-                    }
-                });
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             }
-            
-            // Renk değişimi
-            if (newColorScheme !== currentColorScheme) {
-                currentColorScheme = newColorScheme;
-                CONFIG.colorScheme = currentColorScheme;
-                updateColors();
-            }
-            
-            console.log(`Şekil değişti: ${SHAPES[currentShapeIndex].name}, Renk: ${currentColorScheme}`);
         }
 
-        function animate() {
-            requestAnimationFrame(animate);
-            if (!isInitialized) return;
-            const elapsedTime = clock.getElapsedTime();
-            const deltaTime = clock.getDelta();
-            controls.update();
-            const positions = particlesGeometry.attributes.position.array;
-            const effectStrengths = particlesGeometry.attributes.aEffectStrength.array;
-
-            // Otomatik şekil ve renk değişimi
-            autoChangeTimer += deltaTime * 1000;
-            if (autoChangeTimer >= autoChangeInterval) {
-                autoChangeTimer = 0;
-                autoChangeShapeAndColor();
-            }
-
-            updateIdleAnimation(positions, effectStrengths, elapsedTime, deltaTime);
-            particlesGeometry.attributes.position.needsUpdate = true;
-            if (particlesGeometry.attributes.aEffectStrength.needsUpdate) {
-                 particlesGeometry.attributes.aEffectStrength.needsUpdate = true;
-            }
-            composer.render(deltaTime);
-        }
-
-        function updateIdleAnimation(positions, effectStrengths, elapsedTime, deltaTime) {
-            const breathScale = 1.0 + Math.sin(elapsedTime * 0.5) * 0.015;
-            const timeScaled = elapsedTime * CONFIG.idleFlowSpeed;
-            const freq = 0.1;
-
-            let needsEffectStrengthReset = false;
-
-            for (let i = 0; i < CONFIG.particleCount; i++) {
-                const i3 = i * 3;
-                sourceVec.fromArray(sourcePositions, i3);
-                tempVec.copy(sourceVec).multiplyScalar(breathScale);
-                flowVec.set( noise4D(tempVec.x * freq, tempVec.y * freq, tempVec.z * freq, timeScaled), noise4D(tempVec.x * freq + 10, tempVec.y * freq + 10, tempVec.z * freq + 10, timeScaled), noise4D(tempVec.x * freq + 20, tempVec.y * freq + 20, tempVec.z * freq + 20, timeScaled) );
-                tempVec.addScaledVector(flowVec, CONFIG.idleFlowStrength);
-                currentVec.fromArray(positions, i3);
-                currentVec.lerp(tempVec, 0.05);
-                positions[i3] = currentVec.x;
-                positions[i3 + 1] = currentVec.y;
-                positions[i3 + 2] = currentVec.z;
-
-                if (effectStrengths[i] !== 0.0) {
-                    effectStrengths[i] = 0.0;
-                    needsEffectStrengthReset = true;
-                }
-            }
-             if (needsEffectStrengthReset) {
-                 particlesGeometry.attributes.aEffectStrength.needsUpdate = true;
-             }
-        }
-
-        function onWindowResize() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            composer.setSize(window.innerWidth, window.innerHeight);
-        }
-
+        // Initialize the app
         init();
     </script>
 </body>
