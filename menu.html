@@ -1712,6 +1712,7 @@
                     card.addEventListener('click', (e) => {
                         e.preventDefault();
                         e.stopPropagation();
+                        e.stopImmediatePropagation();
                         addToCart(product);
                     });
                     
@@ -1749,6 +1750,7 @@
                         if (touchDuration < 300 && !isTouchMoved) {
                             e.preventDefault();
                             e.stopPropagation();
+                            e.stopImmediatePropagation();
                             addToCart(product);
                         }
                     });
@@ -1810,17 +1812,16 @@
                 nextBtn.addEventListener('click', nextCard);
                 
                 // Remove old event listeners
-                const carouselContainer = document.querySelector('.carousel-container');
-                carouselContainer.removeEventListener('mousedown', dragStart);
-                carouselContainer.removeEventListener('touchstart', dragStart);
+                carousel.removeEventListener('mousedown', dragStart);
+                carousel.removeEventListener('touchstart', dragStart);
                 document.removeEventListener('mousemove', drag);
                 document.removeEventListener('touchmove', drag);
                 document.removeEventListener('mouseup', dragEnd);
                 document.removeEventListener('touchend', dragEnd);
                 
-                // Add new event listeners to container only
-                carouselContainer.addEventListener('mousedown', dragStart);
-                carouselContainer.addEventListener('touchstart', dragStart, { passive: false });
+                // Add new event listeners to carousel
+                carousel.addEventListener('mousedown', dragStart);
+                carousel.addEventListener('touchstart', dragStart, { passive: false });
                 document.addEventListener('mousemove', drag);
                 document.addEventListener('touchmove', drag, { passive: false });
                 document.addEventListener('mouseup', dragEnd);
@@ -1920,11 +1921,6 @@
             }
             
             function dragStart(e) {
-                // Only handle drag on carousel container, not on cards
-                if (e.target.closest('.product-card')) {
-                    return;
-                }
-                
                 // Prevent default only for touch events
                 if (e.type === 'touchstart') {
                     e.preventDefault();
