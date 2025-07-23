@@ -90,7 +90,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1;
+            z-index: 0;
             pointer-events: auto;
             cursor: pointer;
         }
@@ -2610,6 +2610,7 @@
                 // Otomatik morph
                 bgAutoMorphTimer += deltaTime;
                 if (bgAutoMorphTimer >= BG_CONFIG.autoMorphInterval) {
+                    console.log('Auto morph triggered! Timer:', bgAutoMorphTimer);
                     triggerBackgroundMorph();
                     bgAutoMorphTimer = 0;
                 }
@@ -2626,9 +2627,11 @@
             }
             
             function triggerBackgroundMorph() {
+                console.log('Triggering background morph...');
                 bgMorphProgress = 0;
                 const nextShapeIndex = (bgCurrentShapeIndex + 1) % BG_SHAPES.length;
                 bgCurrentShapeIndex = nextShapeIndex;
+                console.log('New shape index:', bgCurrentShapeIndex, 'Shape:', BG_SHAPES[bgCurrentShapeIndex].name);
             }
             
             function updateBackgroundMorph(deltaTime) {
@@ -2687,7 +2690,10 @@
                 const bgCanvas = document.querySelector('#background-canvas');
                 if (bgCanvas) {
                     bgCanvas.style.pointerEvents = 'auto';
-                    bgCanvas.addEventListener('click', () => {
+                    bgCanvas.addEventListener('click', (e) => {
+                        console.log('Background canvas clicked!');
+                        e.preventDefault();
+                        e.stopPropagation();
                         triggerBackgroundMorph();
                     });
                 }
