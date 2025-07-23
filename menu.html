@@ -1689,6 +1689,8 @@
             let radius = window.innerWidth <= 480 ? 500 : (window.innerWidth <= 768 ? 650 : 800);
             let isDragging = false;
             let startX;
+            let startY;
+            let lastTouchTime = 0;
 
             function renderProducts(filteredProducts = products) {
                 const carousel = document.getElementById('product-carousel');
@@ -1708,52 +1710,13 @@
                         <div class="card-glow"></div>
                     `;
                     
-                    // Add click event for desktop compatibility
-                    card.addEventListener('click', (e) => {
+                    // Simple click handler
+                    card.onclick = function(e) {
                         e.preventDefault();
                         e.stopPropagation();
-                        e.stopImmediatePropagation();
                         addToCart(product);
-                    });
+                    };
                     
-                    // Add touch events for mobile compatibility
-                    let touchStartTime = 0;
-                    let touchStartX = 0;
-                    let touchStartY = 0;
-                    let isTouchMoved = false;
-                    
-                    card.addEventListener('touchstart', (e) => {
-                        touchStartTime = Date.now();
-                        touchStartX = e.touches[0].clientX;
-                        touchStartY = e.touches[0].clientY;
-                        isTouchMoved = false;
-                    });
-                    
-                    card.addEventListener('touchmove', (e) => {
-                        const touchEndX = e.touches[0].clientX;
-                        const touchEndY = e.touches[0].clientY;
-                        const touchDistance = Math.sqrt(
-                            Math.pow(touchEndX - touchStartX, 2) + 
-                            Math.pow(touchEndY - touchStartY, 2)
-                        );
-                        
-                        if (touchDistance > 5) {
-                            isTouchMoved = true;
-                        }
-                    });
-                    
-                    card.addEventListener('touchend', (e) => {
-                        const touchEndTime = Date.now();
-                        const touchDuration = touchEndTime - touchStartTime;
-                        
-                        // If it's a short tap with minimal movement, add to cart
-                        if (touchDuration < 300 && !isTouchMoved) {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            e.stopImmediatePropagation();
-                            addToCart(product);
-                        }
-                    });
                     carousel.appendChild(card);
                 });
                 
@@ -1762,29 +1725,13 @@
                 currentIndex = 0;
                 isDragging = false;
                 
-                // Force carousel to center position
+                // Initialize carousel
                 setTimeout(() => {
-                    initCarousel();
-                    // İlk ürünü tam ortaya getir
-                    const carousel = document.getElementById('product-carousel');
-                    carousel.style.transform = 'rotateY(0deg)';
-                    rotateCarousel();
-                    
-                    // Ortadaki ürünü vurgula
-                    const cards = carousel.querySelectorAll('.product-card');
-                    cards.forEach((card, index) => {
-                        if (index === 0) {
-                            card.style.zIndex = '10';
-                            card.style.filter = 'brightness(1.1)';
-                        } else {
-                            card.style.zIndex = '5';
-                            card.style.filter = 'brightness(0.8)';
-                        }
-                    });
+                    setupCarousel();
                 }, 50);
             }
             
-            function initCarousel() {
+            function setupCarousel() {
                 const carousel = document.getElementById('product-carousel');
                 const cards = carousel.querySelectorAll('.product-card');
                 const prevBtn = document.getElementById('prev-btn');
@@ -1806,48 +1753,45 @@
                 // Position cards correctly
                 arrangeCards();
                 
-                // Add event listeners
-                prevBtn.addEventListener('click', prevCard);
-                nextBtn.addEventListener('click', nextCard);
+                // Setup buttons
+                prevBtn.onclick = prevCard;
+                nextBtn.onclick = nextCard;
                 
-                // Add carousel event listeners
-                carousel.addEventListener('mousedown', dragStart);
-                carousel.addEventListener('touchstart', dragStart, { passive: false });
-                document.addEventListener('mousemove', drag);
-                document.addEventListener('touchmove', drag, { passive: false });
-                document.addEventListener('mouseup', dragEnd);
-                document.addEventListener('touchend', dragEnd);
+                // Setup carousel touch/mouse events
+                carousel.onmousedown = dragStart;
+                carousel.ontouchstart = dragStart;
+                carousel.ontouchmove = drag;
+                carousel.ontouchend = dragEnd;
                 
-                // Keyboard navigation
-                document.addEventListener('keydown', handleKeyDown);
+                // Setup document events
+                document.onmousemove = drag;
+                document.onmouseup = dragEnd;
+                document.ontouchmove = drag;
+                document.ontouchend = dragEnd;
                 
-                // Update radius on resize
-                window.addEventListener('resize', handleResize);
+                // Setup keyboard
+                document.onkeydown = handleKeyDown;
+                
+                // Setup resize
+                window.onresize = handleResize;
+                
+                // Initial position
+                carousel.style.transform = 'rotateY(0deg)';
+                rotateCarousel();
+                
+                // Highlight center card
+                cards.forEach((card, index) => {
+                    if (index === 0) {
+                        card.style.zIndex = '10';
+                        card.style.filter = 'brightness(1.1)';
+                    } else {
+                        card.style.zIndex = '5';
+                        card.style.filter = 'brightness(0.8)';
+                    }
+                });
             }
             
-            function cleanupEventListeners() {
-                const carousel = document.getElementById('product-carousel');
-                const prevBtn = document.getElementById('prev-btn');
-                const nextBtn = document.getElementById('next-btn');
-                
-                // Remove all carousel event listeners
-                carousel.removeEventListener('mousedown', dragStart);
-                carousel.removeEventListener('touchstart', dragStart);
-                
-                // Remove all document event listeners
-                document.removeEventListener('mousemove', drag);
-                document.removeEventListener('touchmove', drag);
-                document.removeEventListener('mouseup', dragEnd);
-                document.removeEventListener('touchend', dragEnd);
-                document.removeEventListener('keydown', handleKeyDown);
-                
-                // Remove button event listeners
-                if (prevBtn) prevBtn.removeEventListener('click', prevCard);
-                if (nextBtn) nextBtn.removeEventListener('click', nextCard);
-                
-                // Remove window event listeners
-                window.removeEventListener('resize', handleResize);
-            }
+
             
             function handleResize() {
                 radius = window.innerWidth <= 480 ? 500 : (window.innerWidth <= 768 ? 650 : 800);
@@ -1934,36 +1878,30 @@
             }
             
             function dragStart(e) {
-                // Prevent default only for touch events
                 if (e.type === 'touchstart') {
                     e.preventDefault();
                 }
-                e.stopPropagation();
                 
                 isDragging = true;
                 startX = e.pageX || e.touches[0].pageX;
                 startY = e.pageY || e.touches[0].pageY;
-                
-                // Reset dragging state
-                isDragging = true;
+                lastTouchTime = Date.now();
             }
             
             function drag(e) {
                 if (!isDragging) return;
+                
                 if (e.type === 'touchmove') {
                     e.preventDefault();
                 }
-                e.stopPropagation();
                 
                 const currentX = e.pageX || (e.touches ? e.touches[0].pageX : startX);
                 const currentY = e.pageY || (e.touches ? e.touches[0].pageY : startY);
                 const diffX = currentX - startX;
                 const diffY = currentY - startY;
                 
-                // Only handle horizontal drags with minimum threshold
-                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 5) {
-                    const sensitivity = 0.5;
-                    theta += diffX * sensitivity;
+                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 3) {
+                    theta += diffX * 0.8;
                     rotateCarousel();
                 }
                 
@@ -1979,16 +1917,13 @@
                 const diffX = currentX - startX;
                 const diffY = currentY - startY;
                 
-                // Only handle horizontal swipes, ignore taps
-                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 15) {
-                    // It was a horizontal swipe
+                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 10) {
                     if (diffX > 0) {
                         prevCard();
                     } else {
                         nextCard();
                     }
                 } else {
-                    // Snap to the closest card
                     const carousel = document.getElementById('product-carousel');
                     const cards = carousel.querySelectorAll('.product-card');
                     const totalCards = cards.length;
@@ -2000,7 +1935,6 @@
                     }
                 }
                 
-                // Reset dragging state
                 isDragging = false;
             }
             
