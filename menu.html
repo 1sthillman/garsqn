@@ -38,6 +38,18 @@
             inherits: false;
         }
         
+        @property --slider-complete {
+            initial-value: 0;
+            inherits: true;
+            syntax: '<integer>';
+        }
+
+        @property --slider-offset {
+            initial-value: 5;
+            inherits: true;
+            syntax: '<integer>';
+        }
+        
         :root {
             --global--size: clamp(2rem, 4vw, 5rem);
             --anim--hover-time: 400ms;
@@ -858,15 +870,16 @@
             left: 0;
             right: 0;
             background: transparent;
-            padding: 0.5rem;
+            padding: 1rem 0.5rem;
             display: flex;
-            gap: 0.5rem;
+            gap: 1rem;
             z-index: 1000;
             box-sizing: border-box;
             max-width: 100vw;
             overflow: hidden;
             justify-content: center;
             align-items: center;
+            flex-wrap: wrap;
         }
 
         /* Button Wrap Container */
@@ -1681,6 +1694,523 @@
                 gap: 0.2rem;
             }
         }
+
+        /* Slider Styles */
+        .slider-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            max-width: 300px;
+            margin: 0 1rem;
+        }
+
+        .instruction {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            font-family: 'Gloria Hallelujah', cursive;
+            translate: -100px 40%;
+            color: color-mix(in lch, canvas, canvasText 80%);
+            z-index: 10;
+            pointer-events: none;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+
+            @media (min-width: 768px) {
+                translate: -200px 20%;
+            }
+
+            span {
+                display: inline-block;
+                translate: -50% 15%;
+                rotate: 10deg;
+                font-size: 0.8rem;
+            }
+
+            svg {
+                width: 1.5rem;
+                height: 1.5rem;
+                margin-right: 0.5rem;
+            }
+        }
+
+        .slider {
+            --width: 230;
+            --height: 2.625rem;
+            --size: 182%;
+            --accent: oklch(0.72 0.28 349.83);
+            display: flex;
+            border-radius: 100px;
+            color: white;
+            width: calc(var(--width) * 1px);
+            max-width: calc(100vw - 2rem);
+            align-items: center;
+            position: relative;
+        }
+
+        .slider__track {
+            flex: 1;
+            height: var(--height);
+            position: relative;
+            container-type: inline-size;
+        }
+
+        .slider__fill {
+            height: 100%;
+            border-radius: 100px;
+            position: absolute;
+            left: 0;
+            width: 100%;
+            top: 50%;
+            display: grid;
+            place-items: center;
+            translate: 0 -50%;
+            clip-path: inset(0 0 0 0 round 120px);
+            pointer-events: none;
+            background: linear-gradient(
+                90deg,
+                oklch(0.32 0.15 259.94),
+                oklch(0.61 0.2 247.14),
+                oklch(0.71 0.24 313.75),
+                oklch(0.72 0.28 349.83),
+                oklch(0.72 0.23 3.74)
+            );
+            transition: clip-path 0.625s linear(
+                0 0%,
+                0.5007 7.21%,
+                0.7803 12.29%,
+                0.8883 14.93%,
+                0.9724 17.63%,
+                1.0343 20.44%,
+                1.0754 23.44%,
+                1.0898 25.22%,
+                1.0984 27.11%,
+                1.1014 29.15%,
+                1.0989 31.4%,
+                1.0854 35.23%,
+                1.0196 48.86%,
+                1.0043 54.06%,
+                0.9956 59.6%,
+                0.9925 68.11%,
+                1 100%
+            );
+
+            span {
+                font-family: 'Grand Hotel', cursive;
+                font-size: calc(var(--height) * 0.65);
+                letter-spacing: 0.1ch;
+                font-weight: 400;
+                font-style: italic;
+                line-height: 1;
+            }
+        }
+
+        .slider__indicator {
+            border-radius: 50%;
+            pointer-events: none;
+            height: 144%;
+            aspect-ratio: 1;
+            background: hsl(0 0% 0%);
+            position: absolute;
+            top: 50%;
+            left: 0;
+            translate: calc(
+                (((var(--slider-complete, 0) / 100) * (100cqi - 54%)) - 28%) +
+                (var(--slider-touch, 0) * 1%)
+            ) -56%;
+            box-shadow: 0 12px 8px -2px light-dark(hsl(0 0% 10% / 0.25), hsl(0 0% 1% / 0.25)),
+                0 8px 12px -4px light-dark(hsl(0 0% 20% / 0.45), hsl(0 0% 2% / 0.45)),
+                0 16px 16px -10px light-dark(hsl(0 0% 30% / 0.45), hsl(0 0% 3% / 0.45)),
+                0 24px 24px -8px light-dark(hsl(0 0% 40% / 0.45), hsl(0 0% 4% / 0.45)),
+                0 32px 32px -2px light-dark(hsl(0 0% 50% / 0.45), hsl(0 0% 5% / 0.45)),
+                0 -6px 10px 0 hsl(0 0% 100% / 0.6) inset;
+            transition: translate 0.625s linear(
+                0 0%,
+                0.5007 7.21%,
+                0.7803 12.29%,
+                0.8883 14.93%,
+                0.9724 17.63%,
+                1.0343 20.44%,
+                1.0754 23.44%,
+                1.0898 25.22%,
+                1.0984 27.11%,
+                1.1014 29.15%,
+                1.0989 31.4%,
+                1.0854 35.23%,
+                1.0196 48.86%,
+                1.0043 54.06%,
+                0.9956 59.6%,
+                0.9925 68.11%,
+                1 100%
+            );
+
+            .shines {
+                position: absolute;
+                inset: 0;
+                overflow: hidden;
+                border-radius: 50%;
+                z-index: 3;
+
+                &::before {
+                    content: '';
+                    position: absolute;
+                    width: 70%;
+                    height: 50%;
+                    background: linear-gradient(#fff, hsl(222 53% 93% / 0.9));
+                    filter: blur(20px);
+                    top: 12%;
+                    left: 50%;
+                    translate: -50% 0;
+                }
+
+                &::after {
+                    content: '';
+                    width: 60%;
+                    aspect-ratio: 1;
+                    background: radial-gradient(
+                        circle at 50% 0,
+                        #fff 50%,
+                        hsl(0 0% 100% / 1)
+                    );
+                    filter: blur(7px);
+                    position: absolute;
+                    top: 10%;
+                    left: 50%;
+                    translate: -50% 0;
+                    border-radius: 50%;
+                }
+            }
+
+            .noise-holder {
+                position: absolute;
+                inset: 0;
+                overflow: hidden;
+                border-radius: 50%;
+                mask: radial-gradient(circle at 50% 40%, #0000 0%, #fff 75%);
+                pointer-events: none;
+            }
+
+            .noise {
+                height: var(--size);
+                aspect-ratio: 1;
+                border-radius: 50%;
+                left: 50%;
+                position: absolute;
+                translate: -50% 0;
+                display: grid;
+                opacity: 0.3;
+
+                div {
+                    grid-area: 1 / 1;
+                }
+
+                div:nth-of-type(1) {
+                    background: black;
+                    filter: url(#noiseshow) contrast(2);
+                }
+                div:nth-of-type(2) {
+                    background: hsl(0 0% 50%);
+                    mix-blend-mode: saturation;
+                }
+            }
+
+            .arrows-holder {
+                position: absolute;
+                inset: 0;
+                z-index: 4;
+                mask: radial-gradient(circle at 50% 30%, #fff 25%, #0000 65%);
+                transition: clip-path 0.625s linear(
+                    0 0%,
+                    0.5007 7.21%,
+                    0.7803 12.29%,
+                    0.8883 14.93%,
+                    0.9724 17.63%,
+                    1.0343 20.44%,
+                    1.0754 23.44%,
+                    1.0898 25.22%,
+                    1.0984 27.11%,
+                    1.1014 29.15%,
+                    1.0989 31.4%,
+                    1.0854 35.23%,
+                    1.0196 48.86%,
+                    1.0043 54.06%,
+                    0.9956 59.6%,
+                    0.9925 68.11%,
+                    1 100%
+                );
+            }
+
+            .arrows {
+                position: absolute;
+                height: var(--size);
+                aspect-ratio: 1;
+                border-radius: 50%;
+                outline: 2px dashed var(--accent);
+                left: 50%;
+                top: 0;
+                translate: -50% 0;
+                transition: transform 0.625s linear(
+                    0 0%,
+                    0.5007 7.21%,
+                    0.7803 12.29%,
+                    0.8883 14.93%,
+                    0.9724 17.63%,
+                    1.0343 20.44%,
+                    1.0754 23.44%,
+                    1.0898 25.22%,
+                    1.0984 27.11%,
+                    1.1014 29.15%,
+                    1.0989 31.4%,
+                    1.0854 35.23%,
+                    1.0196 48.86%,
+                    1.0043 54.06%,
+                    0.9956 59.6%,
+                    0.9925 68.11%,
+                    1 100%
+                );
+
+                svg {
+                    filter: drop-shadow(0 0 1px hsl(0 0% 50%));
+                    width: 1.35rem;
+                    position: absolute;
+                    color: hsl(0 0% 30%);
+                    left: 50%;
+                    top: 50%;
+                    transform: translate(-50%, -50%) rotate(calc(var(--i, 0) * 90deg))
+                        translate(10%, -2.25rem);
+
+                    path {
+                        stroke-width: 8;
+                    }
+
+                    &:nth-of-type(1) {
+                        --i: 0;
+                    }
+                    &:nth-of-type(2) {
+                        --i: 1;
+                    }
+                    &:nth-of-type(3) {
+                        --i: 2;
+                    }
+                    &:nth-of-type(4) {
+                        --i: 3;
+                    }
+                }
+            }
+        }
+
+        .slider input {
+            width: 100%;
+            height: var(--height);
+            outline: none;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .slider:hover:not(:active) {
+            --slider-touch: 5;
+        }
+
+        .slider__indicator {
+            translate: calc(
+                (((var(--slider-complete, 0) / 100) * (100cqi - 54%)) - 28%) +
+                (var(--slider-touch, 0) * 1%)
+            ) -56%;
+        }
+
+        .slider__indicator .arrows,
+        .slider__indicator .noise {
+            transform: rotate(
+                calc(((var(--slider-complete, 0) + var(--slider-touch, 0)) / 100) * 360deg)
+            );
+        }
+
+        .slider__fill {
+            --inset: calc(90% - ((var(--slider-complete, 0) / 100) * 90%));
+            clip-path: inset(0 var(--inset) 0 0 round 120px);
+            transition: clip-path 0.625s linear(
+                0 0%,
+                0.5007 7.21%,
+                0.7803 12.29%,
+                0.8883 14.93%,
+                0.9724 17.63%,
+                1.0343 20.44%,
+                1.0754 23.44%,
+                1.0898 25.22%,
+                1.0984 27.11%,
+                1.1014 29.15%,
+                1.0989 31.4%,
+                1.0854 35.23%,
+                1.0196 48.86%,
+                1.0043 54.06%,
+                0.9956 59.6%,
+                0.9925 68.11%,
+                1 100%
+            );
+        }
+
+        /* Slider reveal states */
+        [data-reveal='true'] .instruction {
+            opacity: 0;
+        }
+
+        [data-reveal='true'] .slider input {
+            opacity: 1;
+            translate: 0 -150%;
+            outline-color: var(--accent);
+            background: color-mix(in oklch, var(--accent), #0000);
+        }
+
+        .slider input {
+            outline: 2px dashed #0000;
+            transition-property: opacity, outline-color, background, translate;
+            transition-duration: 0.5s;
+        }
+
+        .slider [type='range']::-webkit-slider-runnable-track {
+            height: 100%;
+            width: 100%;
+            background: color-mix(in oklch, var(--accent), #0000 75%);
+        }
+
+        .slider [type='range']::-moz-range-track {
+            height: 100%;
+            width: 100%;
+            background: color-mix(in oklch, var(--accent), #0000 75%);
+        }
+
+        .slider ::-webkit-slider-thumb {
+            width: var(--height);
+            height: var(--height);
+        }
+
+        .slider ::-moz-range-thumb {
+            width: var(--height);
+            height: var(--height);
+        }
+
+        /* Test stack for debug */
+        .test-stack {
+            height: 20vmin;
+            aspect-ratio: 1;
+            outline-offset: 4px;
+            outline: 2px dashed var(--accent);
+            overflow: hidden;
+            position: absolute;
+            top: 50%;
+            left: calc(100% + 4rem);
+            opacity: 0;
+            transition: opacity 0.625s linear(
+                0 0%,
+                0.5007 7.21%,
+                0.7803 12.29%,
+                0.8883 14.93%,
+                0.9724 17.63%,
+                1.0343 20.44%,
+                1.0754 23.44%,
+                1.0898 25.22%,
+                1.0984 27.11%,
+                1.1014 29.15%,
+                1.0989 31.4%,
+                1.0854 35.23%,
+                1.0196 48.86%,
+                1.0043 54.06%,
+                0.9956 59.6%,
+                0.9925 68.11%,
+                1 100%
+            );
+            display: grid;
+            pointer-events: none;
+
+            div {
+                grid-area: 1 / 1;
+            }
+
+            div:nth-of-type(1) {
+                background: black;
+                filter: url(#noiseshow) contrast(2);
+            }
+            div:nth-of-type(2) {
+                background: hsl(0 0% 50%);
+                mix-blend-mode: saturation;
+            }
+        }
+
+        [data-reveal='true'] .test-stack {
+            opacity: 1;
+        }
+
+        [data-reveal='true'] .arrows-holder {
+            clip-path: circle(250%);
+            mask: unset;
+        }
+
+        /* Mobile responsive adjustments */
+        @media (max-width: 768px) {
+            .action-bar {
+                flex-direction: column;
+                gap: 0.8rem;
+                padding: 1rem 0.5rem;
+            }
+            
+            .slider-container {
+                max-width: 280px;
+                margin: 0;
+                order: 2;
+            }
+
+            .slider {
+                --width: 250;
+                --height: 2.5rem;
+            }
+
+            .instruction {
+                font-size: 0.8rem;
+                
+                svg {
+                    width: 1.3rem;
+                    height: 1.3rem;
+                }
+            }
+            
+            .button-wrap {
+                order: 1;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .action-bar {
+                flex-direction: column;
+                gap: 0.6rem;
+                padding: 0.8rem 0.3rem;
+            }
+            
+            .slider-container {
+                max-width: 240px;
+                margin: 0;
+                order: 2;
+            }
+
+            .slider {
+                --width: 220;
+                --height: 2.2rem;
+            }
+
+            .instruction {
+                font-size: 0.7rem;
+                
+                svg {
+                    width: 1.1rem;
+                    height: 1.1rem;
+                }
+            }
+            
+            .button-wrap {
+                order: 1;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1758,6 +2288,21 @@
         <!-- Dinamik olarak oluşturulacak ürün kartları -->
     </div>
 
+    <!-- Slider SVG Defs -->
+    <svg class="sr-only" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- Noise & Distortion -->
+        <filter id="noiseshow">
+          <feTurbulence
+            type="turbulence"
+            baseFrequency="0.6"
+            numOctaves="10"
+            result="noise"
+          ></feTurbulence>
+        </filter>
+      </defs>
+    </svg>
+
     <div class="action-bar">
         <div class="button-wrap">
             <button class="action-btn" id="callWaiterBtn">
@@ -1767,6 +2312,70 @@
                 </span>
             </button>
         </div>
+        
+        <!-- Slider Container -->
+        <div class="slider-container">
+            <div class="instruction">
+                <svg viewBox="0 0 144 141" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M129.189 0.0490494C128.744 0.119441 126.422 0.377545 124.03 0.635648C114.719 1.6446 109.23 2.4893 108.058 3.09936C107.119 3.56864 106.674 4.34295 106.674 5.44576C106.674 6.71281 107.424 7.51058 109.043 7.97986C110.403 8.37875 110.825 8.42567 118.87 9.52847C121.778 9.92736 124.288 10.3028 124.475 10.3732C124.663 10.4436 122.951 11.1006 120.676 11.8749C110.028 15.4414 100.412 20.7677 91.7339 27.9242C88.38 30.7164 81.6957 37.4271 79.2096 40.5009C73.8387 47.2116 69.6874 54.8139 66.5681 63.7302C65.9348 65.4665 65.3484 66.8978 65.2546 66.8978C65.1374 66.8978 63.7771 66.7336 62.2291 66.5693C52.9649 65.5134 43.1847 68.1649 34.1316 74.2186C24.7735 80.46 18.5349 87.7338 10.5371 101.742C2.53943 115.726 -1.0959 127.482 0.287874 135.014C0.89767 138.463 2.0469 140.035 3.97011 140.082C5.28352 140.105 5.37733 139.659 4.20465 139.049C3.05541 138.463 2.6567 137.9 2.32835 136.281C0.616228 128.021 6.24512 113.028 17.4325 96.1104C23.2725 87.241 28.362 81.9147 35.5622 77.1046C43.8649 71.5437 52.7069 69.033 61.1737 69.8308C64.9967 70.1828 64.6917 69.9247 64.1992 72.4822C62.2525 82.5013 63.8005 92.6378 67.9753 97.354C73.1116 103.079 81.9771 102 85.0027 95.2657C86.3395 92.2858 86.3864 87.7103 85.1434 83.9796C83.1498 78.0901 80.007 73.8197 75.4335 70.8163C73.8152 69.7604 70.4848 68.1883 69.875 68.1883C69.359 68.1883 69.4294 67.6487 70.2268 65.3257C72.3377 59.2486 75.457 52.7021 78.4122 48.244C83.2436 40.9232 91.4524 32.5701 99.1687 27.103C105.806 22.4102 113.241 18.5386 120.512 16.0045C123.772 14.8548 129.87 13.1889 130.081 13.3766C130.128 13.447 129.541 14.362 128.791 15.4414C124.78 21.0258 122.716 26.0706 122.388 30.998C122.224 33.7198 122.341 34.588 122.88 34.2595C122.998 34.1891 123.678 32.969 124.405 31.5611C126.281 27.8069 131.722 20.6738 139.579 11.6402C141.127 9.85697 142.652 7.86254 143.027 7.08823C144.552 4.03792 143.52 1.48035 140.377 0.471397C139.439 0.166366 138.102 0.0490408 134.584 0.0255769C132.074 -0.021351 129.635 0.00212153 129.189 0.0490494ZM137.117 4.92955C137.187 5.0234 136.718 5.63346 136.061 6.29045L134.865 7.48712L131.042 6.73627C128.931 6.33739 126.727 5.9385 126.14 5.8681C124.827 5.68039 124.123 5.32843 124.968 5.28151C125.296 5.28151 126.868 5.11725 128.486 4.953C131.3 4.64797 136.812 4.62451 137.117 4.92955ZM71.5168 72.5292C76.2075 74.899 79.4441 78.8175 81.3204 84.355C83.6189 91.1361 81.2266 96.8378 76.0433 96.8847C73.3227 96.9082 70.9773 95.2188 69.5936 92.2389C68.2802 89.4232 67.6938 86.5606 67.5765 82.1259C67.4593 78.3248 67.6 76.4242 68.2333 72.7403L68.4912 71.2856L69.359 71.5906C69.8515 71.7548 70.8132 72.1772 71.5168 72.5292Z"
+                        fill="currentColor"
+                    />
+                </svg>
+                <span>Sürükle!</span>
+            </div>
+            
+            <div class="slider">
+                <div class="test-stack">
+                    <div></div>
+                    <div></div>
+                </div>
+                <div class="slider__track">
+                    <label for="slider" class="sr-only">Slider</label>
+                    <input
+                        aria-label="Slide to 100 to unlock premium"
+                        tabindex="0"
+                        type="range"
+                        id="slider"
+                        min="0"
+                        value="0"
+                        max="100"
+                        step="1"
+                    />
+                    <div class="slider__fill">
+                        <span>Garson Çağır</span>
+                    </div>
+                    <div class="slider__indicator">
+                        <div class="shines"></div>
+                        <div class="noise-holder">
+                            <div class="noise">
+                                <div></div>
+                                <div></div>
+                            </div>
+                        </div>
+                        <div class="arrows-holder">
+                            <div class="arrows">
+                                <svg viewBox="0 0 120 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M71.5542 7.10156C71.5542 7.10156 91.68 18.4986 100.553 26.104C111.053 35.104 112.553 39.104 112.053 42.604C111.553 46.104 104.614 51.1058 97.6141 55.6058C89 61.1435 72.5003 72.1101 72.5003 72.1101M7 42.6126C7 42.6126 36.3395 36.643 56 36.6103C75.9938 36.5771 109 40.6102 109 40.6102" stroke="currentColor" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                <svg viewBox="0 0 120 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M71.5542 7.10156C71.5542 7.10156 91.68 18.4986 100.553 26.104C111.053 35.104 112.553 39.104 112.053 42.604C111.553 46.104 104.614 51.1058 97.6141 55.6058C89 61.1435 72.5003 72.1101 72.5003 72.1101M7 42.6126C7 42.6126 36.3395 36.643 56 36.6103C75.9938 36.5771 109 40.6102 109 40.6102" stroke="currentColor" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                <svg viewBox="0 0 120 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M71.5542 7.10156C71.5542 7.10156 91.68 18.4986 100.553 26.104C111.053 35.104 112.553 39.104 112.053 42.604C111.553 46.104 104.614 51.1058 97.6141 55.6058C89 61.1435 72.5003 72.1101 72.5003 72.1101M7 42.6126C7 42.6126 36.3395 36.643 56 36.6103C75.9938 36.5771 109 40.6102 109 40.6102" stroke="currentColor" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                <svg viewBox="0 0 120 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M71.5542 7.10156C71.5542 7.10156 91.68 18.4986 100.553 26.104C111.053 35.104 112.553 39.104 112.053 42.604C111.553 46.104 104.614 51.1058 97.6141 55.6058C89 61.1435 72.5003 72.1101 72.5003 72.1101M7 42.6126C7 42.6126 36.3395 36.643 56 36.6103C75.9938 36.5771 109 40.6102 109 40.6102" stroke="currentColor" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <div class="button-wrap">
             <button class="action-btn" id="requestCharcoalBtn">
                 <span>
@@ -2717,6 +3326,91 @@
             window.updateQuantity = updateQuantity;
             window.openCartModal = openCartModal;
             window.closeCartModal = closeCartModal;
+            
+            // Slider functionality
+            function initSlider() {
+                const slider = document.querySelector('.slider');
+                const input = slider.querySelector('[type=range]');
+                const sliderContainer = document.querySelector('.slider-container');
+                
+                if (!slider || !input) return;
+                
+                // Set initial state
+                slider.style.setProperty('--slider-complete', '0');
+                
+                // Handle input changes
+                const syncSlider = () => {
+                    const val = (input.value - input.min) / (input.max - input.min);
+                    slider.style.setProperty('--slider-complete', Math.round(val * 100));
+                    
+                    // Show reveal state when slider is moved
+                    if (val > 0) {
+                        sliderContainer.setAttribute('data-reveal', 'true');
+                    } else {
+                        sliderContainer.removeAttribute('data-reveal');
+                    }
+                    
+                    // Trigger actions when slider reaches 100%
+                    if (val >= 1) {
+                        handleSliderComplete();
+                    }
+                };
+                
+                // Handle slider completion
+                const handleSliderComplete = () => {
+                    // Reset slider after a short delay
+                    setTimeout(() => {
+                        input.value = 0;
+                        syncSlider();
+                        sliderContainer.removeAttribute('data-reveal');
+                        
+                        // Trigger garson çağır action
+                        callWaiter('garson');
+                        
+                        // Show success message
+                        const t = translations[currentLanguage];
+                        showToast(t.waiterCalled, 'success');
+                    }, 500);
+                };
+                
+                // Add event listeners
+                input.addEventListener('input', syncSlider);
+                input.addEventListener('pointerdown', ({ x, y }) => {
+                    const { left, top, height, width } = input.getBoundingClientRect();
+                    const vertical = height > width;
+                    const range = Number.parseInt(input.max, 10) - Number.parseInt(input.min, 10);
+                    const ratio = vertical ? (y - top) / height : (x - left) / width;
+                    const val = Number.parseInt(input.min, 10) + Math.floor(range * ratio);
+                    input.value = val;
+                    syncSlider();
+                });
+                
+                // Initialize
+                syncSlider();
+            }
+            
+            // Initialize slider when app starts
+            if (!isWelcomeScreenActive) {
+                initSlider();
+            }
+            
+            // Re-initialize slider after welcome screen
+            const originalEnterApp = enterApp;
+            enterApp = function() {
+                originalEnterApp.call(this);
+                setTimeout(() => {
+                    initSlider();
+                }, 3500); // After loading screen
+            };
+            
+            // Also initialize slider when DOM is ready
+            document.addEventListener('DOMContentLoaded', function() {
+                if (!isWelcomeScreenActive) {
+                    setTimeout(() => {
+                        initSlider();
+                    }, 100);
+                }
+            });
             
             initializeApp();
         });
