@@ -150,8 +150,116 @@
              box-shadow: 0 0 10px rgba(255, 255, 255, 0.7); 
          }
 
+        /* Ürün Galerisi */
+        .menu-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 200;
+            pointer-events: none;
+        }
+
+        .menu-content {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+            pointer-events: all;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            pointer-events: all;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+            color: #00ffff;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .menu-item {
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .menu-item:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 255, 255, 0.8);
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
+        }
+
+        .menu-item h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #00ffff;
+        }
+
+        .menu-item p {
+            margin-bottom: 15px;
+            opacity: 0.8;
+        }
+
+        .menu-btn {
+            background: linear-gradient(45deg, #00ffff, #0080ff);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .menu-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 255, 255, 0.5);
+        }
+
         /* Mobil uyumluluk */
         @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .menu-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .menu-item {
+                padding: 15px;
+            }
+            
+            .menu-item h3 {
+                font-size: 1.3rem;
+            }
+            
             #info {
                 font-size: 12px;
                 padding: 8px 12px;
@@ -183,6 +291,22 @@
         }
 
         @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .menu-grid {
+                gap: 10px;
+            }
+            
+            .menu-item {
+                padding: 12px;
+            }
+            
+            .menu-item h3 {
+                font-size: 1.1rem;
+            }
+            
             #info {
                 font-size: 11px;
                 padding: 6px 10px;
@@ -229,6 +353,54 @@
             <div class="color-option" data-scheme="neon" style="background: linear-gradient(to bottom right, #ff00ff, #00ffff)"></div>
             <div class="color-option" data-scheme="nature" style="background: linear-gradient(to bottom right, #00ff00, #66ffcc)"></div>
             <div class="color-option" data-scheme="rainbow" style="background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet)"></div>
+        </div>
+    </div>
+
+    <!-- Ürün Galerisi ve Menü -->
+    <div class="menu-container">
+        <div class="menu-content">
+            <div class="header">
+                <h1>RetoQR Menü</h1>
+                <p>İnteraktif dijital menü deneyimi</p>
+            </div>
+            
+            <div class="menu-grid">
+                <div class="menu-item">
+                    <h3>🍽️ Ürün Galerisi</h3>
+                    <p>100+ ürün ile kapsamlı menü galerisi</p>
+                    <a href="index.html" class="menu-btn">Galeriyi Aç</a>
+                </div>
+                
+                <div class="menu-item">
+                    <h3>📱 QR Kod Oluşturucu</h3>
+                    <p>Özel QR kodlar oluşturun ve paylaşın</p>
+                    <a href="qr-generator.html" class="menu-btn">QR Oluştur</a>
+                </div>
+                
+                <div class="menu-item">
+                    <h3>🛒 Ödeme Sistemi</h3>
+                    <p>Güvenli ödeme işlemleri</p>
+                    <a href="odeme.html" class="menu-btn">Ödeme Yap</a>
+                </div>
+                
+                <div class="menu-item">
+                    <h3>📞 Garson Çağır</h3>
+                    <p>Hızlı garson çağırma sistemi</p>
+                    <a href="demo.html" class="menu-btn">Garson Çağır</a>
+                </div>
+                
+                <div class="menu-item">
+                    <h3>🌐 Dil Seçimi</h3>
+                    <p>Türkçe ve İngilizce dil desteği</p>
+                    <a href="language-selector.html" class="menu-btn">Dil Seç</a>
+                </div>
+                
+                <div class="menu-item">
+                    <h3>📋 Menü Kartı</h3>
+                    <p>Geleneksel menü görünümü</p>
+                    <a href="menu.html" class="menu-btn">Menü Kartı</a>
+                </div>
+            </div>
         </div>
     </div>
 
