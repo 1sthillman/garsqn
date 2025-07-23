@@ -2305,6 +2305,9 @@
             { name: 'Wave', generator: generateWave }
         ];
         let currentShapeIndex = 0;
+        let currentColorScheme = 'fire';
+        let autoChangeTimer = 0;
+        let autoChangeInterval = 8000; // 8 saniyede bir değişim
 
         const morphState = { progress: 0.0 };
 
@@ -2655,6 +2658,57 @@
             particlesGeometry.attributes.color.needsUpdate = true;
         }
 
+        function autoChangeShapeAndColor() {
+            // Yeni şekil seç
+            const newShapeIndex = Math.floor(Math.random() * SHAPES.length);
+            const newColorScheme = Object.keys(COLOR_SCHEMES)[Math.floor(Math.random() * Object.keys(COLOR_SCHEMES).length)];
+            
+            // Şekil değişimi
+            if (newShapeIndex !== currentShapeIndex) {
+                currentShapeIndex = newShapeIndex;
+                const newShape = SHAPES[currentShapeIndex];
+                targetPositions = newShape.generator(CONFIG.particleCount, CONFIG.shapeSize);
+                
+                // Morph animasyonu başlat
+                if (morphTimeline) {
+                    morphTimeline.kill();
+                }
+                
+                morphTimeline = anime({
+                    targets: morphState,
+                    progress: 1,
+                    duration: CONFIG.morphDuration,
+                    easing: 'easeInOutCubic',
+                    update: function() {
+                        const positions = particlesGeometry.attributes.position.array;
+                        for (let i = 0; i < CONFIG.particleCount; i++) {
+                            const i3 = i * 3;
+                            sourceVec.fromArray(sourcePositions, i3);
+                            targetVec.fromArray(targetPositions, i3);
+                            currentVec.lerpVectors(sourceVec, targetVec, morphState.progress);
+                            positions[i3] = currentVec.x;
+                            positions[i3 + 1] = currentVec.y;
+                            positions[i3 + 2] = currentVec.z;
+                        }
+                        particlesGeometry.attributes.position.needsUpdate = true;
+                    },
+                    complete: function() {
+                        sourcePositions = targetPositions.slice();
+                        morphState.progress = 0;
+                    }
+                });
+            }
+            
+            // Renk değişimi
+            if (newColorScheme !== currentColorScheme) {
+                currentColorScheme = newColorScheme;
+                CONFIG.colorScheme = currentColorScheme;
+                updateColors();
+            }
+            
+            console.log(`Şekil değişti: ${SHAPES[currentShapeIndex].name}, Renk: ${currentColorScheme}`);
+        }
+
         function animate() {
             requestAnimationFrame(animate);
             if (!isInitialized) return;
@@ -2663,6 +2717,13 @@
             controls.update();
             const positions = particlesGeometry.attributes.position.array;
             const effectStrengths = particlesGeometry.attributes.aEffectStrength.array;
+
+            // Otomatik şekil ve renk değişimi
+            autoChangeTimer += deltaTime * 1000;
+            if (autoChangeTimer >= autoChangeInterval) {
+                autoChangeTimer = 0;
+                autoChangeShapeAndColor();
+            }
 
             updateIdleAnimation(positions, effectStrengths, elapsedTime, deltaTime);
             particlesGeometry.attributes.position.needsUpdate = true;
