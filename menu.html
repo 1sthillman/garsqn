@@ -2291,7 +2291,7 @@
             let bgCurrentShapeIndex = 0;
             let bgMorphProgress = 0;
             let bgAutoMorphTimer = 0;
-            let bgClock = new THREE.Clock();
+            let bgClock;
             
             const BG_CONFIG = {
                 particleCount: 8000,
@@ -2352,12 +2352,12 @@
                 const points = new Float32Array(count * 3);
                 const halfBase = size / 2;
                 const height = size * 1.2;
-                const apex = new THREE.Vector3(0, height / 2, 0);
+                const apex = { x: 0, y: height / 2, z: 0 };
                 const baseVertices = [
-                    new THREE.Vector3(-halfBase, -height / 2, -halfBase),
-                    new THREE.Vector3(halfBase, -height / 2, -halfBase),
-                    new THREE.Vector3(halfBase, -height / 2, halfBase),
-                    new THREE.Vector3(-halfBase, -height / 2, halfBase)
+                    { x: -halfBase, y: -height / 2, z: -halfBase },
+                    { x: halfBase, y: -height / 2, z: -halfBase },
+                    { x: halfBase, y: -height / 2, z: halfBase },
+                    { x: -halfBase, y: -height / 2, z: halfBase }
                 ];
                 const baseArea = size * size;
                 const sideFaceHeight = Math.sqrt(Math.pow(height, 2) + Math.pow(halfBase, 2));
@@ -2368,14 +2368,20 @@
                 
                 for (let i = 0; i < count; i++) {
                     const r = Math.random();
-                    let p = new THREE.Vector3();
+                    let p = { x: 0, y: 0, z: 0 };
                     let u, v;
                     if (r < baseWeight) {
                         u = Math.random();
                         v = Math.random();
-                        p.lerpVectors(baseVertices[0], baseVertices[1], u);
-                        const p2 = new THREE.Vector3().lerpVectors(baseVertices[3], baseVertices[2], u);
-                        p.lerp(p2, v);
+                        p.x = baseVertices[0].x + (baseVertices[1].x - baseVertices[0].x) * u;
+                        p.y = baseVertices[0].y + (baseVertices[1].y - baseVertices[0].y) * u;
+                        p.z = baseVertices[0].z + (baseVertices[1].z - baseVertices[0].z) * u;
+                        const p2x = baseVertices[3].x + (baseVertices[2].x - baseVertices[3].x) * u;
+                        const p2y = baseVertices[3].y + (baseVertices[2].y - baseVertices[3].y) * u;
+                        const p2z = baseVertices[3].z + (baseVertices[2].z - baseVertices[3].z) * u;
+                        p.x += (p2x - p.x) * v;
+                        p.y += (p2y - p.y) * v;
+                        p.z += (p2z - p.z) * v;
                     } else {
                         const faceIndex = Math.floor((r - baseWeight) / sideWeight);
                         const v1 = baseVertices[faceIndex];
@@ -2386,8 +2392,12 @@
                             u = 1 - u;
                             v = 1 - v;
                         }
-                        p.addVectors(v1, new THREE.Vector3().subVectors(v2, v1).multiplyScalar(u));
-                        p.add(new THREE.Vector3().subVectors(apex, v1).multiplyScalar(v));
+                        p.x = v1.x + (v2.x - v1.x) * u;
+                        p.y = v1.y + (v2.y - v1.y) * u;
+                        p.z = v1.z + (v2.z - v1.z) * u;
+                        p.x += (apex.x - v1.x) * v;
+                        p.y += (apex.y - v1.y) * v;
+                        p.z += (apex.z - v1.z) * v;
                     }
                     points.set([p.x, p.y, p.z], i * 3);
                 }
@@ -2455,6 +2465,8 @@
             }
             
             function initBackgroundAnimation(canvas, THREE) {
+                bgClock = new THREE.Clock();
+                
                 bgScene = new THREE.Scene();
                 bgScene.fog = new THREE.FogExp2(0x000308, 0.02);
                 
@@ -2566,16 +2578,14 @@
             }
             
             function updateBackgroundColors(colors, positionsArray, THREE) {
-                const center = new THREE.Vector3(0, 0, 0);
+                const center = { x: 0, y: 0, z: 0 };
                 const maxRadius = BG_CONFIG.shapeSize * 1.1;
                 for (let i = 0; i < BG_CONFIG.particleCount; i++) {
                     const i3 = i * 3;
-                    const tempVec = new THREE.Vector3(
-                        positionsArray[i3],
-                        positionsArray[i3 + 1],
-                        positionsArray[i3 + 2]
-                    );
-                    const dist = tempVec.distanceTo(center);
+                    const x = positionsArray[i3];
+                    const y = positionsArray[i3 + 1];
+                    const z = positionsArray[i3 + 2];
+                    const dist = Math.sqrt(x * x + y * y + z * z);
                     const hue = THREE.MathUtils.mapLinear(dist, 0, maxRadius, 200, 280);
                     const saturation = 0.8;
                     const lightness = 0.6;
@@ -2624,21 +2634,16 @@
                 
                 for (let i = 0; i < BG_CONFIG.particleCount; i++) {
                     const i3 = i * 3;
-                    const currentPos = new THREE.Vector3(
-                        bgCurrentPositions[i3],
-                        bgCurrentPositions[i3 + 1],
-                        bgCurrentPositions[i3 + 2]
-                    );
-                    const targetPos = new THREE.Vector3(
-                        targets[i3],
-                        targets[i3 + 1],
-                        targets[i3 + 2]
-                    );
+                    const currentX = bgCurrentPositions[i3];
+                    const currentY = bgCurrentPositions[i3 + 1];
+                    const currentZ = bgCurrentPositions[i3 + 2];
+                    const targetX = targets[i3];
+                    const targetY = targets[i3 + 1];
+                    const targetZ = targets[i3 + 2];
                     
-                    const lerpedPos = new THREE.Vector3().lerpVectors(currentPos, targetPos, t);
-                    positions[i3] = lerpedPos.x;
-                    positions[i3 + 1] = lerpedPos.y;
-                    positions[i3 + 2] = lerpedPos.z;
+                    positions[i3] = currentX + (targetX - currentX) * t;
+                    positions[i3 + 1] = currentY + (targetY - currentY) * t;
+                    positions[i3 + 2] = currentZ + (targetZ - currentZ) * t;
                 }
                 
                 if (bgMorphProgress >= 1) {
@@ -2653,16 +2658,13 @@
                 
                 for (let i = 0; i < BG_CONFIG.particleCount; i++) {
                     const i3 = i * 3;
-                    const basePos = new THREE.Vector3(
-                        bgCurrentPositions[i3],
-                        bgCurrentPositions[i3 + 1],
-                        bgCurrentPositions[i3 + 2]
-                    );
+                    const baseX = bgCurrentPositions[i3];
+                    const baseY = bgCurrentPositions[i3 + 1];
+                    const baseZ = bgCurrentPositions[i3 + 2];
                     
-                    const scaledPos = basePos.clone().multiplyScalar(breathScale);
-                    positions[i3] = scaledPos.x;
-                    positions[i3 + 1] = scaledPos.y;
-                    positions[i3 + 2] = scaledPos.z;
+                    positions[i3] = baseX * breathScale;
+                    positions[i3 + 1] = baseY * breathScale;
+                    positions[i3 + 2] = baseZ * breathScale;
                 }
             }
             
