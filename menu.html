@@ -1805,21 +1805,14 @@
                 // Position cards correctly
                 arrangeCards();
                 
-                // Add event listeners (remove old ones first)
-                prevBtn.removeEventListener('click', prevCard);
-                nextBtn.removeEventListener('click', nextCard);
+                // Clean up all event listeners first
+                cleanupEventListeners();
+                
+                // Add event listeners
                 prevBtn.addEventListener('click', prevCard);
                 nextBtn.addEventListener('click', nextCard);
                 
-                // Remove old event listeners
-                carousel.removeEventListener('mousedown', dragStart);
-                carousel.removeEventListener('touchstart', dragStart);
-                document.removeEventListener('mousemove', drag);
-                document.removeEventListener('touchmove', drag);
-                document.removeEventListener('mouseup', dragEnd);
-                document.removeEventListener('touchend', dragEnd);
-                
-                // Add new event listeners to carousel
+                // Add carousel event listeners
                 carousel.addEventListener('mousedown', dragStart);
                 carousel.addEventListener('touchstart', dragStart, { passive: false });
                 document.addEventListener('mousemove', drag);
@@ -1828,12 +1821,34 @@
                 document.addEventListener('touchend', dragEnd);
                 
                 // Keyboard navigation
-                document.removeEventListener('keydown', handleKeyDown);
                 document.addEventListener('keydown', handleKeyDown);
                 
                 // Update radius on resize
-                window.removeEventListener('resize', handleResize);
                 window.addEventListener('resize', handleResize);
+            }
+            
+            function cleanupEventListeners() {
+                const carousel = document.getElementById('product-carousel');
+                const prevBtn = document.getElementById('prev-btn');
+                const nextBtn = document.getElementById('prev-btn');
+                
+                // Remove all carousel event listeners
+                carousel.removeEventListener('mousedown', dragStart);
+                carousel.removeEventListener('touchstart', dragStart);
+                
+                // Remove document event listeners
+                document.removeEventListener('mousemove', drag);
+                document.removeEventListener('touchmove', drag);
+                document.removeEventListener('mouseup', dragEnd);
+                document.removeEventListener('touchend', dragEnd);
+                document.removeEventListener('keydown', handleKeyDown);
+                
+                // Remove button event listeners
+                if (prevBtn) prevBtn.removeEventListener('click', prevCard);
+                if (nextBtn) nextBtn.removeEventListener('click', nextCard);
+                
+                // Remove window event listeners
+                window.removeEventListener('resize', handleResize);
             }
             
             function handleResize() {
@@ -1931,13 +1946,8 @@
                 startX = e.pageX || e.touches[0].pageX;
                 startY = e.pageY || e.touches[0].pageY;
                 
-                // Set a small timeout to detect if it's a tap
-                setTimeout(() => {
-                    if (isDragging) {
-                        // If still dragging after timeout, it's a drag
-                        isDragging = true;
-                    }
-                }, 50);
+                // Reset dragging state
+                isDragging = true;
             }
             
             function drag(e) {
@@ -1953,8 +1963,8 @@
                 const diffY = currentY - startY;
                 
                 // Only handle horizontal drags with minimum threshold
-                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 10) {
-                    const sensitivity = 0.3;
+                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 5) {
+                    const sensitivity = 0.5;
                     theta += diffX * sensitivity;
                     rotateCarousel();
                 }
@@ -1965,7 +1975,6 @@
             
             function dragEnd(e) {
                 if (!isDragging) return;
-                isDragging = false;
                 
                 const currentX = e.pageX || (e.changedTouches ? e.changedTouches[0].pageX : startX);
                 const currentY = e.pageY || (e.changedTouches ? e.changedTouches[0].pageY : startY);
@@ -1973,7 +1982,7 @@
                 const diffY = currentY - startY;
                 
                 // Only handle horizontal swipes, ignore taps
-                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 20) {
+                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 15) {
                     // It was a horizontal swipe
                     if (diffX > 0) {
                         prevCard();
