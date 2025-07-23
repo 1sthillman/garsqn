@@ -386,26 +386,48 @@
             opacity: 1;
         }
 
-                /* Product Grid - Mobil Uyumlu */
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-            padding: 16px;
-            width: 100%;
-            max-width: 100%;
-            margin: 160px auto 120px auto;
+                /* Product Carousel - Optimized */
+        .carousel-container {
             position: relative;
-            z-index: 1;
+            width: 100%;
+            height: 400px;
+            perspective: 1000px;
+            transform-style: preserve-3d;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 160px auto 120px auto;
+            touch-action: none;
+            overflow: hidden;
+            text-align: center;
         }
 
+        .carousel {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            transform-style: preserve-3d;
+            transition: transform 0.5s ease;
+            z-index: 10;
+        }
+        
         .product-card {
+            position: absolute;
+            width: 250px;
+            height: 180px;
+            left: 50%;
+            top: 50%;
+            margin-left: -125px;
+            margin-top: -90px;
+            transform-style: preserve-3d;
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
             background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 1rem;
             padding: 1rem;
-            cursor: pointer;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -413,18 +435,18 @@
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
+            z-index: 5;
             text-align: center;
-            height: 180px;
-            transition: all 0.3s ease;
+            filter: brightness(0.8);
         }
         
         .product-card:hover {
-            transform: scale(1.05);
+            transform: translateZ(20px) scale(1.05);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
         }
         
         .product-card:active {
-            transform: scale(0.98);
+            transform: translateZ(10px) scale(0.98);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
         }
         
@@ -445,10 +467,10 @@
         }
 
         .product-name {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             font-weight: 600;
             color: #fff;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.8rem;
             text-align: center;
         }
 
@@ -458,7 +480,7 @@
             padding: 0.5rem 1rem;
             border-radius: 2rem;
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 1.1rem;
             text-align: center;
             align-self: center;
         }
@@ -482,6 +504,39 @@
         
         .product-card:hover .card-glow {
             opacity: 1;
+        }
+
+        /* Carousel Controls */
+        .carousel-controls {
+            position: absolute;
+            bottom: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 10;
+        }
+
+        .control-btn {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
         }
 
         /* Action Bar */
@@ -1197,27 +1252,33 @@
                 padding: 0.4rem 0.8rem;
             }
             
-            .product-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 20px;
-                padding: 20px;
+            .carousel-container {
                 margin-top: 140px;
                 margin-bottom: 100px;
+                height: 350px;
+            }
+            
+            .carousel {
+                width: 280px;
+                height: 280px;
             }
             
             .product-card {
-                height: 200px;
-                padding: 1.2rem;
+                width: 220px;
+                height: 160px;
+                margin-left: -110px;
+                margin-top: -80px;
+                padding: 1rem;
             }
             
             .product-name {
-                font-size: 1.4rem;
-                margin-bottom: 1rem;
+                font-size: 1.2rem;
+                margin-bottom: 0.8rem;
             }
             
             .product-price {
-                font-size: 1.2rem;
-                padding: 0.6rem 1rem;
+                font-size: 1rem;
+                padding: 0.5rem 0.8rem;
             }
             
             .action-bar {
@@ -1266,27 +1327,33 @@
                 padding: 0.3rem 0.6rem;
             }
             
-            .product-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 12px;
-                padding: 12px;
+            .carousel-container {
                 margin-top: 130px;
                 margin-bottom: 90px;
+                height: 300px;
+            }
+            
+            .carousel {
+                width: 250px;
+                height: 250px;
             }
             
             .product-card {
-                height: 160px;
-                padding: 1rem;
+                width: 200px;
+                height: 140px;
+                margin-left: -100px;
+                margin-top: -70px;
+                padding: 0.8rem;
             }
             
             .product-name {
-                font-size: 1.2rem;
-                margin-bottom: 0.8rem;
+                font-size: 1.1rem;
+                margin-bottom: 0.6rem;
             }
             
             .product-price {
-                font-size: 1.1rem;
-                padding: 0.5rem 0.8rem;
+                font-size: 0.9rem;
+                padding: 0.4rem 0.7rem;
             }
             
             .action-bar {
@@ -1362,8 +1429,19 @@
         </button>
     </div>
 
-    <div class="product-grid" id="product-grid">
+    <div class="carousel-container">
+        <div class="carousel" id="product-carousel">
         <!-- Dinamik olarak oluşturulacak ürün kartları -->
+        </div>
+    </div>
+
+    <div class="carousel-controls">
+        <button id="prev-btn" class="control-btn">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <button id="next-btn" class="control-btn">
+            <i class="fas fa-chevron-right"></i>
+        </button>
     </div>
 
     <div class="action-bar">
@@ -1605,13 +1683,19 @@
             }
             
 
+            // Carousel variables
+            let currentIndex = 0;
+            let theta = 0;
+            let radius = window.innerWidth <= 768 ? 200 : 300;
+            let isDragging = false;
+            let startX;
 
             function renderProducts(filteredProducts = products) {
-                const productGrid = document.getElementById('product-grid');
-                productGrid.innerHTML = '';
+                const carousel = document.getElementById('product-carousel');
+                carousel.innerHTML = '';
                 
                 if (filteredProducts.length === 0) {
-                    productGrid.innerHTML = '<div style="color: white; text-align: center; padding: 2rem; grid-column: 1 / -1;">Bu kategoride ürün bulunamadı.</div>';
+                    carousel.innerHTML = '<div style="color: white; text-align: center; padding: 2rem;">Bu kategoride ürün bulunamadı.</div>';
                     return;
                 }
                 
@@ -1659,11 +1743,256 @@
                             addToCart(product);
                         }
                     });
-                    productGrid.appendChild(card);
+                    carousel.appendChild(card);
+                });
+                
+                // Reset carousel position and initialize
+                theta = 0;
+                currentIndex = 0;
+                
+                // Force carousel to center position
+                setTimeout(() => {
+                    initCarousel();
+                    // İlk ürünü tam ortaya getir
+                    const carousel = document.getElementById('product-carousel');
+                    carousel.style.transform = 'rotateY(0deg)';
+                    rotateCarousel();
+                    
+                    // Ortadaki ürünü vurgula
+                    const cards = carousel.querySelectorAll('.product-card');
+                    cards.forEach((card, index) => {
+                        if (index === 0) {
+                            card.style.zIndex = '10';
+                            card.style.filter = 'brightness(1.1)';
+                        } else {
+                            card.style.zIndex = '5';
+                            card.style.filter = 'brightness(0.8)';
+                        }
+                    });
+                }, 50);
+            }
+            
+            function initCarousel() {
+                const carousel = document.getElementById('product-carousel');
+                const cards = carousel.querySelectorAll('.product-card');
+                const prevBtn = document.getElementById('prev-btn');
+                const nextBtn = document.getElementById('next-btn');
+                
+                if (cards.length === 0) return;
+                
+                const totalCards = cards.length;
+                
+                // Tek ürün varsa kontrol butonlarını gizle
+                if (totalCards <= 1) {
+                    prevBtn.style.display = 'none';
+                    nextBtn.style.display = 'none';
+                } else {
+                    prevBtn.style.display = 'flex';
+                    nextBtn.style.display = 'flex';
+                }
+                
+                // Position cards correctly
+                arrangeCards();
+                
+                // Add event listeners (remove old ones first)
+                prevBtn.removeEventListener('click', prevCard);
+                nextBtn.removeEventListener('click', nextCard);
+                prevBtn.addEventListener('click', prevCard);
+                nextBtn.addEventListener('click', nextCard);
+                
+                // Remove old event listeners
+                carousel.removeEventListener('mousedown', dragStart);
+                carousel.removeEventListener('touchstart', dragStart);
+                document.removeEventListener('mousemove', drag);
+                document.removeEventListener('touchmove', drag);
+                document.removeEventListener('mouseup', dragEnd);
+                document.removeEventListener('touchend', dragEnd);
+                
+                // Add new event listeners
+                carousel.addEventListener('mousedown', dragStart);
+                carousel.addEventListener('touchstart', dragStart, { passive: false });
+                document.addEventListener('mousemove', drag);
+                document.addEventListener('touchmove', drag, { passive: false });
+                document.addEventListener('mouseup', dragEnd);
+                document.addEventListener('touchend', dragEnd);
+                
+                // Keyboard navigation
+                document.removeEventListener('keydown', handleKeyDown);
+                document.addEventListener('keydown', handleKeyDown);
+                
+                // Update radius on resize
+                window.removeEventListener('resize', handleResize);
+                window.addEventListener('resize', handleResize);
+            }
+            
+            function handleResize() {
+                radius = window.innerWidth <= 768 ? 200 : 300;
+                arrangeCards();
+                rotateCarousel();
+            }
+            
+            function arrangeCards() {
+                const carousel = document.getElementById('product-carousel');
+                const cards = carousel.querySelectorAll('.product-card');
+                const totalCards = cards.length;
+                
+                if (totalCards === 0) return;
+                
+                // Tek ürün varsa ortaya getir
+                if (totalCards === 1) {
+                    cards[0].style.transform = `rotateY(0deg) translateZ(0px)`;
+                    cards[0].dataset.index = '0';
+                    return;
+                }
+                
+                const angle = 360 / totalCards;
+                
+                cards.forEach((card, index) => {
+                    const cardAngle = angle * index;
+                    // Her ürünü kendi pozisyonuna yerleştir
+                    card.style.transform = `rotateY(${cardAngle}deg) translateZ(${radius}px)`;
+                    card.dataset.index = index;
                 });
             }
             
-
+            function rotateCarousel() {
+                const carousel = document.getElementById('product-carousel');
+                const cards = carousel.querySelectorAll('.product-card');
+                const totalCards = cards.length;
+                
+                if (totalCards === 0) return;
+                
+                // Tek ürün varsa döndürme yapma
+                if (totalCards === 1) {
+                    carousel.style.transform = `rotateY(0deg)`;
+                    currentIndex = 0;
+                    return;
+                }
+                
+                carousel.style.transform = `rotateY(${theta}deg)`;
+                
+                // Update current card index
+                currentIndex = Math.round(Math.abs(theta / (360 / totalCards)) % totalCards);
+                if (currentIndex >= totalCards) currentIndex = 0;
+                
+                // Her zaman ortadaki ürünü vurgula
+                cards.forEach((card, index) => {
+                    if (index === currentIndex) {
+                        card.style.zIndex = '10';
+                        card.style.filter = 'brightness(1.1)';
+                    } else {
+                        card.style.zIndex = '5';
+                        card.style.filter = 'brightness(0.8)';
+                    }
+                });
+            }
+            
+            function nextCard() {
+                const carousel = document.getElementById('product-carousel');
+                const cards = carousel.querySelectorAll('.product-card');
+                const totalCards = cards.length;
+                
+                if (totalCards <= 1) return;
+                
+                theta -= 360 / totalCards;
+                rotateCarousel();
+            }
+            
+            function prevCard() {
+                const carousel = document.getElementById('product-carousel');
+                const cards = carousel.querySelectorAll('.product-card');
+                const totalCards = cards.length;
+                
+                if (totalCards <= 1) return;
+                
+                theta += 360 / totalCards;
+                rotateCarousel();
+            }
+            
+            function dragStart(e) {
+                // Prevent default only for touch events
+                if (e.type === 'touchstart') {
+                    e.preventDefault();
+                }
+                e.stopPropagation();
+                
+                isDragging = true;
+                startX = e.pageX || e.touches[0].pageX;
+                startY = e.pageY || e.touches[0].pageY;
+                
+                // Set a small timeout to detect if it's a tap
+                setTimeout(() => {
+                    if (isDragging) {
+                        // If still dragging after timeout, it's a drag
+                        isDragging = true;
+                    }
+                }, 50);
+            }
+            
+            function drag(e) {
+                if (!isDragging) return;
+                if (e.type === 'touchmove') {
+                    e.preventDefault();
+                }
+                e.stopPropagation();
+                
+                const currentX = e.pageX || (e.touches ? e.touches[0].pageX : startX);
+                const currentY = e.pageY || (e.touches ? e.touches[0].pageY : startY);
+                const diffX = currentX - startX;
+                const diffY = currentY - startY;
+                
+                // Only handle horizontal drags with minimum threshold
+                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 10) {
+                    const sensitivity = 0.3;
+                    theta += diffX * sensitivity;
+                    rotateCarousel();
+                }
+                
+                startX = currentX;
+                startY = currentY;
+            }
+            
+            function dragEnd(e) {
+                if (!isDragging) return;
+                isDragging = false;
+                
+                const currentX = e.pageX || (e.changedTouches ? e.changedTouches[0].pageX : startX);
+                const currentY = e.pageY || (e.changedTouches ? e.changedTouches[0].pageY : startY);
+                const diffX = currentX - startX;
+                const diffY = currentY - startY;
+                
+                // Only handle horizontal swipes, ignore taps
+                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 20) {
+                    // It was a horizontal swipe
+                    if (diffX > 0) {
+                        prevCard();
+                    } else {
+                        nextCard();
+                    }
+                } else {
+                    // Snap to the closest card
+                    const carousel = document.getElementById('product-carousel');
+                    const cards = carousel.querySelectorAll('.product-card');
+                    const totalCards = cards.length;
+                    if (totalCards > 1) {
+                        const anglePerCard = 360 / totalCards;
+                        const snapAngle = Math.round(theta / anglePerCard) * anglePerCard;
+                        theta = snapAngle;
+                        rotateCarousel();
+                    }
+                }
+                
+                // Reset dragging state
+                isDragging = false;
+            }
+            
+            function handleKeyDown(e) {
+                if (e.key === 'ArrowLeft') {
+                    nextCard();
+                } else if (e.key === 'ArrowRight') {
+                    prevCard();
+                }
+            }
             
             function showToast(message, type = 'success') {
                 const toastContainer = document.getElementById('toastContainer');
