@@ -612,22 +612,13 @@
             -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
             pointer-events: auto;
             z-index: 3;
-            background: linear-gradient(
-                -75deg,
-                rgba(255, 255, 255, 0.05),
-                rgba(255, 255, 255, 0.2),
-                rgba(255, 255, 255, 0.05)
-            );
+            background: transparent;
             border-radius: 999vw;
-            box-shadow: inset 0 0.125em 0.125em rgba(0, 0, 0, 0.05),
-                inset 0 -0.125em 0.125em rgba(255, 255, 255, 0.5),
-                0 0.25em 0.125em -0.125em rgba(0, 0, 0, 0.2),
-                0 0 0.1em 0.25em inset rgba(255, 255, 255, 0.2),
-                0 0 0 0 rgba(255, 255, 255, 1);
-            backdrop-filter: blur(clamp(1px, 0.125em, 4px));
-            -webkit-backdrop-filter: blur(clamp(1px, 0.125em, 4px));
-            -moz-backdrop-filter: blur(clamp(1px, 0.125em, 4px));
-            -ms-backdrop-filter: blur(clamp(1px, 0.125em, 4px));
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            -moz-backdrop-filter: blur(10px);
+            -ms-backdrop-filter: blur(10px);
             transition: all 400ms cubic-bezier(0.25, 1, 0.5, 1);
             display: flex;
             align-items: center;
@@ -643,15 +634,13 @@
 
         .action-btn:hover {
             transform: scale(0.975);
-            backdrop-filter: blur(0.01em);
-            -webkit-backdrop-filter: blur(0.01em);
-            -moz-backdrop-filter: blur(0.01em);
-            -ms-backdrop-filter: blur(0.01em);
-            box-shadow: inset 0 0.125em 0.125em rgba(0, 0, 0, 0.05),
-                inset 0 -0.125em 0.125em rgba(255, 255, 255, 0.5),
-                0 0.15em 0.05em -0.1em rgba(0, 0, 0, 0.25),
-                0 0 0.05em 0.1em inset rgba(255, 255, 255, 0.5),
-                0 0 0 0 rgba(255, 255, 255, 1);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            -moz-backdrop-filter: blur(15px);
+            -ms-backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         }
 
         /* Button Text */
@@ -751,45 +740,46 @@
             --angle-1: -75deg;
         }
 
-        /* Shadow Hover */
+        /* Shadow Hover - Transparent Glass */
         .button-wrap:has(.action-btn:hover) .button-shadow {
-            filter: blur(clamp(2px, 0.0625em, 6px));
-            -webkit-filter: blur(clamp(2px, 0.0625em, 6px));
-            -moz-filter: blur(clamp(2px, 0.0625em, 6px));
-            -ms-filter: blur(clamp(2px, 0.0625em, 6px));
-            transition: filter 400ms cubic-bezier(0.25, 1, 0.5, 1);
+            opacity: 0.3;
+            filter: blur(8px);
+            -webkit-filter: blur(8px);
+            -moz-filter: blur(8px);
+            -ms-filter: blur(8px);
+            transition: all 400ms cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         .button-wrap:has(.action-btn:hover) .button-shadow::after {
-            top: calc(var(--shadow-cuttoff-fix) - 0.875em);
-            opacity: 1;
+            opacity: 0.2;
         }
 
-        /* Rotation */
+        /* Active State - Transparent Glass */
         .button-wrap:has(.action-btn:active) {
-            transform: rotate3d(1, 0, 0, 25deg);
+            transform: scale(0.98);
         }
 
         .button-wrap:has(.action-btn:active) .action-btn {
-            box-shadow: inset 0 0.125em 0.125em rgba(0, 0, 0, 0.05),
-                inset 0 -0.125em 0.125em rgba(255, 255, 255, 0.5),
-                0 0.125em 0.125em -0.125em rgba(0, 0, 0, 0.2),
-                0 0 0.1em 0.25em inset rgba(255, 255, 255, 0.2),
-                0 0.225em 0.05em 0 rgba(0, 0, 0, 0.05),
-                0 0.25em 0 0 rgba(255, 255, 255, 0.75),
-                inset 0 0.25em 0.05em 0 rgba(0, 0, 0, 0.15);
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            -moz-backdrop-filter: blur(20px);
+            -ms-backdrop-filter: blur(20px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            transform: scale(0.95);
         }
 
         .button-wrap:has(.action-btn:active) .button-shadow {
-            filter: blur(clamp(2px, 0.125em, 12px));
-            -webkit-filter: blur(clamp(2px, 0.125em, 12px));
-            -moz-filter: blur(clamp(2px, 0.125em, 12px));
-            -ms-filter: blur(clamp(2px, 0.125em, 12px));
+            opacity: 0.5;
+            filter: blur(12px);
+            -webkit-filter: blur(12px);
+            -moz-filter: blur(12px);
+            -ms-filter: blur(12px);
         }
 
         .button-wrap:has(.action-btn:active) .button-shadow::after {
-            top: calc(var(--shadow-cuttoff-fix) - 0.5em);
-            opacity: 0.75;
+            opacity: 0.3;
         }
 
         .button-wrap:has(.action-btn:active) span {
