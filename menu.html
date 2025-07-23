@@ -2297,7 +2297,7 @@
                 particleCount: 8000,
                 shapeSize: 12,
                 morphDuration: 6000,
-                autoMorphInterval: 8000,
+                autoMorphInterval: 8.0, // saniye cinsinden
                 particleSizeRange: [0.05, 0.15],
                 bloomStrength: 0.8,
                 bloomRadius: 0.4,
@@ -2603,6 +2603,7 @@
                 // Otomatik morph
                 bgAutoMorphTimer += deltaTime;
                 if (bgAutoMorphTimer >= BG_CONFIG.autoMorphInterval) {
+                    console.log('Otomatik morph tetiklendi! Şekil:', BG_SHAPES[bgCurrentShapeIndex].name);
                     triggerBackgroundMorph();
                     bgAutoMorphTimer = 0;
                 }
@@ -2622,6 +2623,7 @@
                 bgMorphProgress = 0;
                 const nextShapeIndex = (bgCurrentShapeIndex + 1) % BG_SHAPES.length;
                 bgCurrentShapeIndex = nextShapeIndex;
+                console.log('Morph başladı! Yeni şekil:', BG_SHAPES[bgCurrentShapeIndex].name);
             }
             
             function updateBackgroundMorph(deltaTime) {
