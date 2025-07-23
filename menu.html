@@ -55,13 +55,17 @@
             overflow: hidden; 
             background-color: #000000; 
             color: white; 
-            font-family: 'Courier New', monospace; 
+            font-family: 'Nunito', sans-serif;
         }
         
         canvas {
             display: block; 
             width: 100%; 
-            height: 100%; 
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
         }
         
         #loading {
@@ -99,8 +103,6 @@
             transition: width 0.3s ease; 
             border-radius: 3px;
         }
-        
-
 
         /* Header */
         header {
@@ -1403,8 +1405,6 @@
         </div>
     </div>
 
-
-
     <canvas id="webglCanvas"></canvas>
 
     <header>
@@ -1623,7 +1623,6 @@
             
             async function getProducts() {
                 try {
-                    console.log('Ürünler yükleniyor... RESTAURANT_ID:', RESTAURANT_ID);
                     const { data, error } = await supabase
                         .from('products')
                         .select('*')
@@ -1632,7 +1631,6 @@
                         .order('sort_order', { ascending: true });
                     
                     if (error) throw error;
-                    console.log('Yüklenen ürünler:', data);
                     return data || [];
                 } catch (error) {
                     console.error('Ürünler alınamadı:', error);
@@ -1714,12 +1712,10 @@
             let startX;
 
             function renderProducts(filteredProducts = products) {
-                console.log('renderProducts çağrıldı, ürün sayısı:', filteredProducts.length);
                 const carousel = document.getElementById('product-carousel');
                 carousel.innerHTML = '';
                 
                 if (filteredProducts.length === 0) {
-                    console.log('Ürün bulunamadı, boş mesaj gösteriliyor');
                     carousel.innerHTML = '<div style="color: white; text-align: center; padding: 2rem;">Bu kategoride ürün bulunamadı.</div>';
                     return;
                 }
@@ -2190,9 +2186,9 @@
             async function submitOrder() {
                 if (cart.length === 0) {
                     showToast('Sepetiniz boş!', 'error');
-                    return;
-                }
-                
+                        return;
+                    }
+                    
                 // Show hamburger loading animation
                 const hamburgerLoading = document.getElementById('hamburgerLoading');
                 hamburgerLoading.classList.add('show');
@@ -2200,19 +2196,12 @@
                 try {
                     const orderNote = document.getElementById('orderNote').value.trim();
                     
-                    const orderItems = cart.map(item => ({
-                        product_id: item.id,
-                        quantity: item.quantity,
-                        price: item.price,
-                        name: item.name
-                    }));
-                    
                     const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
                     
                     // Simulate loading time for better UX
                     await new Promise(resolve => setTimeout(resolve, 3000));
                     
-                    // Önce orders tablosuna sipariş ekle
+                    // Önce order'ı oluştur
                     const { data: orderData, error: orderError } = await supabase
                         .from('orders')
                         .insert([{
@@ -2227,14 +2216,14 @@
                     
                     if (orderError) throw orderError;
                     
-                    // Sonra order_items tablosuna ürünleri ekle
+                    // Sonra order_items'ları ekle
                     const orderItemsData = cart.map(item => ({
                         order_id: orderData.id,
                         product_id: item.id,
                         quantity: item.quantity,
                         unit_price: item.price,
-                        total_price: item.price * item.quantity,
-                        product_name: item.name
+                        product_name: item.name,
+                        total_price: item.price * item.quantity
                     }));
                     
                     const { error: itemsError } = await supabase
@@ -2729,8 +2718,6 @@
             console.log(`Şekil değişti: ${SHAPES[currentShapeIndex].name}, Renk: ${currentColorScheme}`);
         }
 
-
-
         function animate() {
             requestAnimationFrame(animate);
             if (!isInitialized) return;
@@ -2783,8 +2770,6 @@
                  particlesGeometry.attributes.aEffectStrength.needsUpdate = true;
              }
         }
-
-
 
         function onWindowResize() {
             camera.aspect = window.innerWidth / window.innerHeight;
