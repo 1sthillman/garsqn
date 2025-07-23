@@ -55,17 +55,13 @@
             overflow: hidden; 
             background-color: #000000; 
             color: white; 
-            font-family: 'Nunito', sans-serif;
+            font-family: 'Courier New', monospace; 
         }
         
         canvas {
             display: block; 
             width: 100%; 
-            height: 100%;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: -1;
+            height: 100%; 
         }
         
         #loading {
@@ -103,6 +99,86 @@
             transition: width 0.3s ease; 
             border-radius: 3px;
         }
+        
+        #ui {
+            position: absolute;
+            top: 15px; 
+            width: 100%;
+            text-align: center;
+            z-index: 100; 
+            pointer-events: none; 
+        }
+        #info {
+            font-size: 14px;
+            padding: 10px 18px; 
+            background-color: rgba(25, 30, 50, 0.35); 
+            border-radius: 10px; 
+            display: inline-block;
+            text-shadow: 0 0 5px rgba(0, 128, 255, 0.8); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(10px); 
+            -webkit-backdrop-filter: blur(10px); 
+            transition: all 0.3s ease; 
+            box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.05); 
+        }
+        #controls {
+            position: absolute;
+            bottom: 20px; 
+            left: 50%;
+            transform: translateX(-50%); 
+            z-index: 100;
+            text-align: center;
+            pointer-events: all; 
+            background-color: rgba(25, 30, 50, 0.4); 
+            padding: 15px 25px; 
+            border-radius: 12px; 
+            border: 1px solid rgba(255, 255, 255, 0.12); 
+            backdrop-filter: blur(12px); 
+             -webkit-backdrop-filter: blur(12px); 
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); 
+        }
+        button {
+            background: rgba(0, 80, 180, 0.7); 
+            color: white;
+            border: 1px solid rgba(0, 180, 255, 0.6); 
+            border-radius: 6px;
+            padding: 8px 15px;
+            margin: 0 8px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            transition: all 0.25s ease;
+        }
+        button:hover {
+            background: rgba(0, 110, 220, 0.9); 
+            border-color: rgba(0, 210, 255, 0.9);
+            transform: translateY(-1px);
+            box-shadow: 0 3px 8px rgba(0, 150, 255, 0.3);
+        }
+        #color-picker {
+            margin-top: 15px; 
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+        .color-option {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.2); 
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: inset 0 0 4px rgba(0,0,0,0.4); 
+        }
+        .color-option:hover {
+            transform: scale(1.15);
+            border-color: rgba(255, 255, 255, 0.7); 
+        }
+         .color-option.active {
+             transform: scale(1.18);
+             border-color: white;
+             box-shadow: 0 0 10px rgba(255, 255, 255, 0.7); 
+         }
 
         /* Header */
         header {
@@ -1405,6 +1481,21 @@
         </div>
     </div>
 
+    <div id="ui">
+        <div id="info">Shape: Sphere (Click to morph)</div>
+    </div>
+
+    <div id="controls">
+        <button id="shape-btn">Change Shape</button>
+
+        <div id="color-picker">
+            <div class="color-option" data-scheme="fire" style="background: linear-gradient(to bottom right, #ff4500, #ffcc00)"></div>
+            <div class="color-option" data-scheme="neon" style="background: linear-gradient(to bottom right, #ff00ff, #00ffff)"></div>
+            <div class="color-option" data-scheme="nature" style="background: linear-gradient(to bottom right, #00ff00, #66ffcc)"></div>
+            <div class="color-option" data-scheme="rainbow" style="background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet)"></div>
+        </div>
+    </div>
+
     <canvas id="webglCanvas"></canvas>
 
     <header>
@@ -2495,6 +2586,17 @@
             setupParticleSystem(); updateProgress(25);
 
             window.addEventListener('resize', onWindowResize);
+            window.addEventListener('click', onCanvasClick);
+            document.getElementById('shape-btn').addEventListener('click', triggerMorph);
+            document.querySelectorAll('.color-option').forEach(option => {
+                option.addEventListener('click', (e) => {
+                    document.querySelectorAll('.color-option').forEach(o => o.classList.remove('active'));
+                    e.target.classList.add('active');
+                    CONFIG.colorScheme = e.target.dataset.scheme;
+                    updateColors();
+                });
+            });
+            document.querySelector(`.color-option[data-scheme="${CONFIG.colorScheme}"]`).classList.add('active');
             updateProgress(15);
 
             isInitialized = true;
@@ -2709,6 +2811,53 @@
             console.log(`Şekil değişti: ${SHAPES[currentShapeIndex].name}, Renk: ${currentColorScheme}`);
         }
 
+        function autoChangeShapeAndColor() {
+            const newShapeIndex = Math.floor(Math.random() * SHAPES.length);
+            const newColorScheme = Object.keys(COLOR_SCHEMES)[Math.floor(Math.random() * Object.keys(COLOR_SCHEMES).length)];
+            
+            if (newShapeIndex !== currentShapeIndex) {
+                currentShapeIndex = newShapeIndex;
+                const newShape = SHAPES[currentShapeIndex];
+                targetPositions = newShape.generator(CONFIG.particleCount, CONFIG.shapeSize);
+                
+                if (morphTimeline) {
+                    morphTimeline.kill();
+                }
+                
+                morphTimeline = anime({
+                    targets: morphState,
+                    progress: 1,
+                    duration: CONFIG.morphDuration,
+                    easing: 'easeInOutCubic',
+                    update: function() {
+                        const positions = particlesGeometry.attributes.position.array;
+                        for (let i = 0; i < CONFIG.particleCount; i++) {
+                            const i3 = i * 3;
+                            sourceVec.fromArray(sourcePositions, i3);
+                            targetVec.fromArray(targetPositions, i3);
+                            currentVec.lerpVectors(sourceVec, targetVec, morphState.progress);
+                            positions[i3] = currentVec.x;
+                            positions[i3 + 1] = currentVec.y;
+                            positions[i3 + 2] = currentVec.z;
+                        }
+                        particlesGeometry.attributes.position.needsUpdate = true;
+                    },
+                    complete: function() {
+                        sourcePositions = targetPositions.slice();
+                        morphState.progress = 0;
+                    }
+                });
+            }
+            
+            if (newColorScheme !== currentColorScheme) {
+                currentColorScheme = newColorScheme;
+                CONFIG.colorScheme = currentColorScheme;
+                updateColors();
+            }
+            
+            console.log(`Şekil değişti: ${SHAPES[currentShapeIndex].name}, Renk: ${currentColorScheme}`);
+        }
+
         function animate() {
             requestAnimationFrame(animate);
             if (!isInitialized) return;
@@ -2760,6 +2909,49 @@
              if (needsEffectStrengthReset) {
                  particlesGeometry.attributes.aEffectStrength.needsUpdate = true;
              }
+        }
+
+        function triggerMorph() {
+            if (isMorphing) return;
+            isMorphing = true; controls.autoRotate = false; console.log("Morphing triggered...");
+            document.getElementById('info').innerText = `Morphing...`;
+            document.getElementById('info').style.textShadow = '0 0 8px rgba(255, 150, 50, 0.9)';
+            sourcePositions.set(currentPositions);
+            const nextShapeIndex = (currentShapeIndex + 1) % SHAPES.length;
+            const nextTargetPositions = targetPositions[nextShapeIndex];
+            const centerOffsetAmount = CONFIG.shapeSize * CONFIG.swarmDistanceFactor;
+            for (let i = 0; i < CONFIG.particleCount; i++) {
+                const i3 = i * 3;
+                sourceVec.fromArray(sourcePositions, i3); targetVec.fromArray(nextTargetPositions, i3);
+                swarmVec.lerpVectors(sourceVec, targetVec, 0.5);
+                const offsetDir = tempVec.set( noise3D(i * 0.05, 10, 10), noise3D(20, i * 0.05, 20), noise3D(30, 30, i * 0.05) ).normalize();
+                const distFactor = sourceVec.distanceTo(targetVec) * 0.1 + centerOffsetAmount;
+                swarmVec.addScaledVector(offsetDir, distFactor * (0.5 + Math.random() * 0.8));
+                swarmPositions[i3] = swarmVec.x; swarmPositions[i3 + 1] = swarmVec.y; swarmPositions[i3 + 2] = swarmVec.z;
+            }
+            currentShapeIndex = nextShapeIndex;
+            morphState.progress = 0;
+            if (morphTimeline) morphTimeline.pause();
+            morphTimeline = anime({
+                 targets: morphState, progress: 1, duration: CONFIG.morphDuration, easing: 'cubicBezier(0.4, 0.0, 0.2, 1.0)',
+                 complete: () => {
+                     console.log("Morphing complete.");
+                     document.getElementById('info').innerText = `Shape: ${SHAPES[currentShapeIndex].name} (Click to morph)`;
+                     document.getElementById('info').style.textShadow = '0 0 5px rgba(0, 128, 255, 0.8)';
+                     currentPositions.set(targetPositions[currentShapeIndex]);
+                     particlesGeometry.attributes.position.needsUpdate = true;
+                     particleEffectStrengths.fill(0.0);
+                     particlesGeometry.attributes.aEffectStrength.needsUpdate = true;
+                     sourcePositions.set(targetPositions[currentShapeIndex]);
+                     updateColors();
+                     isMorphing = false; controls.autoRotate = true;
+                 }
+            });
+        }
+
+        function onCanvasClick(event) {
+            if (event.target.closest('#controls')) { return; }
+            triggerMorph();
         }
 
         function onWindowResize() {
