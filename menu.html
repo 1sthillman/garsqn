@@ -1719,25 +1719,34 @@
                     let touchStartTime = 0;
                     let touchStartX = 0;
                     let touchStartY = 0;
+                    let isTouchMoved = false;
                     
                     card.addEventListener('touchstart', (e) => {
                         touchStartTime = Date.now();
                         touchStartX = e.touches[0].clientX;
                         touchStartY = e.touches[0].clientY;
+                        isTouchMoved = false;
                     });
                     
-                    card.addEventListener('touchend', (e) => {
-                        const touchEndTime = Date.now();
-                        const touchDuration = touchEndTime - touchStartTime;
-                        const touchEndX = e.changedTouches[0].clientX;
-                        const touchEndY = e.changedTouches[0].clientY;
+                    card.addEventListener('touchmove', (e) => {
+                        const touchEndX = e.touches[0].clientX;
+                        const touchEndY = e.touches[0].clientY;
                         const touchDistance = Math.sqrt(
                             Math.pow(touchEndX - touchStartX, 2) + 
                             Math.pow(touchEndY - touchStartY, 2)
                         );
                         
+                        if (touchDistance > 5) {
+                            isTouchMoved = true;
+                        }
+                    });
+                    
+                    card.addEventListener('touchend', (e) => {
+                        const touchEndTime = Date.now();
+                        const touchDuration = touchEndTime - touchStartTime;
+                        
                         // If it's a short tap with minimal movement, add to cart
-                        if (touchDuration < 300 && touchDistance < 10) {
+                        if (touchDuration < 300 && !isTouchMoved) {
                             e.preventDefault();
                             e.stopPropagation();
                             addToCart(product);
@@ -1801,16 +1810,17 @@
                 nextBtn.addEventListener('click', nextCard);
                 
                 // Remove old event listeners
-                carousel.removeEventListener('mousedown', dragStart);
-                carousel.removeEventListener('touchstart', dragStart);
+                const carouselContainer = document.querySelector('.carousel-container');
+                carouselContainer.removeEventListener('mousedown', dragStart);
+                carouselContainer.removeEventListener('touchstart', dragStart);
                 document.removeEventListener('mousemove', drag);
                 document.removeEventListener('touchmove', drag);
                 document.removeEventListener('mouseup', dragEnd);
                 document.removeEventListener('touchend', dragEnd);
                 
-                // Add new event listeners
-                carousel.addEventListener('mousedown', dragStart);
-                carousel.addEventListener('touchstart', dragStart, { passive: false });
+                // Add new event listeners to container only
+                carouselContainer.addEventListener('mousedown', dragStart);
+                carouselContainer.addEventListener('touchstart', dragStart, { passive: false });
                 document.addEventListener('mousemove', drag);
                 document.addEventListener('touchmove', drag, { passive: false });
                 document.addEventListener('mouseup', dragEnd);
@@ -1910,6 +1920,11 @@
             }
             
             function dragStart(e) {
+                // Only handle drag on carousel container, not on cards
+                if (e.target.closest('.product-card')) {
+                    return;
+                }
+                
                 // Prevent default only for touch events
                 if (e.type === 'touchstart') {
                     e.preventDefault();
