@@ -553,6 +553,9 @@
             display: flex;
             gap: 1rem;
             z-index: 1000;
+            box-sizing: border-box;
+            max-width: 100vw;
+            overflow: hidden;
         }
 
         /* Button Wrap Container */
@@ -566,41 +569,9 @@
             flex: 1;
         }
 
-        /* Button Shadow Container */
+        /* Button Shadow Container - Hidden */
         .button-shadow {
-            --shadow-cuttoff-fix: 2em;
-            position: absolute;
-            width: calc(100% + var(--shadow-cuttoff-fix));
-            height: calc(100% + var(--shadow-cuttoff-fix));
-            top: calc(0% - var(--shadow-cuttoff-fix) / 2);
-            left: calc(0% - var(--shadow-cuttoff-fix) / 2);
-            filter: blur(clamp(2px, 0.125em, 12px));
-            -webkit-filter: blur(clamp(2px, 0.125em, 12px));
-            -moz-filter: blur(clamp(2px, 0.125em, 12px));
-            -ms-filter: blur(clamp(2px, 0.125em, 12px));
-            overflow: visible;
-            pointer-events: none;
-        }
-
-        /* Shadow */
-        .button-shadow::after {
-            content: "";
-            position: absolute;
-            z-index: 0;
-            inset: 0;
-            border-radius: 999vw;
-            background: linear-gradient(180deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.1));
-            width: calc(100% - var(--shadow-cuttoff-fix) - 0.25em);
-            height: calc(100% - var(--shadow-cuttoff-fix) - 0.25em);
-            top: calc(var(--shadow-cuttoff-fix) - 0.5em);
-            left: calc(var(--shadow-cuttoff-fix) - 0.875em);
-            padding: 0.125em;
-            box-sizing: border-box;
-            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-            mask-composite: exclude;
-            transition: all 400ms cubic-bezier(0.25, 1, 0.5, 1);
-            overflow: visible;
-            opacity: 1;
+            display: none;
         }
 
         /* Action Button Base Styles - Product Card Style */
@@ -752,18 +723,9 @@
             --angle-1: -75deg;
         }
 
-        /* Shadow Hover - Transparent Glass */
+        /* Shadow Hover - Removed */
         .button-wrap:has(.action-btn:hover) .button-shadow {
-            opacity: 0.3;
-            filter: blur(8px);
-            -webkit-filter: blur(8px);
-            -moz-filter: blur(8px);
-            -ms-filter: blur(8px);
-            transition: all 400ms cubic-bezier(0.25, 1, 0.5, 1);
-        }
-
-        .button-wrap:has(.action-btn:hover) .button-shadow::after {
-            opacity: 0.2;
+            display: none;
         }
 
         /* Active State - Transparent Glass */
@@ -777,15 +739,7 @@
         }
 
         .button-wrap:has(.action-btn:active) .button-shadow {
-            opacity: 0.5;
-            filter: blur(12px);
-            -webkit-filter: blur(12px);
-            -moz-filter: blur(12px);
-            -ms-filter: blur(12px);
-        }
-
-        .button-wrap:has(.action-btn:active) .button-shadow::after {
-            opacity: 0.3;
+            display: none;
         }
 
         .button-wrap:has(.action-btn:active) span {
@@ -1337,18 +1291,22 @@
             
             .action-bar {
                 padding: 0.8rem;
+                gap: 0.5rem;
             }
             
             .action-btn {
                 padding: 0.8rem;
                 font-size: 0.8rem;
                 border-radius: 0.8rem;
+                min-width: 0;
+                flex: 1;
             }
             
             .action-btn span {
-                padding-inline: 1rem;
+                padding-inline: 0.8rem;
                 padding-block: 0.75rem;
                 font-size: 0.8rem;
+                white-space: nowrap;
             }
         }
         
@@ -1425,18 +1383,22 @@
             
             .action-bar {
                 padding: 0.6rem;
+                gap: 0.4rem;
             }
             
             .action-btn {
                 padding: 0.6rem;
                 font-size: 0.7rem;
                 border-radius: 0.6rem;
+                min-width: 0;
+                flex: 1;
             }
             
             .action-btn span {
-                padding-inline: 0.8rem;
+                padding-inline: 0.6rem;
                 padding-block: 0.6rem;
                 font-size: 0.7rem;
+                white-space: nowrap;
             }
         }
     </style>
@@ -1519,7 +1481,6 @@
             Garson Çağır
                 </span>
         </button>
-            <div class="button-shadow"></div>
         </div>
         <div class="button-wrap">
             <button class="action-btn" id="requestCharcoalBtn">
@@ -1528,7 +1489,6 @@
             Köz İste
                 </span>
         </button>
-            <div class="button-shadow"></div>
         </div>
     </div>
     
