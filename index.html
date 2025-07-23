@@ -2394,6 +2394,18 @@
                 }, 2000);
             });
         });
+        
+        // Check if user already selected language
+        window.addEventListener('load', function() {
+            const savedLang = localStorage.getItem('selectedLanguage');
+            if (savedLang) {
+                // User already selected language, redirect to menu
+                window.location.href = 'menu.html';
+            } else {
+                // User hasn't selected language, redirect to language selector
+                window.location.href = 'language-selector.html';
+            }
+        });
     </script>
 </body>
 </html> 
