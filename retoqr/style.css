@@ -354,27 +354,35 @@ body {
 /* Ürün Grid */
 .menu-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
   padding: 20px;
+  width: 100%;
   max-width: 100%;
   margin: 0 auto;
   align-items: start;
-  justify-items: center;
+  justify-items: stretch;
 }
 
-/* Grid container için minimum genişlik */
-.menu-grid::before {
-  content: '';
-  width: 0;
-  padding-bottom: 100%;
-  grid-row: 1 / 1;
-  grid-column: 1 / 1;
+/* Grid container için daha iyi kontrol */
+.menu-grid {
+  container-type: inline-size;
+  container-name: menu-grid;
 }
 
-.menu-grid > *:first-child {
-  grid-row: 1 / 1;
-  grid-column: 1 / 1;
+/* Container query ile responsive grid */
+@container menu-grid (max-width: 600px) {
+  .menu-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+  }
+}
+
+@container menu-grid (max-width: 400px) {
+  .menu-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+  }
 }
 
 /* Menü kartları için özel stil */
@@ -388,14 +396,14 @@ body {
   box-shadow: 0 0 15px rgba(255, 0, 255, 0.3);
   cursor: pointer;
   width: 100%;
-  max-width: 280px;
-  min-height: 220px;
+  height: 240px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   position: relative;
   overflow: hidden;
   box-sizing: border-box;
+  margin: 0;
 }
 
 .menu-card:hover {
@@ -614,15 +622,14 @@ body {
   }
   
   .menu-grid {
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 16px;
     padding: 16px;
   }
   
   .menu-card {
     padding: 16px;
-    min-height: 180px;
-    max-width: 240px;
+    height: 200px;
   }
   
   .menu-icon-svg {
@@ -662,15 +669,14 @@ body {
   }
   
   .menu-grid {
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 12px;
     padding: 12px;
   }
   
   .menu-card {
     padding: 12px;
-    min-height: 160px;
-    max-width: 200px;
+    height: 180px;
   }
   
   .menu-icon-svg {
