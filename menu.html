@@ -90,7 +90,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 0;
+            z-index: 9998;
             pointer-events: auto;
             cursor: pointer;
         }
@@ -2105,9 +2105,14 @@
                     
                                     // Background animasyonu için ayrı canvas
                 const bgCanvas = document.querySelector('#background-canvas');
+                console.log('Background canvas found:', bgCanvas);
                 if (bgCanvas) {
+                    console.log('Initializing background animation...');
                     initBackgroundAnimation(bgCanvas, THREE);
                     setupBackgroundClick();
+                    console.log('Background animation initialized successfully');
+                } else {
+                    console.error('Background canvas not found!');
                 }
 
                     const renderer = new THREE.default.WebGLRenderer({ canvas, alpha: true });
@@ -2688,14 +2693,19 @@
             // Background canvas'a click event ekle
             function setupBackgroundClick() {
                 const bgCanvas = document.querySelector('#background-canvas');
+                console.log('Setting up background click, canvas found:', bgCanvas);
                 if (bgCanvas) {
                     bgCanvas.style.pointerEvents = 'auto';
+                    bgCanvas.style.zIndex = '9998';
                     bgCanvas.addEventListener('click', (e) => {
                         console.log('Background canvas clicked!');
                         e.preventDefault();
                         e.stopPropagation();
                         triggerBackgroundMorph();
                     });
+                    console.log('Background click event added successfully');
+                } else {
+                    console.error('Background canvas not found!');
                 }
             }
             
