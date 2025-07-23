@@ -1765,26 +1765,11 @@
                         <div class="card-glow"></div>
                     `;
                     
-                    // Add both click and touch events for mobile compatibility
+                    // Add click event for desktop compatibility
                     card.addEventListener('click', (e) => {
                         e.preventDefault();
                         e.stopPropagation();
                         addToCart(product);
-                    });
-                    
-                    card.addEventListener('touchend', (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        addToCart(product);
-                    });
-                    
-                    // Prevent touch events from bubbling to carousel
-                    card.addEventListener('touchstart', (e) => {
-                        e.stopPropagation();
-                    });
-                    
-                    card.addEventListener('touchmove', (e) => {
-                        e.stopPropagation();
                     });
                     carousel.appendChild(card);
                 });
@@ -1935,15 +1920,9 @@
                 }
                 e.stopPropagation();
                 
-                // Check if we're clicking on a product card
-                const target = e.target.closest('.product-card');
-                if (target) {
-                    // Don't start drag if clicking on product card
-                    return;
-                }
-                
                 isDragging = true;
                 startX = e.pageX || e.touches[0].pageX;
+                startY = e.pageY || e.touches[0].pageY;
             }
             
             function drag(e) {
@@ -1954,13 +1933,19 @@
                 e.stopPropagation();
                 
                 const currentX = e.pageX || (e.touches ? e.touches[0].pageX : startX);
+                const currentY = e.pageY || (e.touches ? e.touches[0].pageY : startY);
                 const diffX = currentX - startX;
+                const diffY = currentY - startY;
                 
-                const sensitivity = 0.3; // Daha hassas kontrol
-                const newTheta = theta + diffX * sensitivity;
+                // Only handle horizontal drags with minimum threshold
+                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 10) {
+                    const sensitivity = 0.3;
+                    theta += diffX * sensitivity;
+                    rotateCarousel();
+                }
                 
-                const carousel = document.getElementById('product-carousel');
-                carousel.style.transform = `rotateY(${newTheta}deg)`;
+                startX = currentX;
+                startY = currentY;
             }
             
             function dragEnd(e) {
@@ -1968,10 +1953,25 @@
                 isDragging = false;
                 
                 const currentX = e.pageX || (e.changedTouches ? e.changedTouches[0].pageX : startX);
+                const currentY = e.pageY || (e.changedTouches ? e.changedTouches[0].pageY : startY);
                 const diffX = currentX - startX;
+                const diffY = currentY - startY;
                 
-                // Daha hassas swipe detection
-                if (Math.abs(diffX) > 15) {
+                // Check if it was a tap (small movement) or swipe
+                if (Math.abs(diffX) < 10 && Math.abs(diffY) < 10) {
+                    // It was a tap - check if we tapped on a product card
+                    const target = e.target.closest('.product-card');
+                    if (target) {
+                        // Find the product data and add to cart
+                        const productName = target.querySelector('.product-name').textContent;
+                        const productPrice = target.querySelector('.product-price').textContent;
+                        const product = products.find(p => p.name === productName && p.price + '₺' === productPrice);
+                        if (product) {
+                            addToCart(product);
+                        }
+                    }
+                } else if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 15) {
+                    // It was a horizontal swipe
                     if (diffX > 0) {
                         prevCard();
                     } else {
