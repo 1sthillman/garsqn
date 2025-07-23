@@ -351,12 +351,12 @@ body {
 
 
 
-/* Ürün Grid */
+/* Ürün Grid - Mobil Öncelikli */
 .menu-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
-  padding: 20px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  padding: 12px;
   width: 100%;
   max-width: 100%;
   margin: 0 auto;
@@ -364,39 +364,45 @@ body {
   justify-items: stretch;
 }
 
-/* Grid container için daha iyi kontrol */
-.menu-grid {
-  container-type: inline-size;
-  container-name: menu-grid;
-}
-
-/* Container query ile responsive grid */
-@container menu-grid (max-width: 600px) {
+/* Tablet için 3 sütun */
+@media (min-width: 768px) {
   .menu-grid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 16px;
+    padding: 16px;
   }
 }
 
-@container menu-grid (max-width: 400px) {
+/* Desktop için 4 sütun */
+@media (min-width: 1024px) {
   .menu-grid {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    padding: 20px;
   }
 }
 
-/* Menü kartları için özel stil */
+/* Büyük ekranlar için 5 sütun */
+@media (min-width: 1400px) {
+  .menu-grid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 24px;
+    padding: 24px;
+  }
+}
+
+/* Menü kartları için özel stil - Mobil Öncelikli */
 .menu-card {
   background: rgba(0, 0, 0, 0.7);
   border: 1px solid var(--neon-secondary);
-  border-radius: 16px;
-  padding: 20px;
+  border-radius: 12px;
+  padding: 12px;
   text-align: center;
   transition: all 0.3s ease;
   box-shadow: 0 0 15px rgba(255, 0, 255, 0.3);
   cursor: pointer;
   width: 100%;
-  height: 240px;
+  height: 180px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -406,6 +412,24 @@ body {
   margin: 0;
 }
 
+/* Tablet için kart boyutu */
+@media (min-width: 768px) {
+  .menu-card {
+    border-radius: 16px;
+    padding: 16px;
+    height: 200px;
+  }
+}
+
+/* Desktop için kart boyutu */
+@media (min-width: 1024px) {
+  .menu-card {
+    border-radius: 16px;
+    padding: 20px;
+    height: 240px;
+  }
+}
+
 .menu-card:hover {
   border-color: var(--neon-accent);
   box-shadow: 0 0 25px rgba(255, 255, 0, 0.5);
@@ -413,15 +437,35 @@ body {
 }
 
 .menu-icon-svg {
-  width: 60px;
-  height: 60px;
-  margin: 0 auto 16px;
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
+  border-radius: 8px;
   border: 1px solid var(--neon-accent);
+}
+
+/* Tablet için icon boyutu */
+@media (min-width: 768px) {
+  .menu-icon-svg {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 12px;
+    border-radius: 10px;
+  }
+}
+
+/* Desktop için icon boyutu */
+@media (min-width: 1024px) {
+  .menu-icon-svg {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 16px;
+    border-radius: 12px;
+  }
 }
 
 .menu-info {
@@ -434,17 +478,47 @@ body {
 .menu-info h3 {
   font-weight: 600;
   color: white;
-  margin-bottom: 8px;
-  font-size: 1rem;
-  line-height: 1.3;
+  margin-bottom: 6px;
+  font-size: 0.85rem;
+  line-height: 1.2;
 }
 
 .menu-info p {
   color: rgba(255, 255, 255, 0.7);
-  font-size: 0.85rem;
-  margin-bottom: 12px;
-  line-height: 1.4;
+  font-size: 0.75rem;
+  margin-bottom: 8px;
+  line-height: 1.3;
   flex: 1;
+}
+
+/* Tablet için text boyutu */
+@media (min-width: 768px) {
+  .menu-info h3 {
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+  
+  .menu-info p {
+    font-size: 0.8rem;
+    margin-bottom: 10px;
+    line-height: 1.4;
+  }
+}
+
+/* Desktop için text boyutu */
+@media (min-width: 1024px) {
+  .menu-info h3 {
+    font-size: 1rem;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+  
+  .menu-info p {
+    font-size: 0.85rem;
+    margin-bottom: 12px;
+    line-height: 1.4;
+  }
 }
 
 .menu-bottom {
@@ -457,14 +531,42 @@ body {
 .menu-price {
   color: var(--neon-accent);
   font-weight: 700;
-  font-size: 1.1rem;
-  text-shadow: 0 0 10px var(--neon-accent);
+  font-size: 0.9rem;
+  text-shadow: 0 0 8px var(--neon-accent);
 }
 
 .menu-bottom .neon-btn {
-  padding: 8px 12px;
-  font-size: 0.85rem;
-  min-width: 80px;
+  padding: 6px 8px;
+  font-size: 0.75rem;
+  min-width: 60px;
+}
+
+/* Tablet için fiyat ve buton boyutu */
+@media (min-width: 768px) {
+  .menu-price {
+    font-size: 1rem;
+    text-shadow: 0 0 10px var(--neon-accent);
+  }
+  
+  .menu-bottom .neon-btn {
+    padding: 7px 10px;
+    font-size: 0.8rem;
+    min-width: 70px;
+  }
+}
+
+/* Desktop için fiyat ve buton boyutu */
+@media (min-width: 1024px) {
+  .menu-price {
+    font-size: 1.1rem;
+    text-shadow: 0 0 10px var(--neon-accent);
+  }
+  
+  .menu-bottom .neon-btn {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    min-width: 80px;
+  }
 }
 
 
@@ -610,6 +712,7 @@ body {
 }
 
 /* Responsive */
+/* Mobil için ana grid düzeni */
 @media (max-width: 768px) {
   .main-grid {
     grid-template-columns: 1fr;
@@ -619,90 +722,6 @@ body {
   .order-section {
     position: static;
     max-height: none;
-  }
-  
-  .menu-grid {
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 16px;
-    padding: 16px;
-  }
-  
-  .menu-card {
-    padding: 16px;
-    height: 200px;
-  }
-  
-  .menu-icon-svg {
-    width: 50px;
-    height: 50px;
-    margin-bottom: 12px;
-  }
-  
-  .menu-info h3 {
-    font-size: 0.9rem;
-  }
-  
-  .menu-info p {
-    font-size: 0.8rem;
-  }
-  
-  .menu-price {
-    font-size: 1rem;
-  }
-  
-  .menu-bottom .neon-btn {
-    padding: 6px 10px;
-    font-size: 0.8rem;
-    min-width: 70px;
-  }
-}
-
-@media (max-width: 480px) {
-  .main-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-  
-  .order-section {
-    position: static;
-    max-height: none;
-  }
-  
-  .menu-grid {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 12px;
-    padding: 12px;
-  }
-  
-  .menu-card {
-    padding: 12px;
-    height: 180px;
-  }
-  
-  .menu-icon-svg {
-    width: 40px;
-    height: 40px;
-    margin-bottom: 8px;
-  }
-  
-  .menu-info h3 {
-    font-size: 0.85rem;
-    margin-bottom: 6px;
-  }
-  
-  .menu-info p {
-    font-size: 0.75rem;
-    margin-bottom: 8px;
-  }
-  
-  .menu-price {
-    font-size: 0.9rem;
-  }
-  
-  .menu-bottom .neon-btn {
-    padding: 5px 8px;
-    font-size: 0.75rem;
-    min-width: 60px;
   }
 }
 
