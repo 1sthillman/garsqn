@@ -1686,7 +1686,7 @@
             // Carousel variables
             let currentIndex = 0;
             let theta = 0;
-            let radius = window.innerWidth <= 480 ? 450 : (window.innerWidth <= 768 ? 550 : 700);
+            let radius = window.innerWidth <= 480 ? 500 : (window.innerWidth <= 768 ? 650 : 800);
             let isDragging = false;
             let startX;
 
@@ -1826,7 +1826,7 @@
             }
             
             function handleResize() {
-                radius = window.innerWidth <= 480 ? 450 : (window.innerWidth <= 768 ? 550 : 700);
+                radius = window.innerWidth <= 480 ? 500 : (window.innerWidth <= 768 ? 650 : 800);
                 arrangeCards();
                 rotateCarousel();
             }
