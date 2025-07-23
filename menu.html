@@ -2827,52 +2827,7 @@
             console.log(`Şekil değişti: ${SHAPES[currentShapeIndex].name}, Renk: ${currentColorScheme}`);
         }
 
-        function autoChangeShapeAndColor() {
-            const newShapeIndex = Math.floor(Math.random() * SHAPES.length);
-            const newColorScheme = Object.keys(COLOR_SCHEMES)[Math.floor(Math.random() * Object.keys(COLOR_SCHEMES).length)];
-            
-            if (newShapeIndex !== currentShapeIndex) {
-                currentShapeIndex = newShapeIndex;
-                const newShape = SHAPES[currentShapeIndex];
-                targetPositions = newShape.generator(CONFIG.particleCount, CONFIG.shapeSize);
-                
-                if (morphTimeline) {
-                    morphTimeline.kill();
-                }
-                
-                morphTimeline = anime({
-                    targets: morphState,
-                    progress: 1,
-                    duration: CONFIG.morphDuration,
-                    easing: 'easeInOutCubic',
-                    update: function() {
-                        const positions = particlesGeometry.attributes.position.array;
-                        for (let i = 0; i < CONFIG.particleCount; i++) {
-                            const i3 = i * 3;
-                            sourceVec.fromArray(sourcePositions, i3);
-                            targetVec.fromArray(targetPositions, i3);
-                            currentVec.lerpVectors(sourceVec, targetVec, morphState.progress);
-                            positions[i3] = currentVec.x;
-                            positions[i3 + 1] = currentVec.y;
-                            positions[i3 + 2] = currentVec.z;
-                        }
-                        particlesGeometry.attributes.position.needsUpdate = true;
-                    },
-                    complete: function() {
-                        sourcePositions = targetPositions.slice();
-                        morphState.progress = 0;
-                    }
-                });
-            }
-            
-            if (newColorScheme !== currentColorScheme) {
-                currentColorScheme = newColorScheme;
-                CONFIG.colorScheme = currentColorScheme;
-                updateColors();
-            }
-            
-            console.log(`Şekil değişti: ${SHAPES[currentShapeIndex].name}, Renk: ${currentColorScheme}`);
-        }
+
 
         function animate() {
             requestAnimationFrame(animate);
