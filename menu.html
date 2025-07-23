@@ -2299,20 +2299,36 @@
                     // Simulate loading time for better UX
                     await new Promise(resolve => setTimeout(resolve, 3000));
                     
-                    const { data, error } = await supabase
+                    // Önce orders tablosuna sipariş ekle
+                    const { data: orderData, error: orderError } = await supabase
                         .from('orders')
                         .insert([{
                             restaurant_id: RESTAURANT_ID,
                             table_id: TABLE_ID,
-                            items: orderItems,
-                            total: total,
+                            total_price: total,
                             note: orderNote,
                             status: 'pending'
                         }])
                         .select()
                         .single();
                     
-                    if (error) throw error;
+                    if (orderError) throw orderError;
+                    
+                    // Sonra order_items tablosuna ürünleri ekle
+                    const orderItemsData = cart.map(item => ({
+                        order_id: orderData.id,
+                        product_id: item.id,
+                        quantity: item.quantity,
+                        unit_price: item.price,
+                        total_price: item.price * item.quantity,
+                        product_name: item.name
+                    }));
+                    
+                    const { error: itemsError } = await supabase
+                        .from('order_items')
+                        .insert(orderItemsData);
+                    
+                    if (itemsError) throw itemsError;
                     
                     // Hide hamburger loading animation
                     hamburgerLoading.classList.remove('show');
