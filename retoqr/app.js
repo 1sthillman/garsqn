@@ -41,14 +41,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 });
 
-// Ekran boyutu değiştiğinde menüyü yeniden render et
-let resizeTimeout;
-window.addEventListener('resize', () => {
-  clearTimeout(resizeTimeout);
-  resizeTimeout = setTimeout(() => {
-    renderMenu();
-  }, 250);
-});
+
 
 // Uygulamayı başlat
 async function initializeApp() {
@@ -174,19 +167,9 @@ function renderMenu(productsToRender = products) {
     return;
   }
   
-  // Dinamik grid ayarları
-  const screenWidth = window.innerWidth;
-  let cardsPerRow = 2; // Varsayılan mobil
-  
-  if (screenWidth >= 1400) cardsPerRow = 5;
-  else if (screenWidth >= 1024) cardsPerRow = 4;
-  else if (screenWidth >= 768) cardsPerRow = 3;
-  else if (screenWidth <= 360) cardsPerRow = 1;
-  
-  productsToRender.forEach((product, index) => {
+  productsToRender.forEach(product => {
     const card = document.createElement('div');
     card.className = 'menu-card';
-    card.style.order = Math.floor(index / cardsPerRow);
     card.innerHTML = `
       <div class="menu-icon-svg">${getProductIcon(product.name)}</div>
       <div class="menu-info">
