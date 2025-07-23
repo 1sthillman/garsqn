@@ -445,6 +445,11 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
         }
         
+        .product-card:active {
+            transform: translateZ(10px) scale(0.98);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+        
         .product-card::before {
             content: '';
             position: absolute;
@@ -1761,7 +1766,27 @@
                         <div class="card-glow"></div>
                     `;
                     
-                    card.addEventListener('click', () => addToCart(product));
+                    // Add both click and touch events for mobile compatibility
+                    card.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        addToCart(product);
+                    });
+                    
+                    card.addEventListener('touchend', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        addToCart(product);
+                    });
+                    
+                    // Prevent touch events from bubbling to carousel
+                    card.addEventListener('touchstart', (e) => {
+                        e.stopPropagation();
+                    });
+                    
+                    card.addEventListener('touchmove', (e) => {
+                        e.stopPropagation();
+                    });
                     carousel.appendChild(card);
                 });
                 
@@ -1910,6 +1935,14 @@
                     e.preventDefault();
                 }
                 e.stopPropagation();
+                
+                // Check if we're clicking on a product card
+                const target = e.target.closest('.product-card');
+                if (target) {
+                    // Don't start drag if clicking on product card
+                    return;
+                }
+                
                 isDragging = true;
                 startX = e.pageX || e.touches[0].pageX;
             }
