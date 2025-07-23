@@ -351,84 +351,73 @@ body {
 
 
 
-/* Ürün Grid - Güvenli Mobil Uyumlu */
+/* Ürün Grid - Doğru Mobil Uyumlu */
 .menu-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  padding: 16px;
   width: 100%;
   max-width: 100%;
   margin: 0 auto;
-  justify-content: flex-start;
-  align-items: flex-start;
   position: relative;
   z-index: 1;
-  box-sizing: border-box;
 }
 
 /* Tablet için 3 sütun */
 @media (min-width: 768px) {
   .menu-grid {
-    gap: 24px;
-    padding: 24px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 20px;
   }
   
   .menu-card {
-    width: calc(33.333% - 16px);
-    min-width: 200px;
-    max-width: 220px;
-    height: 220px;
-    padding: 18px;
+    height: 200px;
+    padding: 16px;
   }
 }
 
 /* Desktop için 4 sütun */
 @media (min-width: 1024px) {
   .menu-grid {
-    gap: 28px;
-    padding: 28px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    padding: 24px;
   }
   
   .menu-card {
-    width: calc(25% - 21px);
-    min-width: 220px;
-    max-width: 240px;
-    height: 240px;
-    padding: 20px;
+    height: 220px;
+    padding: 18px;
   }
 }
 
 /* Büyük ekranlar için 5 sütun */
 @media (min-width: 1400px) {
   .menu-grid {
-    gap: 32px;
-    padding: 32px;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 28px;
+    padding: 28px;
   }
   
   .menu-card {
-    width: calc(20% - 26px);
-    min-width: 240px;
-    max-width: 260px;
-    height: 260px;
-    padding: 22px;
+    height: 240px;
+    padding: 20px;
   }
 }
 
-/* Menü kartları için özel stil - Güvenli Mobil Uyumlu */
+/* Menü kartları için özel stil - Doğru Mobil Uyumlu */
 .menu-card {
   background: rgba(0, 0, 0, 0.7);
   border: 1px solid var(--neon-secondary);
   border-radius: 12px;
-  padding: 16px;
+  padding: 12px;
   text-align: center;
   transition: all 0.3s ease;
   box-shadow: 0 0 15px rgba(255, 0, 255, 0.3);
   cursor: pointer;
-  width: calc(50% - 10px);
-  min-width: 150px;
-  max-width: 180px;
-  height: 200px;
+  width: 100%;
+  height: 180px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -438,8 +427,6 @@ body {
   margin: 0;
   backdrop-filter: blur(10px);
   z-index: 2;
-  flex-shrink: 0;
-  flex-grow: 0;
 }
 
 /* Glass class'ının etkisini kaldır */
@@ -766,32 +753,28 @@ body {
 /* Çok küçük ekranlar için özel düzenleme */
 @media (max-width: 480px) {
   .menu-grid {
-    gap: 16px;
-    padding: 16px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: 12px;
   }
   
   .menu-card {
-    width: calc(50% - 8px);
-    min-width: 140px;
-    max-width: 160px;
-    height: 180px;
-    padding: 12px;
+    height: 160px;
+    padding: 10px;
   }
 }
 
 /* Çok dar ekranlar için tek sütun */
 @media (max-width: 360px) {
   .menu-grid {
+    grid-template-columns: 1fr;
     gap: 12px;
     padding: 12px;
   }
   
   .menu-card {
-    width: calc(100% - 6px);
-    min-width: 140px;
-    max-width: 200px;
-    height: 160px;
-    padding: 12px;
+    height: 140px;
+    padding: 10px;
   }
 }
 
