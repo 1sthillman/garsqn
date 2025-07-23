@@ -1760,6 +1760,7 @@
                 // Reset carousel position and initialize
                 theta = 0;
                 currentIndex = 0;
+                isDragging = false;
                 
                 // Force carousel to center position
                 setTimeout(() => {
@@ -1780,7 +1781,7 @@
                             card.style.filter = 'brightness(0.8)';
                         }
                     });
-                }, 50);
+                }, 100);
             }
             
             function initCarousel() {
@@ -1808,35 +1809,37 @@
                 // Clean up all event listeners first
                 cleanupEventListeners();
                 
-                // Add event listeners
-                prevBtn.addEventListener('click', prevCard);
-                nextBtn.addEventListener('click', nextCard);
+                // Add event listeners with fresh functions
+                prevBtn.addEventListener('click', () => prevCard());
+                nextBtn.addEventListener('click', () => nextCard());
                 
-                // Add carousel event listeners
-                carousel.addEventListener('mousedown', dragStart);
-                carousel.addEventListener('touchstart', dragStart, { passive: false });
-                document.addEventListener('mousemove', drag);
-                document.addEventListener('touchmove', drag, { passive: false });
-                document.addEventListener('mouseup', dragEnd);
-                document.addEventListener('touchend', dragEnd);
+                // Add carousel event listeners with fresh functions
+                carousel.addEventListener('mousedown', (e) => dragStart(e));
+                carousel.addEventListener('touchstart', (e) => dragStart(e), { passive: false });
+                document.addEventListener('mousemove', (e) => drag(e));
+                document.addEventListener('touchmove', (e) => drag(e), { passive: false });
+                document.addEventListener('mouseup', (e) => dragEnd(e));
+                document.addEventListener('touchend', (e) => dragEnd(e));
                 
                 // Keyboard navigation
-                document.addEventListener('keydown', handleKeyDown);
+                document.addEventListener('keydown', (e) => handleKeyDown(e));
                 
                 // Update radius on resize
-                window.addEventListener('resize', handleResize);
+                window.addEventListener('resize', () => handleResize());
             }
             
             function cleanupEventListeners() {
                 const carousel = document.getElementById('product-carousel');
                 const prevBtn = document.getElementById('prev-btn');
-                const nextBtn = document.getElementById('prev-btn');
+                const nextBtn = document.getElementById('next-btn');
                 
-                // Remove all carousel event listeners
-                carousel.removeEventListener('mousedown', dragStart);
-                carousel.removeEventListener('touchstart', dragStart);
+                // Remove all carousel event listeners by cloning and replacing
+                if (carousel) {
+                    const newCarousel = carousel.cloneNode(true);
+                    carousel.parentNode.replaceChild(newCarousel, carousel);
+                }
                 
-                // Remove document event listeners
+                // Remove all document event listeners
                 document.removeEventListener('mousemove', drag);
                 document.removeEventListener('touchmove', drag);
                 document.removeEventListener('mouseup', dragEnd);
@@ -1844,8 +1847,14 @@
                 document.removeEventListener('keydown', handleKeyDown);
                 
                 // Remove button event listeners
-                if (prevBtn) prevBtn.removeEventListener('click', prevCard);
-                if (nextBtn) nextBtn.removeEventListener('click', nextCard);
+                if (prevBtn) {
+                    const newPrevBtn = prevBtn.cloneNode(true);
+                    prevBtn.parentNode.replaceChild(newPrevBtn, prevBtn);
+                }
+                if (nextBtn) {
+                    const newNextBtn = nextBtn.cloneNode(true);
+                    nextBtn.parentNode.replaceChild(newNextBtn, nextBtn);
+                }
                 
                 // Remove window event listeners
                 window.removeEventListener('resize', handleResize);
