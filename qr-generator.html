@@ -545,6 +545,23 @@
             }
         }
         
+        // Restoran masalarını getir
+        async function getRestaurantTables() {
+            try {
+                const { data, error } = await supabase
+                    .from('tables')
+                    .select('*')
+                    .eq('restaurant_id', RESTAURANT_ID)
+                    .order('table_number', { ascending: true });
+                
+                if (error) throw error;
+                return data || [];
+            } catch (error) {
+                console.error('Restoran masaları alınamadı:', error);
+                return [];
+            }
+        }
+        
         // Restoran bilgilerini göster
         function displayRestaurantInfo() {
             document.getElementById('restaurantName').textContent = restaurantInfo.name || 'Bilinmeyen Restoran';
@@ -575,33 +592,70 @@
         
         // QR kodları oluştur
         async function generateQRCodes() {
-            const tableLimit = restaurantInfo.table_limit || 0;
+            // Restoran masalarını al
+            const tables = await getRestaurantTables();
             qrCodes = [];
             
-            console.log(`${tableLimit} adet QR kod oluşturuluyor...`);
-            
-            for (let i = 1; i <= tableLimit; i++) {
-                const qrUrl = `menu.html?restaurant_id=${RESTAURANT_ID}&table_id=${i}`;
+            if (tables.length === 0) {
+                // Eğer masalar yoksa, table_limit kadar varsayılan masa oluştur
+                const tableLimit = restaurantInfo.table_limit || 0;
+                console.log(`${tableLimit} adet varsayılan masa QR kodu oluşturuluyor...`);
                 
-                try {
-                    console.log(`Masa ${i} QR kodu oluşturuluyor: ${qrUrl}`);
+                for (let i = 1; i <= tableLimit; i++) {
+                    const qrUrl = `menu.html?restaurant_id=${RESTAURANT_ID}&table_id=${i}`;
                     
-                    // API ile QR kod oluştur
-                    const canvas = await createQRCodeWithAPI(qrUrl, 200);
+                    try {
+                        console.log(`Masa ${i} QR kodu oluşturuluyor: ${qrUrl}`);
+                        
+                        // API ile QR kod oluştur
+                        const canvas = await createQRCodeWithAPI(qrUrl, 200);
+                        
+                        // Canvas'ı data URL'e çevir
+                        const dataUrl = canvas.toDataURL('image/png');
+                        
+                        qrCodes.push({
+                            tableId: i,
+                            tableNumber: i,
+                            tableName: `Masa ${i}`,
+                            url: qrUrl,
+                            dataUrl: dataUrl,
+                            canvas: canvas
+                        });
+                        
+                        console.log(`Masa ${i} QR kodu başarıyla oluşturuldu`);
+                    } catch (error) {
+                        console.error(`QR kod oluşturulamadı (Masa ${i}):`, error);
+                    }
+                }
+            } else {
+                // Gerçek masaları kullan
+                console.log(`${tables.length} adet gerçek masa QR kodu oluşturuluyor...`);
+                
+                for (const table of tables) {
+                    const qrUrl = `menu.html?restaurant_id=${RESTAURANT_ID}&table_id=${table.id}`;
                     
-                    // Canvas'ı data URL'e çevir
-                    const dataUrl = canvas.toDataURL('image/png');
-                    
-                    qrCodes.push({
-                        tableNumber: i,
-                        url: qrUrl,
-                        dataUrl: dataUrl,
-                        canvas: canvas
-                    });
-                    
-                    console.log(`Masa ${i} QR kodu başarıyla oluşturuldu`);
-                } catch (error) {
-                    console.error(`QR kod oluşturulamadı (Masa ${i}):`, error);
+                    try {
+                        console.log(`${table.table_name || 'Masa'} QR kodu oluşturuluyor: ${qrUrl}`);
+                        
+                        // API ile QR kod oluştur
+                        const canvas = await createQRCodeWithAPI(qrUrl, 200);
+                        
+                        // Canvas'ı data URL'e çevir
+                        const dataUrl = canvas.toDataURL('image/png');
+                        
+                        qrCodes.push({
+                            tableId: table.id,
+                            tableNumber: table.table_number,
+                            tableName: table.table_name || `Masa ${table.table_number}`,
+                            url: qrUrl,
+                            dataUrl: dataUrl,
+                            canvas: canvas
+                        });
+                        
+                        console.log(`${table.table_name || 'Masa'} QR kodu başarıyla oluşturuldu`);
+                    } catch (error) {
+                        console.error(`QR kod oluşturulamadı (${table.table_name || 'Masa'}):`, error);
+                    }
                 }
             }
             
@@ -620,9 +674,9 @@
                     <div class="qr-code">
                         <canvas class="qr-code-canvas" width="150" height="150"></canvas>
                     </div>
-                    <div class="table-number">Masa ${qrCode.tableNumber}</div>
+                    <div class="table-number">${qrCode.tableName}</div>
                     <div class="table-url">${qrCode.url}</div>
-                    <button onclick="downloadQRCode(${qrCode.tableNumber})" class="download-btn">
+                    <button onclick="downloadQRCode('${qrCode.tableId}')" class="download-btn">
                         <i class="fas fa-download"></i>
                         İndir
                     </button>
@@ -639,9 +693,9 @@
         }
         
         // QR kodu indir
-        function downloadQRCode(tableNumber) {
+        function downloadQRCode(tableId) {
             try {
-                const qrCode = qrCodes.find(qr => qr.tableNumber === tableNumber);
+                const qrCode = qrCodes.find(qr => qr.tableId == tableId);
                 if (!qrCode) {
                     showError('QR kod bulunamadı');
                     return;
@@ -651,12 +705,12 @@
                     const url = URL.createObjectURL(blob);
                     const link = document.createElement('a');
                     link.href = url;
-                    link.download = `${restaurantInfo.name || 'restoran'}-masa-${tableNumber}-qr.png`;
+                    link.download = `${restaurantInfo.name || 'restoran'}-${qrCode.tableName.toLowerCase().replace(' ', '-')}-qr.png`;
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
                     URL.revokeObjectURL(url);
-                    showSuccess(`Masa ${tableNumber} QR kodu indirildi!`);
+                    showSuccess(`${qrCode.tableName} QR kodu indirildi!`);
                 }, 'image/png');
             } catch (error) {
                 console.error('QR kod indirme hatası:', error);
