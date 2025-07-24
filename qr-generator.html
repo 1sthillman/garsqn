@@ -8,59 +8,34 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js"></script>
     <script>
-        // Basit QR Kod Oluşturucu (Harici kütüphane yok)
-        class SimpleQRCode {
-            constructor() {
-                this.size = 200;
-                this.margin = 2;
-            }
-            
-            // QR kod verisi oluştur (basit versiyon)
-            createQRData(text) {
-                // Basit QR kod verisi - gerçek QR kod yerine görsel temsil
-                const canvas = document.createElement('canvas');
-                canvas.width = this.size;
-                canvas.height = this.size;
-                const ctx = canvas.getContext('2d');
+        // QRCode kütüphanesi yükleme kontrolü
+        function waitForQRCode() {
+            return new Promise((resolve, reject) => {
+                if (typeof QRCode !== 'undefined') {
+                    console.log('QRCode kütüphanesi hazır!');
+                    resolve();
+                    return;
+                }
                 
-                // Beyaz arka plan
-                ctx.fillStyle = '#FFFFFF';
-                ctx.fillRect(0, 0, this.size, this.size);
+                // 5 saniye bekle
+                let attempts = 0;
+                const maxAttempts = 50;
                 
-                // QR kod benzeri desen
-                ctx.fillStyle = '#000000';
-                
-                // Köşe kareler
-                const cornerSize = 20;
-                ctx.fillRect(this.margin, this.margin, cornerSize, cornerSize);
-                ctx.fillRect(this.size - cornerSize - this.margin, this.margin, cornerSize, cornerSize);
-                ctx.fillRect(this.margin, this.size - cornerSize - this.margin, cornerSize, cornerSize);
-                
-                // Ortadaki desen
-                const centerSize = 40;
-                const centerX = (this.size - centerSize) / 2;
-                const centerY = (this.size - centerSize) / 2;
-                ctx.fillRect(centerX, centerY, centerSize, centerSize);
-                
-                // URL metni
-                ctx.fillStyle = '#000000';
-                ctx.font = '12px Arial';
-                ctx.textAlign = 'center';
-                ctx.fillText('QR Code', this.size / 2, this.size - 10);
-                ctx.fillText(text.substring(0, 20) + '...', this.size / 2, this.size - 25);
-                
-                return canvas;
-            }
-            
-            // QR kod oluştur
-            async toCanvas(text) {
-                return this.createQRData(text);
-            }
+                const checkInterval = setInterval(() => {
+                    attempts++;
+                    if (typeof QRCode !== 'undefined') {
+                        clearInterval(checkInterval);
+                        console.log('QRCode kütüphanesi yüklendi!');
+                        resolve();
+                    } else if (attempts >= maxAttempts) {
+                        clearInterval(checkInterval);
+                        reject(new Error('QRCode kütüphanesi yüklenemedi'));
+                    }
+                }, 100);
+            });
         }
-        
-        // Global QRCode objesi
-        window.QRCode = SimpleQRCode;
     </script>
     <style>
         * {
@@ -459,7 +434,10 @@
                     return;
                 }
                 
-                console.log('QR kod oluşturucu hazır!');
+                // QRCode kütüphanesinin yüklenmesini bekle
+                console.log('QRCode kütüphanesi yüklenmesi bekleniyor...');
+                await waitForQRCode();
+                console.log('QRCode kütüphanesi hazır!');
                 
                 // Restoran bilgilerini al
                 restaurantInfo = await getRestaurantInfo();
@@ -544,9 +522,16 @@
                 try {
                     console.log(`Masa ${i} QR kodu oluşturuluyor: ${qrUrl}`);
                     
-                    // Basit QR kod oluştur
-                    const qrCode = new QRCode();
-                    const canvas = await qrCode.toCanvas(qrUrl);
+                    // Gerçek QR kod oluştur
+                    const canvas = document.createElement('canvas');
+                    await QRCode.toCanvas(canvas, qrUrl, {
+                        width: 200,
+                        margin: 2,
+                        color: {
+                            dark: '#000000',
+                            light: '#FFFFFF'
+                        }
+                    });
                     
                     // Canvas'ı data URL'e çevir
                     const dataUrl = canvas.toDataURL('image/png');
