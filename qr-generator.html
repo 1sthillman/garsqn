@@ -362,8 +362,8 @@
         <div id="loading" class="loading">
             <div class="spinner"></div>
             <p class="loading-text">QR kodlar oluşturuluyor...</p>
-        </div>
-        
+            </div>
+            
         <div id="error" class="error-message" style="display: none;">
             <div class="error-icon">⚠️</div>
             <p class="error-text" id="errorText">Bir hata oluştu</p>
@@ -390,7 +390,7 @@
                 <div class="info-item">
                     <div class="info-label">Bitiş Tarihi</div>
                     <div class="info-value" id="endDate">-</div>
-                </div>
+            </div>
             </div>
         </div>
         
@@ -404,31 +404,31 @@
     <script>
         // Güvenli API Konfigürasyonu
         (function() {
-            'use strict';
-            
-            const _0x4a2b = {
-                _0x7c1d: 'aHR0cHM6Ly9lZ2NrbHpmaXl4eG52eXh3b293cS5zdXBhYmFzZS5jbw==',
-                _0x8e3f: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVnY2tsemZpeXh4bnZ5eHdvb3dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0NjQxMTcsImV4cCI6MjA2NDA0MDExN30.dfRQv3lYFCaI1T5ydOw4HyoEJ0I1wOSIUcG8ueEbxKQ'
-            };
-            
-            function _0x2d8e(_0x5f1a) {
-                return atob(_0x5f1a);
-            }
-            
-            Object.defineProperty(window, 'SUPABASE_CONFIG', {
-                get: function() {
-                    return {
-                        url: _0x2d8e(_0x4a2b._0x7c1d),
-                        anonKey: _0x4a2b._0x8e3f
-                    };
-                },
-                set: function() {
-                    console.warn('⚠️ API konfigürasyonu korunuyor');
-                    return false;
-                },
-                configurable: false,
-                enumerable: false
-            });
+          'use strict';
+          
+          const _0x4a2b = {
+            _0x7c1d: 'aHR0cHM6Ly9lZ2NrbHpmaXl4eG52eXh3b293cS5zdXBhYmFzZS5jbw==',
+            _0x8e3f: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVnY2tsemZpeXh4bnZ5eHdvb3dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0NjQxMTcsImV4cCI6MjA2NDA0MDExN30.dfRQv3lYFCaI1T5ydOw4HyoEJ0I1wOSIUcG8ueEbxKQ'
+          };
+        
+          function _0x2d8e(_0x5f1a) {
+            return atob(_0x5f1a);
+          }
+          
+          Object.defineProperty(window, 'SUPABASE_CONFIG', {
+            get: function() {
+              return {
+                url: _0x2d8e(_0x4a2b._0x7c1d),
+                anonKey: _0x4a2b._0x8e3f
+              };
+            },
+            set: function() {
+              console.warn('⚠️ API konfigürasyonu korunuyor');
+              return false;
+            },
+            configurable: false,
+            enumerable: false
+          });
         })();
 
         // Supabase konfigürasyonu
@@ -545,14 +545,14 @@
             }
         }
         
-        // Restoran masalarını getir
+                // Restoran masalarını getir
         async function getRestaurantTables() {
             try {
                 const { data, error } = await supabase
                     .from('tables')
                     .select('*')
                     .eq('restaurant_id', RESTAURANT_ID)
-                    .order('table_number', { ascending: true });
+                    .order('id', { ascending: true });
                 
                 if (error) throw error;
                 return data || [];
@@ -631,11 +631,11 @@
                 // Gerçek masaları kullan
                 console.log(`${tables.length} adet gerçek masa QR kodu oluşturuluyor...`);
                 
-                for (const table of tables) {
+                                for (const table of tables) {
                     const qrUrl = `menu.html?restaurant_id=${RESTAURANT_ID}&table_id=${table.id}`;
                     
                     try {
-                        console.log(`${table.table_name || 'Masa'} QR kodu oluşturuluyor: ${qrUrl}`);
+                        console.log(`${table.name || 'Masa'} QR kodu oluşturuluyor: ${qrUrl}`);
                         
                         // API ile QR kod oluştur
                         const canvas = await createQRCodeWithAPI(qrUrl, 200);
@@ -645,16 +645,16 @@
                         
                         qrCodes.push({
                             tableId: table.id,
-                            tableNumber: table.table_number,
-                            tableName: table.table_name || `Masa ${table.table_number}`,
+                            tableNumber: table.number || table.id,
+                            tableName: table.name || `Masa ${table.id}`,
                             url: qrUrl,
                             dataUrl: dataUrl,
                             canvas: canvas
                         });
                         
-                        console.log(`${table.table_name || 'Masa'} QR kodu başarıyla oluşturuldu`);
+                        console.log(`${table.name || 'Masa'} QR kodu başarıyla oluşturuldu`);
                     } catch (error) {
-                        console.error(`QR kod oluşturulamadı (${table.table_name || 'Masa'}):`, error);
+                        console.error(`QR kod oluşturulamadı (${table.name || 'Masa'}):`, error);
                     }
                 }
             }
@@ -703,11 +703,11 @@
                 
                 qrCode.canvas.toBlob((blob) => {
                     const url = URL.createObjectURL(blob);
-                    const link = document.createElement('a');
+                const link = document.createElement('a');
                     link.href = url;
                     link.download = `${restaurantInfo.name || 'restoran'}-${qrCode.tableName.toLowerCase().replace(' ', '-')}-qr.png`;
                     document.body.appendChild(link);
-                    link.click();
+                link.click();
                     document.body.removeChild(link);
                     URL.revokeObjectURL(url);
                     showSuccess(`${qrCode.tableName} QR kodu indirildi!`);
