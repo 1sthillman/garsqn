@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Kod Üretici</title>
+    <title>QR Kod Üretici - Adisyon</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -18,11 +18,12 @@
         }
         
         :root {
-            /* Primary Colors */
-            --primary-gradient: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             --secondary-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --success-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --warning-gradient: linear-gradient(135deg, #ffd700 0%, #ffb347 100%);
+            --error-gradient: linear-gradient(135deg, #ff6b6b 0%, #ffa500 100%);
             
-            /* Glass Effects */
             --glass-bg: rgba(255, 255, 255, 0.06);
             --glass-bg-strong: rgba(255, 255, 255, 0.1);
             --glass-border: rgba(255, 255, 255, 0.18);
@@ -30,36 +31,61 @@
             --glass-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
             --glass-shadow-strong: 0 20px 60px rgba(0, 0, 0, 0.4);
             
-            /* Text Colors */
             --text-primary: #ffffff;
             --text-secondary: rgba(255, 255, 255, 0.9);
             --text-muted: rgba(255, 255, 255, 0.75);
             
-            /* Border Radius */
-            --radius-sm: 10px;
-            --radius-md: 16px;
-            --radius-lg: 24px;
-            --radius-xl: 32px;
-            --radius-full: 50%;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
             
-            /* Spacing */
+            --space-xs: 4px;
             --space-sm: 8px;
             --space-md: 16px;
             --space-lg: 24px;
             --space-xl: 32px;
+            --space-2xl: 48px;
+            --space-3xl: 64px;
+            
+            --radius-sm: 10px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --radius-xl: 32px;
+            --radius-2xl: 40px;
+            --radius-full: 50%;
+            
+            --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-normal: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-elastic: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            
+            --font-size-xs: 0.75rem;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.125rem;
+            --font-size-xl: 1.25rem;
+            --font-size-2xl: 1.5rem;
+            --font-size-3xl: 1.875rem;
+            --font-size-4xl: 2.25rem;
+            
+            --font-weight-light: 300;
+            --font-weight-normal: 400;
+            --font-weight-medium: 500;
+            --font-weight-semibold: 600;
+            --font-weight-bold: 700;
+            --font-weight-extrabold: 800;
+            --font-weight-black: 900;
         }
         
         body {
-            background: linear-gradient(-45deg, #6a11cb, #2575fc, #4facfe, #00f2fe);
+            background: linear-gradient(-45deg, #6a11cb, #2575fc, #4facfe, #00f2fe, #a8edea);
             background-size: 400% 400%;
             animation: gradientShift 20s ease infinite;
             background-attachment: fixed;
             color: var(--text-primary);
             min-height: 100vh;
-            padding: var(--space-xl);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            overflow-x: hidden;
         }
         
         @keyframes gradientShift {
@@ -69,176 +95,319 @@
         }
         
         .container {
-            max-width: 800px;
-            width: 100%;
-            margin: var(--space-xl) auto;
-        }
-        
-        .card {
-            background: var(--glass-bg-strong);
-            backdrop-filter: blur(30px) saturate(200%);
-            -webkit-backdrop-filter: blur(30px) saturate(200%);
-            border: 1px solid var(--glass-border-strong);
-            border-radius: var(--radius-lg);
+            max-width: 1200px;
+            margin: 0 auto;
             padding: var(--space-xl);
-            box-shadow: var(--glass-shadow);
-            margin-bottom: var(--space-xl);
         }
         
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: var(--space-lg);
+        .header {
             text-align: center;
-            background: var(--primary-gradient);
+            margin-bottom: var(--space-3xl);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header h1 {
+            font-size: var(--font-size-4xl);
+            font-weight: var(--font-weight-black);
+            margin-bottom: var(--space-md);
+            background: var(--success-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            text-shadow: 0 5px 15px rgba(106, 17, 203, 0.3);
-            filter: drop-shadow(0 2px 5px rgba(37, 117, 252, 0.2));
         }
         
-        .form-group {
-            margin-bottom: var(--space-lg);
-        }
-        
-        label {
-            display: block;
-            margin-bottom: var(--space-sm);
-            font-weight: 500;
+        .header p {
+            font-size: var(--font-size-lg);
             color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
         }
         
-        input, select {
-            width: 100%;
-            padding: var(--space-md);
-            border-radius: var(--radius-md);
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+        .restaurant-info {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            padding: var(--space-2xl);
+            margin-bottom: var(--space-2xl);
+            box-shadow: var(--glass-shadow);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .restaurant-name {
+            font-size: var(--font-size-2xl);
+            font-weight: var(--font-weight-bold);
+            margin-bottom: var(--space-md);
             color: var(--text-primary);
-            font-size: 1rem;
         }
         
-        input:focus, select:focus {
-            outline: none;
-            border-color: rgba(106, 17, 203, 0.6);
-            box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.15);
+        .restaurant-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-lg);
+            margin-bottom: var(--space-xl);
         }
         
-        button {
-            background: var(--primary-gradient);
-            color: white;
-            border: none;
-            padding: var(--space-md) var(--space-lg);
-            border-radius: var(--radius-md);
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            width: 100%;
-        }
-        
-        button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(106, 17, 203, 0.3);
-        }
-        
-        button:active {
-            transform: translateY(-1px);
-        }
-        
-        .qr-container {
+        .detail-item {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            margin-top: var(--space-xl);
+            gap: var(--space-xs);
+        }
+        
+        .detail-label {
+            font-size: var(--font-size-sm);
+            color: var(--text-muted);
+            font-weight: var(--font-weight-medium);
+        }
+        
+        .detail-value {
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-primary);
+        }
+        
+        .qr-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: var(--space-lg);
+            margin-bottom: var(--space-2xl);
+        }
+        
+        .qr-item {
+            background: var(--glass-bg-strong);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            text-align: center;
+            transition: var(--transition-elastic);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .qr-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--glass-shadow-strong);
+            border-color: var(--glass-border-strong);
+        }
+        
+        .qr-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--success-gradient);
         }
         
         .qr-code {
-            padding: var(--space-md);
-            background: white;
+            margin-bottom: var(--space-md);
+            display: flex;
+            justify-content: center;
+        }
+        
+        .qr-code canvas {
             border-radius: var(--radius-md);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .table-number {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-bold);
+            color: var(--text-primary);
+            margin-bottom: var(--space-xs);
+        }
+        
+        .table-url {
+            font-size: var(--font-size-xs);
+            color: var(--text-muted);
+            word-break: break-all;
             margin-bottom: var(--space-md);
         }
         
         .download-btn {
-            background: var(--secondary-gradient);
-            margin-top: var(--space-md);
-            max-width: 300px;
-        }
-        
-        .table-info {
-            text-align: center;
-            margin-bottom: var(--space-lg);
-        }
-        
-        .table-number {
-            font-size: 3rem;
-            font-weight: 700;
-            margin-bottom: var(--space-sm);
-        }
-        
-        .url-display {
-            background: rgba(0, 0, 0, 0.2);
-            padding: var(--space-md);
+            background: var(--success-gradient);
+            color: white;
+            border: none;
             border-radius: var(--radius-md);
-            word-break: break-all;
-            margin-bottom: var(--space-md);
+            padding: var(--space-sm) var(--space-md);
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-semibold);
+            cursor: pointer;
+            transition: var(--transition-normal);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(67, 233, 123, 0.3);
+        }
+        
+        .download-all-btn {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            border-radius: var(--radius-xl);
+            padding: var(--space-lg) var(--space-2xl);
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-bold);
+            cursor: pointer;
+            transition: var(--transition-elastic);
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-md);
+            margin: 0 auto;
+            text-decoration: none;
+        }
+        
+        .download-all-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+        }
+        
+        .download-all-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-md);
+            font-size: var(--font-size-lg);
+            color: var(--text-secondary);
+        }
+        
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--glass-border);
+            border-top: 2px solid var(--success);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            background: var(--error-gradient);
+            color: white;
+            padding: var(--space-lg);
+            border-radius: var(--radius-lg);
             text-align: center;
+            margin-bottom: var(--space-xl);
+        }
+        
+        .success-message {
+            background: var(--success-gradient);
+            color: white;
+            padding: var(--space-lg);
+            border-radius: var(--radius-lg);
+            text-align: center;
+            margin-bottom: var(--space-xl);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: var(--space-lg);
+            }
+            
+            .header h1 {
+                font-size: var(--font-size-3xl);
+            }
+            
+            .qr-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: var(--space-md);
+            }
+            
+            .restaurant-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .download-all-btn {
+                width: 100%;
+                justify-content: center;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>QR Kod Üretici</h1>
-        
-        <div class="card">
-            <div class="form-group">
-                <label for="tableNumber">Masa Numarası</label>
-                <input type="number" id="tableNumber" min="1" max="100" value="1">
-            </div>
-            
-            <div class="form-group">
-                <label for="baseUrl">QR Kod URL'si (Opsiyonel)</label>
-                <input type="text" id="baseUrl" placeholder="Örn: https://yoursite.com/menu" value="https://your-domain.com/menu.html">
-            </div>
-            
-            <button id="generateBtn">QR Kod Üret</button>
+        <div class="header">
+            <h1><i class="fas fa-qrcode"></i> QR Kod Üretici</h1>
+            <p>Restoranınız için masa sayısına göre QR kodlar oluşturun ve PNG formatında indirin</p>
         </div>
         
-        <div id="qrResult" class="card" style="display: none;">
-            <div class="table-info">
-                <div class="table-number" id="displayTableNumber">1</div>
-                <div>Numaralı Masa</div>
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <span>Restoran bilgileri yükleniyor...</span>
+        </div>
+        
+        <div id="error" class="error-message" style="display: none;">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span id="errorText">Bir hata oluştu</span>
+        </div>
+        
+        <div id="restaurantInfo" class="restaurant-info" style="display: none;">
+            <div class="restaurant-name" id="restaurantName">Restoran Adı</div>
+            <div class="restaurant-details">
+                <div class="detail-item">
+                    <span class="detail-label">Masa Sayısı</span>
+                    <span class="detail-value" id="tableCount">0</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Abonelik Durumu</span>
+                    <span class="detail-value" id="subscriptionStatus">Trial</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Paket</span>
+                    <span class="detail-value" id="packageName">-</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Bitiş Tarihi</span>
+                    <span class="detail-value" id="endDate">-</span>
+                </div>
             </div>
+        </div>
+        
+        <div id="qrContainer" style="display: none;">
+            <div class="qr-grid" id="qrGrid"></div>
             
-            <div class="url-display" id="urlDisplay"></div>
-            
-            <div class="qr-container">
-                <div class="qr-code" id="qrCode"></div>
-                <button id="downloadBtn" class="download-btn">QR Kodu İndir</button>
+            <div style="text-align: center; margin-top: var(--space-2xl);">
+                <button id="downloadAllBtn" class="download-all-btn">
+                    <i class="fas fa-download"></i>
+                    Tüm QR Kodları İndir (ZIP)
+                </button>
             </div>
         </div>
     </div>
-    
+
     <script>
-        // Güvenli API Konfigürasyonu - Konsol erişimi engellendi
+        // Güvenli API Konfigürasyonu
         (function() {
           'use strict';
           
-          // Şifrelenmiş veriler (Base64)
           const _0x4a2b = {
             _0x7c1d: 'aHR0cHM6Ly9lZ2NrbHpmaXl4eG52eXh3b293cS5zdXBhYmFzZS5jbw==',
             _0x8e3f: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVnY2tsemZpeXh4bnZ5eHdvb3dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0NjQxMTcsImV4cCI6MjA2NDA0MDExN30.dfRQv3lYFCaI1T5ydOw4HyoEJ0I1wOSIUcG8ueEbxKQ'
           };
-        
-          // Şifre çözme fonksiyonu
+          
           function _0x2d8e(_0x5f1a) {
             return atob(_0x5f1a);
           }
           
-          // Global erişimi engelle
           Object.defineProperty(window, 'SUPABASE_CONFIG', {
             get: function() {
               return {
@@ -253,162 +422,231 @@
             configurable: false,
             enumerable: false
           });
-          
-          // Konsol erişimini engelle
-          const _0x3f7e = console.log;
-          const _0x1a2b = console.warn;
-          const _0x5c4d = console.error;
-          
-          console.log = function(...args) {
-            const _0x9e2f = args.join(' ').toLowerCase();
-            if (_0x9e2f.includes('supabase') || _0x9e2f.includes('api') || _0x9e2f.includes('key') || _0x9e2f.includes('url')) {
-              return;
-            }
-            _0x3f7e.apply(console, args);
-          };
-          
-          console.warn = function(...args) {
-            const _0x9e2f = args.join(' ').toLowerCase();
-            if (_0x9e2f.includes('supabase') || _0x9e2f.includes('api') || _0x9e2f.includes('key') || _0x9e2f.includes('url')) {
-              return;
-            }
-            _0x1a2b.apply(console, args);
-          };
-          
-          console.error = function(...args) {
-            const _0x9e2f = args.join(' ').toLowerCase();
-            if (_0x9e2f.includes('supabase') || _0x9e2f.includes('api') || _0x9e2f.includes('key') || _0x9e2f.includes('url')) {
-              return;
-            }
-            _0x5c4d.apply(console, args);
-          };
-          
-          // Object.keys ve Object.values erişimini engelle
-          const _0x8f2c = Object.keys;
-          const _0x7d4e = Object.values;
-          
-          Object.keys = function(obj) {
-            if (obj === window.SUPABASE_CONFIG) {
-              return [];
-            }
-            return _0x8f2c.call(this, obj);
-          };
-          
-          Object.values = function(obj) {
-            if (obj === window.SUPABASE_CONFIG) {
-              return [];
-            }
-            return _0x7d4e.call(this, obj);
-          };
-          
-          // JSON.stringify erişimini engelle
-          const _0x4e2a = JSON.stringify;
-          JSON.stringify = function(obj) {
-            if (obj && (obj.url || obj.anonKey)) {
-              return '{"protected": true}';
-            }
-            return _0x4e2a.call(this, obj);
-          };
-          
-          // DevTools erişimini engelle
-          setInterval(function() {
-            if (window.outerHeight - window.innerHeight > 200) {
-              window.SUPABASE_CONFIG = {
-                url: '[PROTECTED]',
-                anonKey: '[PROTECTED]'
-              };
-            }
-          }, 1000);
-          
         })();
 
-        // Supabase istemcisini başlat (güvenli config)
-        const supabase = supabase.createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.anonKey);
+        // Supabase konfigürasyonu
+        const supabase = window.supabase.createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.anonKey);
         
-        document.addEventListener('DOMContentLoaded', function() {
-            const generateBtn = document.getElementById('generateBtn');
-            const downloadBtn = document.getElementById('downloadBtn');
-            const tableNumberInput = document.getElementById('tableNumber');
-            const baseUrlInput = document.getElementById('baseUrl');
-            const qrResult = document.getElementById('qrResult');
-            const qrCodeEl = document.getElementById('qrCode');
-            const urlDisplayEl = document.getElementById('urlDisplay');
-            const displayTableNumber = document.getElementById('displayTableNumber');
-            
-            generateBtn.addEventListener('click', async function() {
-                const tableNumber = tableNumberInput.value;
-                const baseUrl = baseUrlInput.value || 'https://your-domain.com/menu.html';
-                
-                if (!tableNumber || tableNumber < 1) {
-                    alert('Lütfen geçerli bir masa numarası girin.');
+        // URL parametrelerinden restoran ID'sini al
+        const urlParams = new URLSearchParams(window.location.search);
+        const RESTAURANT_ID = urlParams.get('restaurant_id');
+        
+        let restaurantInfo = null;
+        let qrCodes = [];
+        
+        // Uygulamayı başlat
+        async function initializeApp() {
+            try {
+                if (!RESTAURANT_ID) {
+                    showError('Restoran ID bulunamadı. URL parametresini kontrol edin.');
                     return;
                 }
                 
-                // Masa QR URL'sini oluştur
-                const url = `${baseUrl}?table=${tableNumber}`;
-                
-                // QR kodunu oluştur
-                qrCodeEl.innerHTML = '';
-                QRCode.toCanvas(qrCodeEl, url, { width: 200 }, function(error) {
-                    if (error) console.error(error);
-                });
-                
-                // Masa numarasını ve URL'yi göster
-                displayTableNumber.textContent = tableNumber;
-                urlDisplayEl.textContent = url;
-                
-                // QR sonucunu göster
-                qrResult.style.display = 'block';
-                
-                // İlgili masayı Supabase'de güncelle veya oluştur
-                try {
-                    // Önce bu masa numarası var mı diye kontrol et
-                    const { data: existingTables, error: fetchError } = await supabase
-                        .from('tables')
-                        .select('*')
-                        .eq('table_number', parseInt(tableNumber));
-                    
-                    if (fetchError) throw fetchError;
-                    
-                    if (existingTables && existingTables.length === 0) {
-                        // Masa yoksa yeni masa oluştur
-                        const { error: insertError } = await supabase
-                            .from('tables')
-                            .insert({
-                                table_number: parseInt(tableNumber),
-                                restaurant_id: '7f8d6c5e-4b3a-2c1d-0e9f-8a7b6c5d4e3f', // Varsayılan restoran ID'si
-                                status: 'available',
-                                qr_code: url
-                            });
-                        
-                        if (insertError) throw insertError;
-                    } else {
-                        // Masa varsa QR kodunu güncelle
-                        const { error: updateError } = await supabase
-                            .from('tables')
-                            .update({ qr_code: url })
-                            .eq('table_number', parseInt(tableNumber));
-                        
-                        if (updateError) throw updateError;
-                    }
-                    
-                } catch (error) {
-                    console.error('Masa güncelleme hatası:', error);
+                // Restoran bilgilerini al
+                restaurantInfo = await getRestaurantInfo();
+                if (!restaurantInfo) {
+                    showError('Restoran bilgileri alınamadı.');
+                    return;
                 }
+                
+                // Restoran bilgilerini göster
+                displayRestaurantInfo();
+                
+                // QR kodları oluştur
+                await generateQRCodes();
+                
+                // QR kodları göster
+                displayQRCodes();
+                
+                // Loading'i gizle
+                document.getElementById('loading').style.display = 'none';
+                
+            } catch (error) {
+                console.error('Uygulama başlatılamadı:', error);
+                showError('Uygulama başlatılamadı: ' + error.message);
+            }
+        }
+        
+        // Restoran bilgilerini getir
+        async function getRestaurantInfo() {
+            try {
+                const { data, error } = await supabase
+                    .from('restaurants')
+                    .select('*')
+                    .eq('id', RESTAURANT_ID)
+                    .single();
+                
+                if (error) throw error;
+                return data;
+            } catch (error) {
+                console.error('Restoran bilgileri alınamadı:', error);
+                return null;
+            }
+        }
+        
+        // Restoran bilgilerini göster
+        function displayRestaurantInfo() {
+            document.getElementById('restaurantName').textContent = restaurantInfo.name || 'Bilinmeyen Restoran';
+            document.getElementById('tableCount').textContent = restaurantInfo.table_limit || 0;
+            document.getElementById('subscriptionStatus').textContent = restaurantInfo.subscription_status || 'Trial';
+            
+            // Paket adını göster
+            const packages = {
+                'test_package': 'Test Paketi',
+                'starter_monthly': 'Başlangıç Paketi (Aylık)',
+                'starter_yearly': 'Başlangıç Paketi (Yıllık)',
+                'professional_monthly': 'Profesyonel Paket (Aylık)',
+                'professional_yearly': 'Profesyonel Paket (Yıllık)'
+            };
+            
+            document.getElementById('packageName').textContent = packages[restaurantInfo.subscription_package] || '-';
+            
+            // Bitiş tarihini göster
+            if (restaurantInfo.subscription_end) {
+                const endDate = new Date(restaurantInfo.subscription_end);
+                document.getElementById('endDate').textContent = endDate.toLocaleDateString('tr-TR');
+            } else {
+                document.getElementById('endDate').textContent = '-';
+            }
+            
+            document.getElementById('restaurantInfo').style.display = 'block';
+        }
+        
+        // QR kodları oluştur
+        async function generateQRCodes() {
+            const tableLimit = restaurantInfo.table_limit || 0;
+            qrCodes = [];
+            
+            for (let i = 1; i <= tableLimit; i++) {
+                const qrUrl = `menu.html?restaurant_id=${RESTAURANT_ID}&table_id=${i}`;
+                
+                try {
+                    const qrDataUrl = await QRCode.toDataURL(qrUrl, {
+                        width: 200,
+                        margin: 2,
+                        color: {
+                            dark: '#000000',
+                            light: '#FFFFFF'
+                        }
+                    });
+                    
+                    qrCodes.push({
+                        tableNumber: i,
+                        url: qrUrl,
+                        dataUrl: qrDataUrl
+                    });
+                } catch (error) {
+                    console.error(`QR kod oluşturulamadı (Masa ${i}):`, error);
+                }
+            }
+        }
+        
+        // QR kodları göster
+        function displayQRCodes() {
+            const qrGrid = document.getElementById('qrGrid');
+            qrGrid.innerHTML = '';
+            
+            qrCodes.forEach(qrCode => {
+                const qrItem = document.createElement('div');
+                qrItem.className = 'qr-item';
+                qrItem.innerHTML = `
+                    <div class="qr-code">
+                        <img src="${qrCode.dataUrl}" alt="QR Kod Masa ${qrCode.tableNumber}" width="150" height="150">
+                    </div>
+                    <div class="table-number">Masa ${qrCode.tableNumber}</div>
+                    <div class="table-url">${qrCode.url}</div>
+                    <a href="${qrCode.dataUrl}" download="masa-${qrCode.tableNumber}-qr.png" class="download-btn">
+                        <i class="fas fa-download"></i>
+                        İndir
+                    </a>
+                `;
+                qrGrid.appendChild(qrItem);
             });
             
-            // QR kodunu indir
-            downloadBtn.addEventListener('click', function() {
-                const canvas = qrCodeEl.querySelector('canvas');
-                if (!canvas) return;
+            document.getElementById('qrContainer').style.display = 'block';
+        }
+        
+        // Tüm QR kodları ZIP olarak indir
+        async function downloadAllQRCodes() {
+            const downloadBtn = document.getElementById('downloadAllBtn');
+            downloadBtn.disabled = true;
+            downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ZIP Oluşturuluyor...';
+            
+            try {
+                // JSZip kütüphanesini dinamik olarak yükle
+                if (!window.JSZip) {
+                    const script = document.createElement('script');
+                    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
+                    document.head.appendChild(script);
+                    
+                    await new Promise((resolve, reject) => {
+                        script.onload = resolve;
+                        script.onerror = reject;
+                    });
+                }
                 
-                const tableNumber = tableNumberInput.value;
+                const zip = new JSZip();
+                const restaurantName = restaurantInfo.name || 'restoran';
+                
+                // Her QR kodu ZIP'e ekle
+                qrCodes.forEach(qrCode => {
+                    const fileName = `${restaurantName}-masa-${qrCode.tableNumber}-qr.png`;
+                    
+                    // Data URL'den base64'ü çıkar
+                    const base64Data = qrCode.dataUrl.split(',')[1];
+                    zip.file(fileName, base64Data, {base64: true});
+                });
+                
+                // ZIP dosyasını oluştur ve indir
+                const zipBlob = await zip.generateAsync({type: 'blob'});
+                const downloadUrl = URL.createObjectURL(zipBlob);
+                
                 const link = document.createElement('a');
-                link.download = `masa-${tableNumber}-qr.png`;
-                link.href = canvas.toDataURL('image/png');
+                link.href = downloadUrl;
+                link.download = `${restaurantName}-qr-kodlari.zip`;
+                document.body.appendChild(link);
                 link.click();
-            });
-        });
+                document.body.removeChild(link);
+                
+                URL.revokeObjectURL(downloadUrl);
+                
+                showSuccess('Tüm QR kodları başarıyla indirildi!');
+                
+            } catch (error) {
+                console.error('ZIP oluşturma hatası:', error);
+                showError('ZIP dosyası oluşturulamadı: ' + error.message);
+            } finally {
+                downloadBtn.disabled = false;
+                downloadBtn.innerHTML = '<i class="fas fa-download"></i> Tüm QR Kodları İndir (ZIP)';
+            }
+        }
+        
+        // Hata mesajı göster
+        function showError(message) {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('errorText').textContent = message;
+            document.getElementById('error').style.display = 'block';
+        }
+        
+        // Başarı mesajı göster
+        function showSuccess(message) {
+            const successDiv = document.createElement('div');
+            successDiv.className = 'success-message';
+            successDiv.innerHTML = `<i class="fas fa-check"></i> ${message}`;
+            
+            const container = document.querySelector('.container');
+            container.insertBefore(successDiv, container.firstChild);
+            
+            setTimeout(() => {
+                successDiv.remove();
+            }, 5000);
+        }
+        
+        // Event listener'ları ekle
+        document.getElementById('downloadAllBtn').addEventListener('click', downloadAllQRCodes);
+        
+        // Uygulamayı başlat
+        initializeApp();
     </script>
 </body>
 </html> 
