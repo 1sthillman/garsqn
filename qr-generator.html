@@ -249,33 +249,7 @@
             box-shadow: 0 8px 25px rgba(67, 233, 123, 0.3);
         }
         
-        .download-all-btn {
-            background: var(--primary-gradient);
-            color: white;
-            border: none;
-            border-radius: var(--radius-xl);
-            padding: var(--space-lg) var(--space-2xl);
-            font-size: var(--font-size-lg);
-            font-weight: var(--font-weight-bold);
-            cursor: pointer;
-            transition: var(--transition-elastic);
-            display: inline-flex;
-            align-items: center;
-            gap: var(--space-md);
-            margin: 0 auto;
-            text-decoration: none;
-        }
-        
-        .download-all-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
-        }
-        
-        .download-all-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
+        /* download-all-btn stilleri kaldırıldı */
         
         .loading {
             display: flex;
@@ -336,10 +310,7 @@
                 grid-template-columns: 1fr;
             }
             
-            .download-all-btn {
-                width: 100%;
-                justify-content: center;
-            }
+            /* download-all-btn responsive stilleri kaldırıldı */
         }
     </style>
 </head>
@@ -384,13 +355,6 @@
         
         <div id="qrContainer" style="display: none;">
             <div class="qr-grid" id="qrGrid"></div>
-            
-            <div style="text-align: center; margin-top: var(--space-2xl);">
-                <button id="downloadAllBtn" class="download-all-btn">
-                    <i class="fas fa-download"></i>
-                    Tüm QR Kodları İndir (ZIP)
-                </button>
-            </div>
         </div>
     </div>
 
@@ -521,7 +485,9 @@
                 const qrUrl = `menu.html?restaurant_id=${RESTAURANT_ID}&table_id=${i}`;
                 
                 try {
-                    const qrDataUrl = await QRCode.toDataURL(qrUrl, {
+                    // QR kodu canvas olarak oluştur
+                    const canvas = document.createElement('canvas');
+                    await QRCode.toCanvas(canvas, qrUrl, {
                         width: 200,
                         margin: 2,
                         color: {
@@ -530,10 +496,14 @@
                         }
                     });
                     
+                    // Canvas'ı data URL'e çevir
+                    const dataUrl = canvas.toDataURL('image/png');
+                    
                     qrCodes.push({
                         tableNumber: i,
                         url: qrUrl,
-                        dataUrl: qrDataUrl
+                        dataUrl: dataUrl,
+                        canvas: canvas
                     });
                 } catch (error) {
                     console.error(`QR kod oluşturulamadı (Masa ${i}):`, error);
@@ -555,10 +525,10 @@
                     </div>
                     <div class="table-number">Masa ${qrCode.tableNumber}</div>
                     <div class="table-url">${qrCode.url}</div>
-                    <a href="${qrCode.dataUrl}" download="masa-${qrCode.tableNumber}-qr.png" class="download-btn">
+                    <button onclick="downloadQRCode(${qrCode.tableNumber})" class="download-btn">
                         <i class="fas fa-download"></i>
                         İndir
-                    </a>
+                    </button>
                 `;
                 qrGrid.appendChild(qrItem);
             });
@@ -566,58 +536,37 @@
             document.getElementById('qrContainer').style.display = 'block';
         }
         
-        // Tüm QR kodları ZIP olarak indir
-        async function downloadAllQRCodes() {
-            const downloadBtn = document.getElementById('downloadAllBtn');
-            downloadBtn.disabled = true;
-            downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ZIP Oluşturuluyor...';
-            
+        // Tekil QR kodu indir
+        function downloadQRCode(tableNumber) {
             try {
-                // JSZip kütüphanesini dinamik olarak yükle
-                if (!window.JSZip) {
-                    const script = document.createElement('script');
-                    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
-                    document.head.appendChild(script);
-                    
-                    await new Promise((resolve, reject) => {
-                        script.onload = resolve;
-                        script.onerror = reject;
-                    });
+                const qrCode = qrCodes.find(qr => qr.tableNumber === tableNumber);
+                if (!qrCode) {
+                    showError('QR kod bulunamadı');
+                    return;
                 }
                 
-                const zip = new JSZip();
-                const restaurantName = restaurantInfo.name || 'restoran';
-                
-                // Her QR kodu ZIP'e ekle
-                qrCodes.forEach(qrCode => {
-                    const fileName = `${restaurantName}-masa-${qrCode.tableNumber}-qr.png`;
+                // Canvas'ı blob'a çevir
+                qrCode.canvas.toBlob((blob) => {
+                    // Download link oluştur
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = `${restaurantInfo.name || 'restoran'}-masa-${tableNumber}-qr.png`;
                     
-                    // Data URL'den base64'ü çıkar
-                    const base64Data = qrCode.dataUrl.split(',')[1];
-                    zip.file(fileName, base64Data, {base64: true});
-                });
-                
-                // ZIP dosyasını oluştur ve indir
-                const zipBlob = await zip.generateAsync({type: 'blob'});
-                const downloadUrl = URL.createObjectURL(zipBlob);
-                
-                const link = document.createElement('a');
-                link.href = downloadUrl;
-                link.download = `${restaurantName}-qr-kodlari.zip`;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                
-                URL.revokeObjectURL(downloadUrl);
-                
-                showSuccess('Tüm QR kodları başarıyla indirildi!');
+                    // İndirmeyi başlat
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    // URL'i temizle
+                    URL.revokeObjectURL(url);
+                    
+                    showSuccess(`Masa ${tableNumber} QR kodu indirildi!`);
+                }, 'image/png');
                 
             } catch (error) {
-                console.error('ZIP oluşturma hatası:', error);
-                showError('ZIP dosyası oluşturulamadı: ' + error.message);
-            } finally {
-                downloadBtn.disabled = false;
-                downloadBtn.innerHTML = '<i class="fas fa-download"></i> Tüm QR Kodları İndir (ZIP)';
+                console.error('QR kod indirme hatası:', error);
+                showError('QR kod indirilemedi: ' + error.message);
             }
         }
         
@@ -643,7 +592,7 @@
         }
         
         // Event listener'ları ekle
-        document.getElementById('downloadAllBtn').addEventListener('click', downloadAllQRCodes);
+        // downloadAllBtn event listener'ı kaldırıldı
         
         // Uygulamayı başlat
         initializeApp();
