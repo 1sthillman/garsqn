@@ -549,8 +549,8 @@
         async function getRestaurantTables() {
             try {
                 const { data, error } = await supabase
-                    .from('tables')
-                    .select('*')
+                        .from('tables')
+                        .select('*')
                     .eq('restaurant_id', RESTAURANT_ID)
                     .order('id', { ascending: true });
                 
@@ -653,7 +653,7 @@
                         });
                         
                         console.log(`${table.name || 'Masa'} QR kodu başarıyla oluşturuldu`);
-                    } catch (error) {
+                } catch (error) {
                         console.error(`QR kod oluşturulamadı (${table.name || 'Masa'}):`, error);
                     }
                 }
