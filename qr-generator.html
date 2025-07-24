@@ -8,23 +8,32 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js"></script>
+    <script src="https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js"></script>
     <script>
-        // QRCode kütüphanesi yüklenmezse alternatif yükle
-        window.addEventListener('load', function() {
-            if (typeof QRCode === 'undefined') {
-                console.log('QRCode kütüphanesi yüklenmedi, alternatif yükleniyor...');
-                const script = document.createElement('script');
-                script.src = 'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js';
-                script.onload = function() {
-                    console.log('QRCode kütüphanesi alternatif kaynaktan yüklendi');
-                };
-                script.onerror = function() {
-                    console.error('QRCode kütüphanesi yüklenemedi');
-                };
-                document.head.appendChild(script);
-            }
-        });
+        // QRCode kütüphanesi yükleme kontrolü
+        function waitForQRCode() {
+            return new Promise((resolve, reject) => {
+                if (typeof QRCode !== 'undefined') {
+                    resolve();
+                    return;
+                }
+                
+                // 5 saniye bekle
+                let attempts = 0;
+                const maxAttempts = 50; // 5 saniye (100ms * 50)
+                
+                const checkInterval = setInterval(() => {
+                    attempts++;
+                    if (typeof QRCode !== 'undefined') {
+                        clearInterval(checkInterval);
+                        resolve();
+                    } else if (attempts >= maxAttempts) {
+                        clearInterval(checkInterval);
+                        reject(new Error('QRCode kütüphanesi yüklenemedi'));
+                    }
+                }, 100);
+            });
+        }
     </script>
     <style>
         * {
@@ -423,6 +432,11 @@
                     return;
                 }
                 
+                // QRCode kütüphanesinin yüklenmesini bekle
+                console.log('QRCode kütüphanesi yüklenmesi bekleniyor...');
+                await waitForQRCode();
+                console.log('QRCode kütüphanesi yüklendi!');
+                
                 // Restoran bilgilerini al
                 restaurantInfo = await getRestaurantInfo();
                 if (!restaurantInfo) {
@@ -495,20 +509,17 @@
         
         // QR kodları oluştur
         async function generateQRCodes() {
-            // QRCode kütüphanesinin yüklenip yüklenmediğini kontrol et
-            if (typeof QRCode === 'undefined') {
-                console.error('QRCode kütüphanesi yüklenmedi!');
-                showError('QRCode kütüphanesi yüklenemedi. Lütfen sayfayı yenileyin.');
-                return;
-            }
-            
             const tableLimit = restaurantInfo.table_limit || 0;
             qrCodes = [];
+            
+            console.log(`${tableLimit} adet QR kod oluşturuluyor...`);
             
             for (let i = 1; i <= tableLimit; i++) {
                 const qrUrl = `menu.html?restaurant_id=${RESTAURANT_ID}&table_id=${i}`;
                 
                 try {
+                    console.log(`Masa ${i} QR kodu oluşturuluyor: ${qrUrl}`);
+                    
                     // QR kodu canvas olarak oluştur
                     const canvas = document.createElement('canvas');
                     await QRCode.toCanvas(canvas, qrUrl, {
@@ -529,10 +540,14 @@
                         dataUrl: dataUrl,
                         canvas: canvas
                     });
+                    
+                    console.log(`Masa ${i} QR kodu başarıyla oluşturuldu`);
                 } catch (error) {
                     console.error(`QR kod oluşturulamadı (Masa ${i}):`, error);
                 }
             }
+            
+            console.log(`Toplam ${qrCodes.length} QR kod oluşturuldu`);
         }
         
         // QR kodları göster
