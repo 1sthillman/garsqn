@@ -8,7 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     
     <style>
         * {
@@ -442,34 +441,38 @@
         let restaurantInfo = null;
         let qrCodes = [];
         
-        // QR kod kütüphanesi yükleme kontrolü
-        function waitForQRCode() {
-            return new Promise((resolve, reject) => {
-                if (typeof QRCode !== 'undefined') {
-                    console.log('QRCode kütüphanesi hazır!');
-                    resolve();
-                    return;
-                }
+        // QR kod API'si ile QR kod oluştur
+        async function createQRCodeWithAPI(text, size = 200) {
+            try {
+                // QR kod API'si kullan
+                const apiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(text)}&format=png&margin=2&color=000000&bgcolor=FFFFFF`;
                 
-                console.log('QRCode kütüphanesi yüklenmesi bekleniyor...');
+                // Canvas oluştur
+                const canvas = document.createElement('canvas');
+                canvas.width = size;
+                canvas.height = size;
+                const ctx = canvas.getContext('2d');
                 
-                // 10 saniye bekle
-                let attempts = 0;
-                const maxAttempts = 100;
+                // API'den QR kod resmini yükle
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
                 
-                const checkInterval = setInterval(() => {
-                    attempts++;
-                    if (typeof QRCode !== 'undefined') {
-                        clearInterval(checkInterval);
-                        console.log('QRCode kütüphanesi başarıyla yüklendi!');
-                        resolve();
-                    } else if (attempts >= maxAttempts) {
-                        clearInterval(checkInterval);
-                        console.error('QRCode kütüphanesi yüklenemedi!');
-                        reject(new Error('QRCode kütüphanesi yüklenemedi. Lütfen sayfayı yenileyin.'));
-                    }
-                }, 100);
-            });
+                return new Promise((resolve, reject) => {
+                    img.onload = function() {
+                        ctx.drawImage(img, 0, 0, size, size);
+                        resolve(canvas);
+                    };
+                    
+                    img.onerror = function() {
+                        reject(new Error('QR kod API\'si yüklenemedi'));
+                    };
+                    
+                    img.src = apiUrl;
+                });
+            } catch (error) {
+                console.error('QR kod oluşturma hatası:', error);
+                throw error;
+            }
         }
         
         // Hata göster
@@ -498,10 +501,7 @@
                     return;
                 }
                 
-                // QRCode kütüphanesinin yüklenmesini bekle
-                console.log('QRCode kütüphanesi yüklenmesi bekleniyor...');
-                await waitForQRCode();
-                console.log('QRCode kütüphanesi hazır!');
+                console.log('QR kod API\'si hazır!');
                 
                 // Restoran bilgilerini al
                 restaurantInfo = await getRestaurantInfo();
@@ -586,16 +586,8 @@
                 try {
                     console.log(`Masa ${i} QR kodu oluşturuluyor: ${qrUrl}`);
                     
-                    // Gerçek QR kod oluştur
-                    const canvas = document.createElement('canvas');
-                    await QRCode.toCanvas(canvas, qrUrl, {
-                        width: 200,
-                        margin: 2,
-                        color: {
-                            dark: '#000000',
-                            light: '#FFFFFF'
-                        }
-                    });
+                    // API ile QR kod oluştur
+                    const canvas = await createQRCodeWithAPI(qrUrl, 200);
                     
                     // Canvas'ı data URL'e çevir
                     const dataUrl = canvas.toDataURL('image/png');
