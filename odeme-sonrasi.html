@@ -475,7 +475,7 @@
                 }
                 
                 // Sonucu göster
-                showResult();
+                await showResult();
                 
                 // Geri sayım başlat
                 startCountdown();
@@ -520,8 +520,68 @@
             }
         }
         
+        // Shopier callback doğrulama
+        async function verifyShopierCallback() {
+            if (shopierPaymentId && shopierSignature && shopierRandomNumber) {
+                try {
+                    // Shopier'den gelen ödemeyi doğrula
+                    const { data: shopierPayment, error } = await supabase
+                        .from('payments')
+                        .select('*')
+                        .eq('shopier_payment_id', shopierPaymentId)
+                        .single();
+                    
+                    if (shopierPayment) {
+                        // Ödeme zaten işlenmiş
+                        return shopierPayment;
+                    } else {
+                        // Yeni Shopier ödemesi - işle
+                        console.log('Yeni Shopier ödemesi tespit edildi:', shopierPaymentId);
+                        
+                        // Ödeme kaydını güncelle
+                        const { data: updatedPayment, error: updateError } = await supabase
+                            .from('payments')
+                            .update({
+                                status: 'success',
+                                shopier_payment_id: shopierPaymentId,
+                                updated_at: new Date().toISOString()
+                            })
+                            .eq('id', paymentId)
+                            .select()
+                            .single();
+                        
+                        if (updateError) throw updateError;
+                        
+                        // Restoran aboneliğini güncelle
+                        if (updatedPayment) {
+                            const packageId = updatedPayment.package_id;
+                            const tableLimit = packageId === 'test_package' ? 20 : 
+                                             (packageId.includes('starter') ? 10 : 25);
+                            
+                            await supabase
+                                .from('restaurants')
+                                .update({
+                                    subscription_package: packageId,
+                                    subscription_status: 'active',
+                                    subscription_start: new Date().toISOString(),
+                                    subscription_end: new Date(Date.now() + (packageId.includes('yearly') ? 365 : 30) * 24 * 60 * 60 * 1000).toISOString(),
+                                    table_limit: tableLimit
+                                })
+                                .eq('id', restaurantId);
+                        }
+                        
+                        return updatedPayment;
+                    }
+                } catch (error) {
+                    console.error('Shopier callback doğrulama hatası:', error);
+                    return null;
+                }
+            }
+            return null;
+        }
+        
         // Sonucu göster
-        function showResult() {
+        async function showResult() {
             const resultIcon = document.getElementById('resultIcon');
             const resultTitle = document.getElementById('resultTitle');
             const resultMessage = document.getElementById('resultMessage');
@@ -531,14 +591,20 @@
             const paymentDate = document.getElementById('paymentDate');
             
             // Shopier callback kontrolü
-            // Shopier'den gelen ödeme ID'si ve imzası ile başarılı mı diye kontrol et
-            const isSuccess = ((status === 'success' || shopierStatus === 'success' || shopierPaymentId) && paymentData);
+            let verifiedPayment = paymentData;
+            
+            if (shopierPaymentId) {
+                verifiedPayment = await verifyShopierCallback();
+                if (verifiedPayment) {
+                    paymentData = verifiedPayment;
+                }
+            }
+            
+            const isSuccess = ((status === 'success' || shopierStatus === 'success' || shopierPaymentId) && verifiedPayment);
             
             // Eğer Shopier payment_id gelmiş ve veritabanında ödeme bilgisi yoksa başarılı sayalım
-            // Bu, Shopier ödeme bildiriminin geldiği ancak veritabanındaki ödemeyi henüz güncelleyemediğimiz durumlar için
             if (!isSuccess && shopierPaymentId) {
                 console.log('Shopier payment ID mevcut ancak veritabanında ödeme bilgisi bulunamadı. Payment ID:', shopierPaymentId);
-                // Bu durumda ödemeyi başarılı olarak işleyebiliriz veya manuel kontrol için bir mesaj gösterebiliriz
                 return showPartialSuccess();
             }
             if (isSuccess) {

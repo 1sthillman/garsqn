@@ -874,19 +874,24 @@
             });
         }
         
-        // Shopier API bilgileri (gerçek)
+        // Shopier API bilgileri (gerçek ödeme için)
         const SHOPIER_CONFIG = {
             api_key: 'ba946ce45c717d982cc6decbcb616bb2',
             secret: '8a186b6f15655c57c65ec415ae121e69',
-            payment_endpoint_url: 'https://www.shopier.com/ShowProduct/api_pay4.php', // api_pay4.php kullanılıyor
+            payment_endpoint_url: 'https://www.shopier.com/ShowProduct/api_pay4.php',
             website_index: '1',
             return_url: 'https://1sthillman.github.io/garsqn/odeme-sonrasi.html',
-            test_mode: true, // Test modu aktif
-            domain_id: '1', // Shopier domain ID
-            order_id_prefix: 'ADISYON', // Sipariş ID prefix
-            shop_id: '1234567', // Shopier panel'den alınan Shop ID
-            timeout: 30000, // 30 saniye timeout
-            retry_count: 3 // 3 kez deneme
+            test_mode: false, // Gerçek ödeme modu aktif
+            domain_id: '1',
+            order_id_prefix: 'ADISYON',
+            shop_id: '1234567', // Gerçek Shopier Shop ID
+            timeout: 30000,
+            retry_count: 3,
+            // Gerçek ödeme için ek ayarlar
+            currency: 'TRY',
+            language: 'tr',
+            success_url: 'https://1sthillman.github.io/garsqn/odeme-sonrasi.html',
+            cancel_url: 'https://1sthillman.github.io/garsqn/odeme.html'
         };
         
         // Alternatif endpoint'ler (504 hatası durumunda)
@@ -1000,7 +1005,7 @@
                 // Shopier signature oluştur
                 const signature = generateShopierSignature(randomNr.toString(), orderId, amount, currency);
                 
-                // Resmi Shopier API dokümantasyonuna göre form verileri
+                // Gerçek Shopier ödeme için form verileri
                 const shopierData = {
                     // API Bilgileri
                     API_key: SHOPIER_CONFIG.api_key,
@@ -1009,9 +1014,9 @@
                     // Sipariş Bilgileri
                     platform_order_id: orderId,
                     product_name: selectedPackage.name,
-                    product_type: '0', // Fiziksel ürün
+                    product_type: '1', // Dijital ürün
                     total_order_value: amount,
-                    currency: currency,
+                    currency: SHOPIER_CONFIG.currency,
                     
                     // Müşteri Bilgileri
                     buyer_name: restaurantInfo?.name || 'Restoran',
@@ -1019,14 +1024,14 @@
                     buyer_email: restaurantInfo?.email || 'info@restoran.com',
                     buyer_account_age: '0',
                     buyer_id_nr: RESTAURANT_ID,
-                    buyer_phone: restaurantInfo?.phone || '',
+                    buyer_phone: restaurantInfo?.phone || '5551234567',
                     
                     // Adres Bilgileri
-                    billing_address: 'Adisyon QR Menü',
+                    billing_address: 'Adisyon QR Menü Sistemi',
                     billing_city: 'İstanbul',
                     billing_country: 'TR',
                     billing_postcode: '34000',
-                    shipping_address: 'Adisyon QR Menü',
+                    shipping_address: 'Adisyon QR Menü Sistemi',
                     shipping_city: 'İstanbul',
                     shipping_country: 'TR',
                     shipping_postcode: '34000',
@@ -1040,10 +1045,11 @@
                     platform: '1', // WooCommerce
                     
                     // Dönüş URL'leri
-                    return_url: `${SHOPIER_CONFIG.return_url}?payment_id=${orderId}&restaurant_id=${RESTAURANT_ID}&status=success`,
+                    return_url: `${SHOPIER_CONFIG.success_url}?payment_id=${orderId}&restaurant_id=${RESTAURANT_ID}&status=success`,
+                    cancel_url: `${SHOPIER_CONFIG.cancel_url}?restaurant_id=${RESTAURANT_ID}&status=cancelled`,
                     
                     // Shopier Shop ID
-                    shopier_show_id: SHOPIER_CONFIG.shop_id // Shopier panelinden alınan Shop ID
+                    shopier_show_id: SHOPIER_CONFIG.shop_id
                 };
                 
                 // Test modu kontrolü
