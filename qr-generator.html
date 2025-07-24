@@ -8,30 +8,34 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js"></script>
+    <script src="https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js"></script>
     <script>
         // QRCode kütüphanesi yükleme kontrolü
         function waitForQRCode() {
             return new Promise((resolve, reject) => {
+                // Hemen kontrol et
                 if (typeof QRCode !== 'undefined') {
-                    console.log('QRCode kütüphanesi hazır!');
+                    console.log('QRCode kütüphanesi zaten yüklü!');
                     resolve();
                     return;
                 }
                 
-                // 5 saniye bekle
+                console.log('QRCode kütüphanesi yüklenmesi bekleniyor...');
+                
+                // 10 saniye bekle
                 let attempts = 0;
-                const maxAttempts = 50;
+                const maxAttempts = 100; // 10 saniye
                 
                 const checkInterval = setInterval(() => {
                     attempts++;
                     if (typeof QRCode !== 'undefined') {
                         clearInterval(checkInterval);
-                        console.log('QRCode kütüphanesi yüklendi!');
+                        console.log('QRCode kütüphanesi başarıyla yüklendi!');
                         resolve();
                     } else if (attempts >= maxAttempts) {
                         clearInterval(checkInterval);
-                        reject(new Error('QRCode kütüphanesi yüklenemedi'));
+                        console.error('QRCode kütüphanesi yüklenemedi!');
+                        reject(new Error('QRCode kütüphanesi yüklenemedi. Lütfen sayfayı yenileyin.'));
                     }
                 }, 100);
             });
