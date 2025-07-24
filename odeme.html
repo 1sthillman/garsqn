@@ -25,6 +25,7 @@
             --premium-rose: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
             --premium-ocean: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
             --premium-emerald: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --test-gradient: linear-gradient(135deg, #ff6b6b 0%, #ffa500 100%);
             
             --glass-bg: rgba(255, 255, 255, 0.06);
             --glass-bg-strong: rgba(255, 255, 255, 0.1);
@@ -454,6 +455,37 @@
             font-size: var(--font-size-base);
         }
         
+        /* Test paketi özel stilleri */
+        .package-card[data-package-id="test_package"] {
+            border-color: var(--test-gradient);
+            background: rgba(255, 107, 107, 0.1);
+        }
+        
+        .package-card[data-package-id="test_package"]:hover {
+            border-color: #ff6b6b;
+            box-shadow: 0 20px 60px rgba(255, 107, 107, 0.3);
+        }
+        
+        .package-card[data-package-id="test_package"] .package-name {
+            background: var(--test-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .package-card[data-package-id="test_package"] .package-btn {
+            background: var(--test-gradient);
+        }
+        
+        .package-card[data-package-id="test_package"] .package-btn:hover {
+            box-shadow: 0 15px 40px rgba(255, 107, 107, 0.5);
+        }
+        
+        .package-card[data-package-id="test_package"] .popular-badge {
+            background: var(--test-gradient);
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+        }
+        
         @media (max-width: 768px) {
             .container {
                 padding: var(--space-lg);
@@ -644,6 +676,23 @@
         // Paketleri tanımla
         const packages = [
             {
+                id: 'test_package',
+                name: 'Test Paketi',
+                price: '1₺',
+                period: '1 Ay',
+                originalPrice: null,
+                discount: null,
+                tables: 20,
+                features: [
+                    '20 Masa QR Kodu',
+                    'Müşteri Siparişleri',
+                    'Garson Çağırma',
+                    'Köz İsteme',
+                    'Mobil Uyumlu',
+                    'Test Amaçlı'
+                ]
+            },
+            {
                 id: 'starter_monthly',
                 name: 'Başlangıç Paketi',
                 price: '199₺',
@@ -763,13 +812,13 @@
                 card.className = 'package-card';
                 card.setAttribute('data-package-id', package.id);
                 
-                // Popüler paket işaretle (Profesyonel aylık)
-                const isPopular = package.id === 'professional_monthly';
+                // Popüler paket işaretle (Test paketi özel olarak işaretlenir)
+                const isPopular = package.id === 'test_package';
                 const isYearly = package.period === 'Yıllık';
                 
                 card.innerHTML = `
                     ${package.discount ? `<div class="discount-badge">${package.discount} İndirim</div>` : ''}
-                    ${isPopular ? '<div class="popular-badge">En Popüler</div>' : ''}
+                    ${isPopular ? '<div class="popular-badge">Test Paketi</div>' : ''}
                     <div class="package-header">
                         <div class="package-name">${package.name}</div>
                         <div class="package-price">
@@ -784,7 +833,7 @@
                         `).join('')}
                     </ul>
                     <button class="package-btn" onclick="selectPackage('${package.id}')">
-                        ${isYearly ? '<i class="fas fa-gift"></i> ' : ''}Bu Paketi Seç
+                        ${isYearly ? '<i class="fas fa-gift"></i> ' : ''}${package.id === 'test_package' ? '<i class="fas fa-flask"></i> Test Et' : 'Bu Paketi Seç'}
                     </button>
                 `;
                 
@@ -1026,7 +1075,7 @@
                                     subscription_status: 'active',
                                     subscription_start: new Date().toISOString(),
                                     subscription_end: new Date(Date.now() + (selectedPackage.id.includes('yearly') ? 365 : 30) * 24 * 60 * 60 * 1000).toISOString(),
-                                    table_limit: selectedPackage.id.includes('starter') ? 10 : 25
+                                    table_limit: selectedPackage.id === 'test_package' ? 20 : (selectedPackage.id.includes('starter') ? 10 : 25)
                                 })
                                 .eq('id', RESTAURANT_ID);
                             
