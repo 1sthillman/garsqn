@@ -1084,45 +1084,24 @@
                 
                 // Shopier'ın resmi dokümantasyonuna göre minimum gerekli alanlar
                 const minimalShopierData = {
-                    api_key: SHOPIER_CONFIG.api_key,
+                    API_key: SHOPIER_CONFIG.api_key, // Shopier dokümantasyonuna göre API_key
                     website_index: SHOPIER_CONFIG.website_index,
                     platform_order_id: orderId,
-                    product_name: selectedPackage.name + ' - Dijital QR Menü',
+                    product_name: selectedPackage.name,
+                    total_order_value: selectedPackage.price,
+                    currency: '0', // TRY
+                    buyer_info: restaurantInfo,
+                    return_url: SHOPIER_CONFIG.return_url,
+                    cancel_url: SHOPIER_CONFIG.cancel_url,
+                    signature: signature,
+                    // Shopier özel parametreleri
                     product_type: '0', // Dijital ürün
-                    total_order_value: amount,
-                    currency: currency,
-                    
-                    // Müşteri bilgileri
-                    buyer_name: restaurantInfo?.name || 'Restoran',
-                    buyer_surname: 'Sahibi',
-                    buyer_email: restaurantInfo?.email || 'info@restoran.com',
-                    buyer_phone: restaurantInfo?.phone || '5551234567',
-                    
-                    // Adres bilgileri (minimum)
-                    billing_address: 'Dijital Ürün - Adisyon QR Menü',
-                    billing_city: 'İstanbul',
-                    billing_country: 'TR',
-                    billing_postcode: '34000',
-                    
-                    // Dijital ürün için
                     is_digital: '1',
                     digital_delivery: '1',
                     no_shipping: '1',
-                    
-                    // Teknik bilgiler
-                    random_nr: randomNr.toString(),
-                    signature: signature,
-                    modul_version: '1.2.0', // Güncel modül versiyonu
-                    current_language: '0', // TR
-                    is_in_frame: '0',
-                    platform: '1', // WooCommerce
-                    
-                    // Shopier domain doğrulama için
-                    domain_id: SHOPIER_CONFIG.domain_id,
-                    
-                    // Dönüş URL'leri
-                    return_url: `${SHOPIER_CONFIG.return_url}?payment_id=${orderId}&restaurant_id=${RESTAURANT_ID}&status=success`,
-                    cancel_url: `${SHOPIER_CONFIG.cancel_url}?restaurant_id=${RESTAURANT_ID}&status=cancelled`
+                    modul_version: '1.2.0',
+                    domain_id: SHOPIER_CONFIG.domain_id
+                    // shop_id kaldırıldı
                 };
                 
                 // Test modu kontrolü
