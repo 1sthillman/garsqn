@@ -881,8 +881,8 @@
             payment_endpoint_url: 'https://www.shopier.com/ShowProduct/api_pay4.php',
             website_index: '1',
             return_url: 'https://1sthillman.github.io/garsqn/odeme-sonrasi.html',
-            test_mode: true, // Test modunu aktif ediyoruz (gerçek ödeme için false yapın)
-            domain_id: '0', // Test modu için domain ID
+            test_mode: false, // Gerçek ödeme modu aktif
+            domain_id: '1', // Gerçek domain ID
             order_id_prefix: 'ADISYON',
             shop_id: '1234567', // Gerçek Shopier Shop ID
             timeout: 30000,
@@ -1139,213 +1139,149 @@
                     shopier_show_id: SHOPIER_CONFIG.shop_id
                 };
                 
-                // Test modu kontrolü
+                // Test modu kontrolü - Gerçek ödeme modu aktif
                 if (SHOPIER_CONFIG.test_mode === true) {
-                    console.log('Test modu aktif - Shopier API çağrısı simüle ediliyor');
-                    console.log('Shopier verileri:', shopierData);
-                    
-                    // Kullanıcıya test modu bilgisi göster
-                    const testModeInfo = document.createElement('div');
-                    testModeInfo.style.position = 'fixed';
-                    testModeInfo.style.top = '50%';
-                    testModeInfo.style.left = '50%';
-                    testModeInfo.style.transform = 'translate(-50%, -50%)';
-                    testModeInfo.style.background = 'rgba(0,0,0,0.9)';
-                    testModeInfo.style.color = 'white';
-                    testModeInfo.style.padding = '20px';
-                    testModeInfo.style.borderRadius = '10px';
-                    testModeInfo.style.zIndex = '10000';
-                    testModeInfo.style.maxWidth = '400px';
-                    testModeInfo.style.textAlign = 'center';
-                    testModeInfo.style.boxShadow = '0 0 20px rgba(0,0,0,0.5)';
-                    testModeInfo.innerHTML = `
-                        <h3 style="margin-top:0;">Test Modu Aktif</h3>
-                        <p>Gerçek ödeme sayfasına gitmeden test simülasyonu yapılıyor.</p>
-                        <p>Sipariş ID: ${orderId}</p>
-                        <p>Paket: ${selectedPackage.name} - ${selectedPackage.price}</p>
-                        <div style="margin-top:20px;">
-                            <button id="testContinueBtn" style="background:#10b981; border:none; color:white; padding:10px 20px; border-radius:5px; cursor:pointer;">Devam Et</button>
-                        </div>
-                    `;
-                    document.body.appendChild(testModeInfo);
-                    
-                    // Devam et butonuna tıklandığında
-                    document.getElementById('testContinueBtn').addEventListener('click', async function() {
-                        // Yükleniyor göster
-                        this.disabled = true;
-                        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> İşleniyor...';
-                        
-                        try {
-                            // Ödeme durumunu güncelle
-                            await supabase
-                                .from('payments')
-                                .update({ 
-                                    status: 'success',
-                                    shopier_payment_id: 'test_' + Date.now(),
-                                    updated_at: new Date().toISOString()
-                                })
-                                .eq('id', orderId);
-                            
-                            // Restoran aboneliğini güncelle
-                            await supabase
-                                .from('restaurants')
-                                .update({
-                                    subscription_package: selectedPackage.id,
-                                    subscription_status: 'active',
-                                    subscription_start: new Date().toISOString(),
-                                    subscription_end: new Date(Date.now() + (selectedPackage.id.includes('yearly') ? 365 : 30) * 24 * 60 * 60 * 1000).toISOString(),
-                                    table_limit: selectedPackage.id === 'test_package' ? 20 : (selectedPackage.id.includes('starter') ? 10 : 25)
-                                })
-                                .eq('id', RESTAURANT_ID);
-                            
-                            // Başarılı ödeme sayfasına yönlendir
-                            window.location.href = `${SHOPIER_CONFIG.return_url}?payment_id=${orderId}&restaurant_id=${RESTAURANT_ID}&status=success`;
-                        } catch (error) {
-                            console.error('Test ödeme simülasyonu hatası:', error);
-                            alert('Ödeme işlemi başarısız: ' + error.message);
-                            
-                            document.body.removeChild(testModeInfo);
-                            payBtn.disabled = false;
-                            payBtn.innerHTML = '<i class="fas fa-lock"></i> Shopier ile Güvenli Ödeme';
-                        }
-                    });
-                    
-                    // Ödeme butonunu normale döndür
-                    payBtn.disabled = false;
-                    payBtn.innerHTML = '<i class="fas fa-lock"></i> Shopier ile Güvenli Ödeme';
-                } else {
-                    // Gerçek Shopier entegrasyonu - Timeout ve retry ile
-                    console.log('Shopier ödeme sayfasına yönlendiriliyor...');
-                    
-                    // Debug için logla
-                    console.log('Shopier signature:', signature);
-                    console.log('Shopier data:', randomNr.toString() + orderId + amount + currency);
-                    
-                    // Gerçek ödeme için debug bilgileri
-                    console.log('------------------------------------------------');
-                    console.log('✅ Shopier Debug Bilgileri - Gerçek Ödeme');
-                    console.log('------------------------------------------------');
-                    console.log('Domain:', window.location.origin);
-                    console.log('API Key:', SHOPIER_CONFIG.api_key);
-                    console.log('API Endpoint:', SHOPIER_CONFIG.payment_endpoint_url);
-                    console.log('Shop ID:', SHOPIER_CONFIG.shop_id);
-                    console.log('Test Mode:', SHOPIER_CONFIG.test_mode);
-                    console.log('Tarayıcı:', navigator.userAgent);
-                    console.log('Protokol:', window.location.protocol);
-                    console.log('Form Verileri:', JSON.stringify(shopierData));
-                    console.log('------------------------------------------------');
-                    
-                    // Gerçek domain kontrolü - GitHub Pages veya diğer canlı ortamlar
-                    const currentDomain = window.location.hostname;
-                    console.log('Mevcut domain:', currentDomain);
-                    
-                    // Shopier için özel debug bilgisi
-                    const debugInfo = document.createElement('div');
-                    debugInfo.style.position = 'fixed';
-                    debugInfo.style.bottom = '10px';
-                    debugInfo.style.right = '10px';
-                    debugInfo.style.background = 'rgba(0,0,0,0.8)';
-                    debugInfo.style.color = 'white';
-                    debugInfo.style.padding = '10px';
-                    debugInfo.style.borderRadius = '5px';
-                    debugInfo.style.zIndex = '9999';
-                    debugInfo.style.fontSize = '12px';
-                    debugInfo.innerHTML = `
-                        <strong>Shopier Gerçek Ödeme</strong><br>
-                        Yönlendiriliyor...<br>
-                        Domain: ${currentDomain}<br>
-                        Test Mode: ${SHOPIER_CONFIG.test_mode}<br>
-                        Order ID: ${orderId}
-                    `;
-                    document.body.appendChild(debugInfo);
-                    
-                    // 5 saniye sonra debug bilgisini kaldır
-                    setTimeout(() => {
-                        try {
-                            document.body.removeChild(debugInfo);
-                        } catch (e) {
-                            // Ignore
-                        }
-                    }, 5000);
-                    
-                    // Domain için özel ayarları kontrol et
-                    if (SHOPIER_DOMAIN_CONFIG[currentDomain]) {
-                        shopierData.domain_id = SHOPIER_DOMAIN_CONFIG[currentDomain].domain_id;
-                        shopierData.website_index = SHOPIER_DOMAIN_CONFIG[currentDomain].website_index;
-                        console.log(`Domain özel ayarları kullanılıyor: ${currentDomain}`, shopierData.domain_id, shopierData.website_index);
-                    } else {
-                        // Varsayılan ayarları kullan
-                        shopierData.domain_id = SHOPIER_CONFIG.domain_id;
-                        shopierData.website_index = SHOPIER_CONFIG.website_index;
-                        console.log('Varsayılan domain ayarları kullanılıyor');
-                    }
-                    
-                    // Shopier'a gönderilecek form verilerini güncelle
-                    shopierData.API_key = SHOPIER_CONFIG.api_key;
-                    
-                    // Shopier form gönderimi için doğrudan form oluştur
-                    console.log('Shopier form verileri:', shopierData);
-                    
-                    // Shopier'ın resmi dokümantasyonuna göre minimum gerekli alanlar
-                    const minimalShopierData = {
-                        API_key: SHOPIER_CONFIG.api_key,
-                        website_index: SHOPIER_CONFIG.website_index,
-                        platform_order_id: orderId,
-                        product_name: selectedPackage.name + ' - Dijital QR Menü',
-                        product_type: '0', // Dijital ürün
-                        total_order_value: amount,
-                        currency: currency,
-                        
-                        // Müşteri bilgileri
-                        buyer_name: restaurantInfo?.name || 'Restoran',
-                        buyer_surname: 'Sahibi',
-                        buyer_email: restaurantInfo?.email || 'info@restoran.com',
-                        buyer_phone: restaurantInfo?.phone || '5551234567',
-                        
-                        // Adres bilgileri (minimum)
-                        billing_address: 'Dijital Ürün - Adisyon QR Menü',
-                        billing_city: 'İstanbul',
-                        billing_country: 'TR',
-                        billing_postcode: '34000',
-                        
-                        // Dijital ürün için
-                        is_digital: '1',
-                        digital_delivery: '1',
-                        no_shipping: '1',
-                        
-                        // Teknik bilgiler
-                        random_nr: randomNr.toString(),
-                        signature: signature,
-                        
-                        // Dönüş URL'leri
-                        return_url: `${SHOPIER_CONFIG.success_url}?payment_id=${orderId}&restaurant_id=${RESTAURANT_ID}&status=success`,
-                        cancel_url: `${SHOPIER_CONFIG.cancel_url}?restaurant_id=${RESTAURANT_ID}&status=cancelled`
-                    };
-                    
-                    // Form oluştur
-                    const shopierForm = document.createElement('form');
-                    shopierForm.method = 'POST';
-                    shopierForm.action = SHOPIER_CONFIG.payment_endpoint_url;
-                    shopierForm.target = '_self';
-                    shopierForm.acceptCharset = 'UTF-8';
-                    
-                    // Form alanlarını ekle
-                    Object.keys(minimalShopierData).forEach(key => {
-                        const input = document.createElement('input');
-                        input.type = 'hidden';
-                        input.name = key;
-                        input.value = minimalShopierData[key];
-                        shopierForm.appendChild(input);
-                    });
-                    
-                    // Formu sayfaya ekle ve gönder
-                    document.body.appendChild(shopierForm);
-                    
-                    console.log('Shopier formunu gönderiyorum...');
-                    shopierForm.submit();
-                    console.log('✅ Shopier\'e başarıyla gönderildi');
+                    // Test modu kodu buradan kaldırıldı - Gerçek ödeme modu aktif
+                    console.log('Test modu devre dışı - Gerçek Shopier ödeme sayfasına yönlendiriliyor');
                 }
                 
+                // Gerçek Shopier ödeme sayfasına yönlendirme
+                console.log('Gerçek Shopier ödeme sayfasına yönlendiriliyor...');
+                
+                // Debug için logla
+                console.log('Shopier signature:', signature);
+                console.log('Shopier data:', randomNr.toString() + orderId + amount + currency);
+                
+                // Gerçek ödeme için debug bilgileri
+                console.log('------------------------------------------------');
+                console.log('✅ Shopier Debug Bilgileri - Gerçek Ödeme');
+                console.log('------------------------------------------------');
+                console.log('Domain:', window.location.origin);
+                console.log('API Key:', SHOPIER_CONFIG.api_key);
+                console.log('API Endpoint:', SHOPIER_CONFIG.payment_endpoint_url);
+                console.log('Shop ID:', SHOPIER_CONFIG.shop_id);
+                console.log('Test Mode:', SHOPIER_CONFIG.test_mode);
+                console.log('Tarayıcı:', navigator.userAgent);
+                console.log('Protokol:', window.location.protocol);
+                console.log('------------------------------------------------');
+                
+                // Gerçek domain kontrolü - GitHub Pages veya diğer canlı ortamlar
+                const currentDomain = window.location.hostname;
+                console.log('Mevcut domain:', currentDomain);
+                
+                // Shopier için yükleniyor göstergesi
+                const loadingOverlay = document.createElement('div');
+                loadingOverlay.style.position = 'fixed';
+                loadingOverlay.style.top = '0';
+                loadingOverlay.style.left = '0';
+                loadingOverlay.style.width = '100%';
+                loadingOverlay.style.height = '100%';
+                loadingOverlay.style.background = 'rgba(0,0,0,0.7)';
+                loadingOverlay.style.zIndex = '9999';
+                loadingOverlay.style.display = 'flex';
+                loadingOverlay.style.flexDirection = 'column';
+                loadingOverlay.style.alignItems = 'center';
+                loadingOverlay.style.justifyContent = 'center';
+                loadingOverlay.style.color = 'white';
+                loadingOverlay.style.fontSize = '18px';
+                loadingOverlay.innerHTML = `
+                    <div style="text-align:center;">
+                        <div style="width:60px; height:60px; border:5px solid #f3f3f3; border-top:5px solid #3498db; border-radius:50%; margin:0 auto; animation:spin 1s linear infinite;"></div>
+                        <style>@keyframes spin {0% {transform:rotate(0deg);} 100% {transform:rotate(360deg);}}</style>
+                        <p style="margin-top:20px;">Shopier Ödeme Sayfasına Yönlendiriliyor...</p>
+                        <p style="font-size:14px; margin-top:10px;">Lütfen bekleyin...</p>
+                    </div>
+                `;
+                document.body.appendChild(loadingOverlay);
+                
+                // 10 saniye sonra yükleniyor göstergesini kaldır (Shopier'a yönlendirme yapıldıysa zaten sayfadan çıkılmış olacak)
+                setTimeout(() => {
+                    try {
+                        document.body.removeChild(loadingOverlay);
+                    } catch (e) {
+                        // Ignore
+                    }
+                }, 10000);
+                
+                // Domain için özel ayarları kontrol et
+                if (SHOPIER_DOMAIN_CONFIG[currentDomain]) {
+                    shopierData.domain_id = SHOPIER_DOMAIN_CONFIG[currentDomain].domain_id;
+                    shopierData.website_index = SHOPIER_DOMAIN_CONFIG[currentDomain].website_index;
+                    console.log(`Domain özel ayarları kullanılıyor: ${currentDomain}`, shopierData.domain_id, shopierData.website_index);
+                } else {
+                    // Varsayılan ayarları kullan
+                    shopierData.domain_id = SHOPIER_CONFIG.domain_id;
+                    shopierData.website_index = SHOPIER_CONFIG.website_index;
+                    console.log('Varsayılan domain ayarları kullanılıyor');
+                }
+                
+                // Shopier'a gönderilecek form verilerini güncelle
+                shopierData.API_key = SHOPIER_CONFIG.api_key;
+                
+                // Shopier form gönderimi için doğrudan form oluştur
+                console.log('Shopier form verileri:', shopierData);
+                
+                // Shopier'ın resmi dokümantasyonuna göre minimum gerekli alanlar
+                const minimalShopierData = {
+                    API_key: SHOPIER_CONFIG.api_key,
+                    website_index: SHOPIER_CONFIG.website_index,
+                    platform_order_id: orderId,
+                    product_name: selectedPackage.name + ' - Dijital QR Menü',
+                    product_type: '0', // Dijital ürün
+                    total_order_value: amount,
+                    currency: currency,
+                    
+                    // Müşteri bilgileri
+                    buyer_name: restaurantInfo?.name || 'Restoran',
+                    buyer_surname: 'Sahibi',
+                    buyer_email: restaurantInfo?.email || 'info@restoran.com',
+                    buyer_phone: restaurantInfo?.phone || '5551234567',
+                    
+                    // Adres bilgileri (minimum)
+                    billing_address: 'Dijital Ürün - Adisyon QR Menü',
+                    billing_city: 'İstanbul',
+                    billing_country: 'TR',
+                    billing_postcode: '34000',
+                    
+                    // Dijital ürün için
+                    is_digital: '1',
+                    digital_delivery: '1',
+                    no_shipping: '1',
+                    
+                    // Teknik bilgiler
+                    random_nr: randomNr.toString(),
+                    signature: signature,
+                    
+                    // Shopier domain doğrulama için
+                    domain_id: SHOPIER_CONFIG.domain_id,
+                    
+                    // Dönüş URL'leri
+                    return_url: `${SHOPIER_CONFIG.success_url}?payment_id=${orderId}&restaurant_id=${RESTAURANT_ID}&status=success`,
+                    cancel_url: `${SHOPIER_CONFIG.cancel_url}?restaurant_id=${RESTAURANT_ID}&status=cancelled`
+                };
+                
+                // Form oluştur
+                const shopierForm = document.createElement('form');
+                shopierForm.method = 'POST';
+                shopierForm.action = SHOPIER_CONFIG.payment_endpoint_url;
+                shopierForm.target = '_self';
+                shopierForm.acceptCharset = 'UTF-8';
+                
+                // Form alanlarını ekle
+                Object.keys(minimalShopierData).forEach(key => {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = key;
+                    input.value = minimalShopierData[key];
+                    shopierForm.appendChild(input);
+                });
+                
+                // Formu sayfaya ekle ve gönder
+                document.body.appendChild(shopierForm);
+                
+                console.log('Shopier formunu gönderiyorum...');
+                shopierForm.submit();
+                console.log('✅ Shopier\'e başarıyla gönderildi');
             } catch (error) {
                 console.error('Ödeme hatası:', error);
                 alert('Ödeme işlemi başarısız: ' + error.message);
