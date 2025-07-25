@@ -103,67 +103,34 @@ function woocommerce_shopier_init()
                 'api_key' => array(
                     'title' => $this->getLangText('API Key'),
                     'type' => 'text',
-                    'description' => $this->getLangText('This obtained by user from Shopier panel'),
-                    'default' => ''
+                    'description' => $this->getLangText('This obtained by user from Shopier panel')
                 ),
                 'secret' => array(
                     'title' => $this->getLangText('Secret'),
-                    'type' => 'text',
+                    'type' => 'password',
                     'description' => $this->getLangText('This obtained by user from Shopier panel'),
-                    'default' => ''
-                ),
-                'shop_id' => array(
-                    'title' => 'Shopier Shop ID',
-                    'type' => 'text',
-                    'description' => 'This obtained by user from Shopier panel (Mağazam → API → WooCommerce)',
-                    'default' => ''
                 ),
                 'payment_endpoint_url' => array(
                     'title' => $this->getLangText('Payment Endpoint URL'),
                     'type' => 'text',
-                    'default' => 'https://www.shopier.com/ShowProduct/api_pay4.php',
+                    'default' => $this->getLangText('https://www.shopier.com/ShowProduct/api_pay4.php'),
                     'description' => $this->getLangText('In standard usage, you don\'t need to change this field.')
                 ),
 
                 'website_index' => array(
-                    'title' => 'Website index',
+                    'title' => $this->getLangText('Website Index'),
                     'type' => 'text',
                     'description' => $this->getLangText('If you are only using it on one site, this field should be 1. If you use more than 1 site, follow the setup guide for setting this field.'),
-                    'default' => '1'
+                    'default' => $this->getLangText('1')
                 ),
                 'use_adress' => array(
                     'title' => $this->getLangText('Use Adress'),
                     'type' => 'select',
-                    'options' => array(
-                        '0' => $this->getLangText('Use Billing Address'),
-                        '1' => $this->getLangText('Use Delivery Address'),
-                    ),
-                    'default' => '0',
-                    'description' => $this->getLangText('In standard usage, you don\'t need to change this field.')
-                ),
-                'mode' => array(
-                    'title' => 'Mode',
-                    'type' => 'select',
-                    'options' => array(
-                        'test' => 'Test Mode',
-                        'live' => 'Live Mode',
-                    ),
-                    'default' => 'live',
-                    'description' => 'Set to "Test Mode" while testing your integration. Switch to "Live Mode" for real transactions.'
-                ),
-                'force_https' => array(
-                    'title' => 'Force HTTPS',
-                    'type' => 'checkbox',
-                    'label' => 'Force HTTPS for payment process (recommended)',
-                    'default' => 'yes',
-                    'description' => 'Use secure connection for payment process. This is highly recommended for security.'
-                ),
-                'debug_mode' => array(
-                    'title' => 'Debug Mode',
-                    'type' => 'checkbox',
-                    'label' => 'Enable debug logging',
-                    'default' => 'no',
-                    'description' => 'Log Shopier API interactions for troubleshooting. Only enable when needed.'
+                    'options' => array
+                    (
+                        $this->getLangText('Use Billing Address'),
+                        $this->getLangText('Use Delivery Address')
+                    )
                 ),
                 'callback' => array(
                     'title' => $this->getLangText('Response URL'),
@@ -249,11 +216,9 @@ function woocommerce_shopier_init()
 
 
             $items = $order->get_items();
-            $productNames = ''; // Initialize $productNames variable
 
             foreach ($items as $item) {
-                $productName = $item['name'];
-                $productNames .= $productName.';';
+                $productNames .= $item['name'].';';
                 $product = $item->get_product();
                 $product_id = $item['product_id'];
 
@@ -344,8 +309,7 @@ function woocommerce_shopier_init()
                     'is_in_frame' => 0,
                     'current_language' => $current_lan,
                     'modul_version' => $modul_version,
-                    'random_nr' => $random_number,
-                    'shopier_show_id' => $this->get_option('shop_id', ''), // Shopier panel'den alınan Shop ID
+                    'random_nr' => $random_number
                 );
             } else if ($this->use_adress == 1) {
                 $args = array
@@ -378,23 +342,14 @@ function woocommerce_shopier_init()
                     'is_in_frame' => 0,
                     'current_language' => $current_lan,
                     'modul_version' => $modul_version,
-                    'random_nr' => $random_number,
-                    'shopier_show_id' => $this->get_option('shop_id', ''), // Shopier panel'den alınan Shop ID
+                    'random_nr' => $random_number
                 );
             }
 
-            // Shopier API dokümanına göre signature oluşturma
-            // random_nr + platform_order_id + total_order_value + currency formatında
             $data = $args["random_nr"] . $args["platform_order_id"] . $args["total_order_value"] . $args["currency"];
             $signature = hash_hmac('SHA256', $data, $this->secret, true);
             $signature = base64_encode($signature);
             $args['signature'] = $signature;
-            
-            // Debug log
-            if ('yes' === $this->get_option('debug_mode', 'no')) {
-                $this->log("Payment data: " . json_encode($args));
-                $this->log("Signature data string: " . $data);
-            }
 
             $args_array = array();
             foreach ($args as $key => $value) {
@@ -433,38 +388,13 @@ function woocommerce_shopier_init()
 			</form>';
         }
 
-        /**
-         * Process Payment
-         */
         public function process_payment($order_id)
         {
             $order = new WC_Order($order_id);
-            
-            // SSL kontrolü
-            if (!$this->check_ssl()) {
-                $this->log("Payment failed - SSL required but not enabled");
-                wc_add_notice('SSL is required for secure payment processing. Please contact the site administrator.', 'error');
-                return array(
-                    'result' => 'failure',
-                    'redirect' => ''
-                );
-            }
-            
-            // Log payment attempt
-            $this->log("Processing payment for order #$order_id");
-            
-            if (!$this->api_key || !$this->secret) {
-                $this->log("Payment failed - API credentials missing");
-                wc_add_notice('Payment configuration error. Please contact the site administrator.', 'error');
-                return array(
-                    'result' => 'failure',
-                    'redirect' => ''
-                );
-            }
+            return array('result' => 'success', 'redirect' => add_query_arg('order',
+                //$order->id, add_query_arg('key', $order->order_key, get_permalink(get_option('woocommerce_pay_page_id'))))
+                $order->id, add_query_arg('key', $order->order_key, $order->get_checkout_payment_url(true)))
 
-            return array(
-                'result' => 'success',
-                'redirect' => add_query_arg('order', $order->id, add_query_arg('key', $order->order_key, $order->get_checkout_payment_url(true)))
             );
         }
 
@@ -482,8 +412,7 @@ function woocommerce_shopier_init()
                         $order = new WC_Order($order_id);
 
                         $signature = base64_decode($_POST["signature"]);
-                        $data = $random_nr . $order_id . $order->order_total . '0'; // 0 for TRY currency
-                        $expected = hash_hmac('SHA256', $data, $this->secret, true);
+                        $expected = hash_hmac('SHA256', $random_nr . $order_id, $this->secret, true);
 
                         $transauthorised = false;
                         if ($order->status !== 'completed') {
@@ -535,37 +464,6 @@ function woocommerce_shopier_init()
         {
             return '<div class="box ' . $this->msg['class'] . '-box">' . $this->msg['message'] . '</div>' . $content;
         }
-        
-        /**
-         * Log debug messages
-         */
-        public function log($message) {
-            if ('yes' === $this->get_option('debug_mode', 'no')) {
-                if (empty($this->logger)) {
-                    $this->logger = wc_get_logger();
-                }
-                $this->logger->debug($message, array('source' => 'shopier'));
-            }
-        }
-        
-        /**
-         * Check if SSL is required and enabled
-         */
-        public function check_ssl() {
-            if ('yes' === $this->get_option('force_https', 'yes') && !is_ssl()) {
-                // SSL required but not active
-                $this->log('SSL is required but not enabled on the site');
-                return false;
-            }
-            return true;
-        }
-        
-        /**
-         * Process Payment
-         *
-         * @param int $order_id
-         * @return array
-         */
     }
 
     /**
