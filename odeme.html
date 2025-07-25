@@ -881,8 +881,8 @@
             payment_endpoint_url: 'https://www.shopier.com/ShowProduct/api_pay4.php',
             website_index: '1',
             return_url: 'https://1sthillman.github.io/garsqn/odeme-sonrasi.html',
-            test_mode: false, // Gerçek ödeme modu aktif
-            domain_id: '1', // Gerçek domain ID
+            test_mode: true, // Test modunu aktif ediyoruz (geçici olarak)
+            domain_id: '0', // Test modu için domain ID
             order_id_prefix: 'ADISYON',
             shop_id: '1234567', // Gerçek Shopier Shop ID
             timeout: 30000,
@@ -1139,10 +1139,83 @@
                     shopier_show_id: SHOPIER_CONFIG.shop_id
                 };
                 
-                // Test modu kontrolü - Gerçek ödeme modu aktif
+                // Test modu kontrolü
                 if (SHOPIER_CONFIG.test_mode === true) {
-                    // Test modu kodu buradan kaldırıldı - Gerçek ödeme modu aktif
-                    console.log('Test modu devre dışı - Gerçek Shopier ödeme sayfasına yönlendiriliyor');
+                    console.log('Test modu aktif - Shopier API çağrısı simüle ediliyor');
+                    console.log('Shopier verileri:', minimalShopierData);
+                    
+                    // Kullanıcıya test modu bilgisi göster
+                    const testModeInfo = document.createElement('div');
+                    testModeInfo.style.position = 'fixed';
+                    testModeInfo.style.top = '50%';
+                    testModeInfo.style.left = '50%';
+                    testModeInfo.style.transform = 'translate(-50%, -50%)';
+                    testModeInfo.style.background = 'rgba(0,0,0,0.9)';
+                    testModeInfo.style.color = 'white';
+                    testModeInfo.style.padding = '20px';
+                    testModeInfo.style.borderRadius = '10px';
+                    testModeInfo.style.zIndex = '10000';
+                    testModeInfo.style.maxWidth = '400px';
+                    testModeInfo.style.textAlign = 'center';
+                    testModeInfo.style.boxShadow = '0 0 20px rgba(0,0,0,0.5)';
+                    testModeInfo.innerHTML = `
+                        <h3 style="margin-top:0;">Test Modu Aktif</h3>
+                        <p>Gerçek ödeme sayfasına gitmeden test simülasyonu yapılıyor.</p>
+                        <p>Sipariş ID: ${orderId}</p>
+                        <p>Paket: ${selectedPackage.name} - ${selectedPackage.price}</p>
+                        <div style="margin-top:20px;">
+                            <button id="testContinueBtn" style="background:#10b981; border:none; color:white; padding:10px 20px; border-radius:5px; cursor:pointer;">Devam Et</button>
+                        </div>
+                    `;
+                    document.body.appendChild(testModeInfo);
+                    
+                    // Devam et butonuna tıklandığında
+                    document.getElementById('testContinueBtn').addEventListener('click', async function() {
+                        // Yükleniyor göster
+                        this.disabled = true;
+                        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> İşleniyor...';
+                        
+                        try {
+                            // Ödeme durumunu güncelle
+                            await supabase
+                                .from('payments')
+                                .update({ 
+                                    status: 'success',
+                                    shopier_payment_id: 'test_' + Date.now(),
+                                    updated_at: new Date().toISOString()
+                                })
+                                .eq('id', orderId);
+                            
+                            // Restoran aboneliğini güncelle
+                            await supabase
+                                .from('restaurants')
+                                .update({
+                                    subscription_package: selectedPackage.id,
+                                    subscription_status: 'active',
+                                    subscription_start: new Date().toISOString(),
+                                    subscription_end: new Date(Date.now() + (selectedPackage.id.includes('yearly') ? 365 : 30) * 24 * 60 * 60 * 1000).toISOString(),
+                                    table_limit: selectedPackage.id === 'test_package' ? 20 : (selectedPackage.id.includes('starter') ? 10 : 25)
+                                })
+                                .eq('id', RESTAURANT_ID);
+                            
+                            // Başarılı ödeme sayfasına yönlendir
+                            window.location.href = `${SHOPIER_CONFIG.return_url}?payment_id=${orderId}&restaurant_id=${RESTAURANT_ID}&status=success`;
+                        } catch (error) {
+                            console.error('Test ödeme simülasyonu hatası:', error);
+                            alert('Ödeme işlemi başarısız: ' + error.message);
+                            
+                            document.body.removeChild(testModeInfo);
+                            payBtn.disabled = false;
+                            payBtn.innerHTML = '<i class="fas fa-lock"></i> Shopier ile Güvenli Ödeme';
+                        }
+                    });
+                    
+                    // Ödeme butonunu normale döndür
+                    payBtn.disabled = false;
+                    payBtn.innerHTML = '<i class="fas fa-lock"></i> Shopier ile Güvenli Ödeme';
+                    
+                    // Test modu aktif olduğu için form gönderme işlemini durdur
+                    return;
                 }
                 
                 // Gerçek Shopier ödeme sayfasına yönlendirme
@@ -1251,6 +1324,10 @@
                     // Teknik bilgiler
                     random_nr: randomNr.toString(),
                     signature: signature,
+                    modul_version: '1.2.0', // Güncel modül versiyonu
+                    current_language: '0', // TR
+                    is_in_frame: '0',
+                    platform: '1', // WooCommerce
                     
                     // Shopier domain doğrulama için
                     domain_id: SHOPIER_CONFIG.domain_id,
