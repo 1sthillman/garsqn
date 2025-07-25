@@ -1128,7 +1128,7 @@
                 };
                 
                 // Test modu kontrolü
-                if (SHOPIER_CONFIG.test_mode) {
+                if (SHOPIER_CONFIG.test_mode === true) {
                     console.log('Test modu aktif - Shopier API çağrısı simüle ediliyor');
                     console.log('Shopier verileri:', shopierData);
                     
@@ -1192,12 +1192,38 @@
                     console.log('Form Verileri:', JSON.stringify(shopierData));
                     console.log('------------------------------------------------');
                     
-                    // Debug için form verilerini konsola yazdır
-                    console.log('Form verileri:', shopierData);
-                    
                     // Gerçek domain kontrolü - GitHub Pages veya diğer canlı ortamlar
                     const currentDomain = window.location.hostname;
                     console.log('Mevcut domain:', currentDomain);
+                    
+                    // Shopier için özel debug bilgisi
+                    const debugInfo = document.createElement('div');
+                    debugInfo.style.position = 'fixed';
+                    debugInfo.style.bottom = '10px';
+                    debugInfo.style.right = '10px';
+                    debugInfo.style.background = 'rgba(0,0,0,0.8)';
+                    debugInfo.style.color = 'white';
+                    debugInfo.style.padding = '10px';
+                    debugInfo.style.borderRadius = '5px';
+                    debugInfo.style.zIndex = '9999';
+                    debugInfo.style.fontSize = '12px';
+                    debugInfo.innerHTML = `
+                        <strong>Shopier Gerçek Ödeme</strong><br>
+                        Yönlendiriliyor...<br>
+                        Domain: ${currentDomain}<br>
+                        Test Mode: ${SHOPIER_CONFIG.test_mode}<br>
+                        Order ID: ${orderId}
+                    `;
+                    document.body.appendChild(debugInfo);
+                    
+                    // 5 saniye sonra debug bilgisini kaldır
+                    setTimeout(() => {
+                        try {
+                            document.body.removeChild(debugInfo);
+                        } catch (e) {
+                            // Ignore
+                        }
+                    }, 5000);
                     
                     // Domain için özel ayarları kontrol et
                     if (SHOPIER_DOMAIN_CONFIG[currentDomain]) {
@@ -1214,20 +1240,31 @@
                     // Shopier'a gönderilecek form verilerini güncelle
                     shopierData.API_key = SHOPIER_CONFIG.api_key;
                     
-                    // Timeout ve retry ile Shopier'e gönder
-                    try {
-                        console.log('Shopier form verileri:', shopierData);
-                        await submitToShopier(shopierData);
-                        console.log('✅ Shopier\'e başarıyla gönderildi');
-                    } catch (error) {
-                        console.error('❌ Shopier gönderim hatası:', error);
-                        
-                        // Kullanıcıya hata mesajı göster
-                        alert('Ödeme sistemi geçici olarak meşgul. Lütfen birkaç dakika sonra tekrar deneyin.\n\nHata: ' + error.message);
-                        
-                        payBtn.disabled = false;
-                        payBtn.innerHTML = '<i class="fas fa-lock"></i> Shopier ile Güvenli Ödeme';
-                    }
+                    // Shopier form gönderimi için doğrudan form oluştur
+                    console.log('Shopier form verileri:', shopierData);
+                    
+                    // Form oluştur
+                    const shopierForm = document.createElement('form');
+                    shopierForm.method = 'POST';
+                    shopierForm.action = SHOPIER_CONFIG.payment_endpoint_url;
+                    shopierForm.target = '_self';
+                    shopierForm.acceptCharset = 'UTF-8';
+                    
+                    // Form alanlarını ekle
+                    Object.keys(shopierData).forEach(key => {
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = key;
+                        input.value = shopierData[key];
+                        shopierForm.appendChild(input);
+                    });
+                    
+                    // Formu sayfaya ekle ve gönder
+                    document.body.appendChild(shopierForm);
+                    
+                    console.log('Shopier formunu gönderiyorum...');
+                    shopierForm.submit();
+                    console.log('✅ Shopier\'e başarıyla gönderildi');
                 }
                 
             } catch (error) {
