@@ -438,6 +438,9 @@
         const urlParams = new URLSearchParams(window.location.search);
         const RESTAURANT_ID = urlParams.get('restaurant_id');
         
+        // QR kodlarda mutlak yol kullan 32lmas 31 i 7e7in temel adresi belirle
+        const BASE_URL = window.location.origin + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
+        
         let restaurantInfo = null;
         let qrCodes = [];
         
@@ -602,7 +605,7 @@
                 console.log(`${tableLimit} adet varsayılan masa QR kodu oluşturuluyor...`);
                 
                 for (let i = 1; i <= tableLimit; i++) {
-                    const qrUrl = `menu.html?restaurant_id=${RESTAURANT_ID}&table_id=${i}`;
+                    const qrUrl = `${BASE_URL}menu.html?restaurant_id=${RESTAURANT_ID}&table_id=${i}`;
                     
                     try {
                         console.log(`Masa ${i} QR kodu oluşturuluyor: ${qrUrl}`);
@@ -632,7 +635,7 @@
                 console.log(`${tables.length} adet gerçek masa QR kodu oluşturuluyor...`);
                 
                                 for (const table of tables) {
-                    const qrUrl = `menu.html?restaurant_id=${RESTAURANT_ID}&table_id=${table.id}`;
+                    const qrUrl = `${BASE_URL}menu.html?restaurant_id=${RESTAURANT_ID}&table_id=${table.id}`;
                     
                     try {
                         console.log(`${table.name || 'Masa'} QR kodu oluşturuluyor: ${qrUrl}`);
