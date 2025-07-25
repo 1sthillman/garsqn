@@ -878,7 +878,7 @@
         const SHOPIER_CONFIG = {
             api_key: 'ba946ce45c717d982cc6decbcb616bb2',
             secret: '8a186b6f15655c57c65ec415ae121e69',
-            payment_endpoint_url: 'https://www.shopier.com/ShowProduct/api_pay4.php',
+            payment_endpoint_url: 'https://www.shopier.com/ShowProduct/api_pay2.php', // Farklı endpoint
             website_index: '0', // İlk website index
             return_url: 'http://1sthillman.github.io/garsqn/odeme-sonrasi.html', // HTTP protokolü kullanıyoruz
             test_mode: false, // Gerçek ödeme modu aktif
@@ -1093,8 +1093,8 @@
                     buyer_info: restaurantInfo,
                     return_url: SHOPIER_CONFIG.return_url,
                     cancel_url: SHOPIER_CONFIG.cancel_url,
-                    signature: signature
-                    // Gereksiz parametreler kaldırıldı
+                    signature: signature,
+                    random_nr: randomNr.toString() // Shopier için gerekli
                 };
                 
                 // Test modu kontrolü
