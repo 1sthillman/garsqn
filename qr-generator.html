@@ -18,22 +18,22 @@
         }
         
         :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --secondary-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --primary-gradient: linear-gradient(135deg, #1e1e2f 0%, #2e2e3e 100%);
+            --secondary-gradient: linear-gradient(135deg, #3a506b 0%, #5bc0be 100%);
             --success-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
             --warning-gradient: linear-gradient(135deg, #ffd700 0%, #ffb347 100%);
             --error-gradient: linear-gradient(135deg, #ff6b6b 0%, #ffa500 100%);
             
-            --glass-bg: rgba(255, 255, 255, 0.06);
-            --glass-bg-strong: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.18);
-            --glass-border-strong: rgba(255, 255, 255, 0.25);
-            --glass-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
-            --glass-shadow-strong: 0 20px 60px rgba(0, 0, 0, 0.4);
+            --glass-bg: rgba(29, 31, 46, 0.6);
+            --glass-bg-strong: rgba(29, 31, 46, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.05);
+            --glass-border-strong: rgba(255, 255, 255, 0.1);
+            --glass-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            --glass-shadow-strong: 0 20px 60px rgba(0, 0, 0, 0.6);
             
-            --text-primary: #ffffff;
-            --text-secondary: rgba(255, 255, 255, 0.9);
-            --text-muted: rgba(255, 255, 255, 0.75);
+            --text-primary: #e0e0e0;
+            --text-secondary: rgba(224, 224, 224, 0.9);
+            --text-muted: rgba(224, 224, 224, 0.6);
             
             --success: #10b981;
             --error: #ef4444;
@@ -125,12 +125,12 @@
         .title {
             font-size: var(--font-size-4xl);
             font-weight: var(--font-weight-black);
-            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            background: linear-gradient(135deg, #8d99ae 0%, #2b2d42 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             margin-bottom: var(--space-md);
-            text-shadow: 0 4px 20px rgba(67, 233, 123, 0.3);
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
         }
         
         .subtitle {
@@ -287,11 +287,11 @@
         }
         
         .download-btn {
-            background: var(--success-gradient);
+            background: var(--secondary-gradient);
             border: none;
             border-radius: var(--radius-md);
             padding: var(--space-sm) var(--space-lg);
-            color: #ffffff;
+            color: var(--text-primary);
             font-size: var(--font-size-sm);
             font-weight: var(--font-weight-semibold);
             cursor: pointer;
@@ -303,7 +303,7 @@
         
         .download-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
         }
         
         .download-btn:active {
