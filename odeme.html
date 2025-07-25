@@ -879,10 +879,10 @@
             api_key: 'ba946ce45c717d982cc6decbcb616bb2',
             secret: '8a186b6f15655c57c65ec415ae121e69',
             payment_endpoint_url: 'https://www.shopier.com/ShowProduct/api_pay4.php',
-            website_index: '1',
+            website_index: '0', // İlk website index
             return_url: 'http://1sthillman.github.io/garsqn/odeme-sonrasi.html', // HTTP protokolü kullanıyoruz
             test_mode: false, // Gerçek ödeme modu aktif
-            domain_id: '1', // Gerçek domain ID
+            domain_id: '0', // İlk domain ID
             order_id_prefix: 'ADISYON',
             // shop_id kaldırıldı - Shopier'de otomatik belirleniyor
             timeout: 30000,
@@ -1082,9 +1082,9 @@
                 // Shopier signature oluştur
                 const signature = generateShopierSignature(randomNr.toString(), orderId, amount, currency);
                 
-                // Shopier'ın resmi dokümantasyonuna göre minimum gerekli alanlar
+                // Shopier için form verileri hazırla - Sadece temel parametreler
                 const minimalShopierData = {
-                    API_key: SHOPIER_CONFIG.api_key, // Shopier dokümantasyonuna göre API_key
+                    API_key: SHOPIER_CONFIG.api_key,
                     website_index: SHOPIER_CONFIG.website_index,
                     platform_order_id: orderId,
                     product_name: selectedPackage.name,
@@ -1093,15 +1093,8 @@
                     buyer_info: restaurantInfo,
                     return_url: SHOPIER_CONFIG.return_url,
                     cancel_url: SHOPIER_CONFIG.cancel_url,
-                    signature: signature,
-                    // Shopier özel parametreleri
-                    product_type: '0', // Dijital ürün
-                    is_digital: '1',
-                    digital_delivery: '1',
-                    no_shipping: '1',
-                    modul_version: '1.2.0',
-                    domain_id: SHOPIER_CONFIG.domain_id
-                    // shop_id kaldırıldı
+                    signature: signature
+                    // Gereksiz parametreler kaldırıldı
                 };
                 
                 // Test modu kontrolü
