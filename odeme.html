@@ -1082,7 +1082,7 @@
                 // Shopier signature oluştur
                 const signature = generateShopierSignature(randomNr.toString(), orderId, amount, currency);
                 
-                // Shopier için form verileri hazırla - Sadece temel parametreler (return_url kaldırıldı)
+                // Shopier için form verileri hazırla - Return URL eklendi
                 const minimalShopierData = {
                     API_key: SHOPIER_CONFIG.api_key,
                     website_index: SHOPIER_CONFIG.website_index,
@@ -1100,7 +1100,8 @@
                     current_language: '0', // TR
                     modul_version: '2.0.0',
                     random_nr: randomNr.toString(),
-                    signature: signature
+                    signature: signature,
+                    return_url: SHOPIER_CONFIG.return_url // 504 hatası için eklendi
                 };
                 
                 // Test modu kontrolü
