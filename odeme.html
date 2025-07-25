@@ -878,18 +878,19 @@
         const SHOPIER_CONFIG = {
             api_key: 'ba946ce45c717d982cc6decbcb616bb2',
             secret: '8a186b6f15655c57c65ec415ae121e69',
-            payment_endpoint_url: 'https://www.shopier.com/ShowProduct/api_pay4.php', // test-shopier.php dosyasından
-            website_index: '1', // test-shopier.php dosyasından
+            payment_endpoint_url: 'https://www.shopier.com/ShowProduct/api_pay4.php', // WooCommerce plugin'inden
+            website_index: '1', // WooCommerce plugin'inden
             return_url: 'https://1sthillman.github.io/garsqn/odeme-sonrasi.html',
             test_mode: false, // Gerçek ödeme modu aktif
-            domain_id: '1',
+            domain_id: '1', // WooCommerce plugin'inden
             order_id_prefix: 'ADISYON',
             timeout: 30000,
             retry_count: 3,
             currency: 'TRY',
             language: 'tr',
             success_url: 'https://1sthillman.github.io/garsqn/odeme-sonrasi.html',
-            cancel_url: 'https://1sthillman.github.io/garsqn/odeme.html'
+            cancel_url: 'https://1sthillman.github.io/garsqn/odeme.html',
+            domain: 'https://1sthillman.github.io/garsqn/odeme.html' // Tam URL olarak kayıtlı domain
         };
         
         // Shopier'a gönderilecek alan adı ayarları
@@ -1080,17 +1081,28 @@
                 // Shopier signature oluştur
                 const signature = generateShopierSignature(randomNr.toString(), orderId, amount, currency);
                 
-                // Shopier için form verileri hazırla - test-shopier.php dosyasından alınan minimum parametreler
+                // Shopier için form verileri hazırla - WooCommerce plugin'inden alınan doğru parametreler
                 const minimalShopierData = {
                     API_key: SHOPIER_CONFIG.api_key,
-                    random_nr: randomNr.toString(),
+                    website_index: SHOPIER_CONFIG.website_index,
                     platform_order_id: orderId,
+                    product_name: selectedPackage.name,
                     total_order_value: selectedPackage.price,
                     currency: '0', // TRY
-                    website_index: SHOPIER_CONFIG.website_index,
-                    platform: '1', // WooCommerce
+                    buyer_name: restaurantInfo?.name || 'Restoran',
+                    buyer_surname: 'Sahibi',
+                    buyer_email: restaurantInfo?.email || 'info@restoran.com',
+                    buyer_phone: restaurantInfo?.phone || '5551234567',
+                    product_type: '1', // Dijital ürün (WooCommerce plugin'inden)
+                    is_digital: '1', // Dijital ürün
+                    digital_delivery: '1', // Dijital teslimat
+                    no_shipping: '1', // Kargo yok
+                    platform: '0',
                     is_in_frame: '0',
                     current_language: '0', // TR
+                    modul_version: '2.0.0', // WooCommerce plugin'inden
+                    domain: 'https://1sthillman.github.io/garsqn/odeme.html', // Tam URL olarak domain bilgisi
+                    random_nr: randomNr.toString(),
                     signature: signature
                 };
                 
