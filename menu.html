@@ -109,6 +109,12 @@
             text-align: center;
             z-index: 10;
             position: relative;
+            /* Glass-style background for language and enter button */
+            background: rgba(29,31,46,0.7);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            backdrop-filter: blur(15px);
         }
         
         .error-message {
@@ -2026,9 +2032,11 @@
                 });
                 
                 // Geç butonu
-                document.getElementById('enterBtn').addEventListener('click', function() {
+                const enterBtn = document.getElementById('enterBtn');
+                enterBtn.addEventListener('click', function() {
+                    this.disabled = true;
                     enterApp();
-                });
+                }, { once: true });
             }
             
             function selectWelcomeLanguage(lang) {
