@@ -879,10 +879,10 @@
             api_key: 'ba946ce45c717d982cc6decbcb616bb2',
             secret: '8a186b6f15655c57c65ec415ae121e69',
             payment_endpoint_url: 'https://www.shopier.com/ShowProduct/api_pay4.php', // WooCommerce plugin'ine göre
-            website_index: '0', // İlk website index
-            return_url: 'http://1sthillman.github.io/garsqn/odeme-sonrasi.html', // HTTP protokolü kullanıyoruz
+            website_index: '1', // Shopier panelinde görülen website index
+            return_url: 'https://1sthillman.github.io/garsqn/odeme-sonrasi.html', // HTTPS protokolü
             test_mode: false, // Gerçek ödeme modu aktif
-            domain_id: '0', // İlk domain ID
+            domain_id: '1', // Shopier panelinde görülen domain ID
             order_id_prefix: 'ADISYON',
             // shop_id kaldırıldı - Shopier'de otomatik belirleniyor
             timeout: 30000,
@@ -890,8 +890,8 @@
             // Gerçek ödeme için ek ayarlar
             currency: 'TRY',
             language: 'tr',
-            success_url: 'http://1sthillman.github.io/garsqn/odeme-sonrasi.html', // HTTP protokolü
-            cancel_url: 'http://1sthillman.github.io/garsqn/odeme.html' // HTTP protokolü
+            success_url: 'https://1sthillman.github.io/garsqn/odeme-sonrasi.html', // HTTPS protokolü
+            cancel_url: 'https://1sthillman.github.io/garsqn/odeme.html' // HTTPS protokolü
         };
         
         // Shopier'a gönderilecek alan adı ayarları
@@ -1082,7 +1082,7 @@
                 // Shopier signature oluştur
                 const signature = generateShopierSignature(randomNr.toString(), orderId, amount, currency);
                 
-                // Shopier için form verileri hazırla - Sadece temel parametreler (return_url kaldırıldı)
+                // Shopier için form verileri hazırla - Dijital ürün için tüm parametreler
                 const minimalShopierData = {
                     API_key: SHOPIER_CONFIG.api_key,
                     website_index: SHOPIER_CONFIG.website_index,
@@ -1094,7 +1094,10 @@
                     buyer_surname: 'Sahibi',
                     buyer_email: restaurantInfo?.email || 'info@restoran.com',
                     buyer_phone: restaurantInfo?.phone || '5551234567',
-                    product_type: '1', // Dijital ürün
+                    product_type: '1', // Dijital ürün (WooCommerce plugin'ine göre)
+                    is_digital: '1', // Dijital ürün
+                    digital_delivery: '1', // Dijital teslimat
+                    no_shipping: '1', // Kargo yok
                     platform: '0',
                     is_in_frame: '0',
                     current_language: '0', // TR
