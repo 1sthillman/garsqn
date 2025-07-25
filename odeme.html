@@ -881,8 +881,8 @@
             payment_endpoint_url: 'https://www.shopier.com/ShowProduct/api_pay4.php',
             website_index: '1',
             return_url: 'https://1sthillman.github.io/garsqn/odeme-sonrasi.html',
-            test_mode: true, // Test moduna geçiş yapıyoruz
-            domain_id: '0', // Domain ID'yi 0 olarak ayarlıyoruz (test için)
+            test_mode: false, // Gerçek ödeme modu aktif
+            domain_id: '1', // Gerçek domain ID
             order_id_prefix: 'ADISYON',
             shop_id: '1234567', // Gerçek Shopier Shop ID
             timeout: 30000,
@@ -892,6 +892,23 @@
             language: 'tr',
             success_url: 'https://1sthillman.github.io/garsqn/odeme-sonrasi.html',
             cancel_url: 'https://1sthillman.github.io/garsqn/odeme.html'
+        };
+        
+        // Shopier'a gönderilecek alan adı ayarları
+        const SHOPIER_DOMAIN_CONFIG = {
+            // Alan adı ayarları (Shopier'da kayıtlı olması gerekir)
+            '1sthillman.github.io': {
+                domain_id: '1',
+                website_index: '1'
+            },
+            'localhost': {
+                domain_id: '0',
+                website_index: '0'
+            },
+            '127.0.0.1': {
+                domain_id: '0',
+                website_index: '0'
+            }
         };
         
         // Alternatif endpoint'ler (504 hatası durumunda)
@@ -963,7 +980,7 @@
                         <strong>Shopier Debug</strong><br>
                         Endpoint: ${currentEndpoint}<br>
                         Test Mode: ${SHOPIER_CONFIG.test_mode}<br>
-                        Domain ID: ${SHOPIER_CONFIG.domain_id}<br>
+                        Domain ID: ${shopierData.domain_id}<br>
                         Product Type: ${shopierData.product_type}<br>
                         Is Digital: ${shopierData.is_digital}
                     `;
@@ -1002,6 +1019,7 @@
                 };
                 
                 try {
+                    console.log('Shopier form gönderiliyor...');
                     form.submit();
                 } catch (error) {
                     console.error('Form gönderim hatası:', error);
@@ -1177,71 +1195,28 @@
                     // Debug için form verilerini konsola yazdır
                     console.log('Form verileri:', shopierData);
                     
-                    // Shopier API çağrısını yapabilmek için önce domain kontrolü
-                    if (window.location.hostname === 'localhost' || 
-                        window.location.hostname === '127.0.0.1' || 
-                        window.location.protocol === 'file:') {
-                        // Yerel geliştirme ortamında test modu kullan
-                        console.warn('⚠️ Yerel geliştirme ortamında Shopier API çağrılamaz. Test modu kullanılıyor.');
-                        
-                        // Test moduna geç
-                        const testBtn = document.createElement('button');
-                        testBtn.className = 'pay-btn';
-                        testBtn.innerHTML = '<i class="fas fa-flask"></i> Test Modunda Devam Et';
-                        testBtn.style.marginTop = '10px';
-                        testBtn.style.background = 'var(--warning)';
-                        
-                        // Butonu ekle
-                        payBtn.parentNode.appendChild(testBtn);
-                        
-                        // Test butonu click event
-                        testBtn.addEventListener('click', () => {
-                            // Test modu simülasyonu
-                            setTimeout(async () => {
-                                try {
-                                    // Ödeme durumunu güncelle
-                                    await supabase
-                                        .from('payments')
-                                        .update({ 
-                                            status: 'success',
-                                            shopier_payment_id: 'test_' + Date.now(),
-                                            updated_at: new Date().toISOString()
-                                        })
-                                        .eq('id', orderId);
-                                    
-                                    // Restoran aboneliğini güncelle
-                                    await supabase
-                                        .from('restaurants')
-                                        .update({
-                                            subscription_package: selectedPackage.id,
-                                            subscription_status: 'active',
-                                            subscription_start: new Date().toISOString(),
-                                            subscription_end: new Date(Date.now() + (selectedPackage.id.includes('yearly') ? 365 : 30) * 24 * 60 * 60 * 1000).toISOString(),
-                                            table_limit: selectedPackage.id === 'test_package' ? 20 : (selectedPackage.id.includes('starter') ? 10 : 25)
-                                        })
-                                        .eq('id', RESTAURANT_ID);
-                                    
-                                    // Başarılı ödeme sayfasına yönlendir
-                                    window.location.href = `${SHOPIER_CONFIG.return_url}?payment_id=${orderId}&restaurant_id=${RESTAURANT_ID}&status=success`;
-                                } catch (error) {
-                                    console.error('Test ödeme simülasyonu hatası:', error);
-                                    alert('Ödeme işlemi başarısız: ' + error.message);
-                                    
-                                    payBtn.disabled = false;
-                                    payBtn.innerHTML = '<i class="fas fa-lock"></i> Shopier ile Güvenli Ödeme';
-                                }
-                            }, 2000);
-                        });
-                        
-                        // Ödeme butonunu devre dışı bırak
-                        payBtn.disabled = false;
-                        payBtn.innerHTML = '<i class="fas fa-lock"></i> Shopier ile Güvenli Ödeme';
-                        
-                        return;
+                    // Gerçek domain kontrolü - GitHub Pages veya diğer canlı ortamlar
+                    const currentDomain = window.location.hostname;
+                    console.log('Mevcut domain:', currentDomain);
+                    
+                    // Domain için özel ayarları kontrol et
+                    if (SHOPIER_DOMAIN_CONFIG[currentDomain]) {
+                        shopierData.domain_id = SHOPIER_DOMAIN_CONFIG[currentDomain].domain_id;
+                        shopierData.website_index = SHOPIER_DOMAIN_CONFIG[currentDomain].website_index;
+                        console.log(`Domain özel ayarları kullanılıyor: ${currentDomain}`, shopierData.domain_id, shopierData.website_index);
+                    } else {
+                        // Varsayılan ayarları kullan
+                        shopierData.domain_id = SHOPIER_CONFIG.domain_id;
+                        shopierData.website_index = SHOPIER_CONFIG.website_index;
+                        console.log('Varsayılan domain ayarları kullanılıyor');
                     }
+                    
+                    // Shopier'a gönderilecek form verilerini güncelle
+                    shopierData.API_key = SHOPIER_CONFIG.api_key;
                     
                     // Timeout ve retry ile Shopier'e gönder
                     try {
+                        console.log('Shopier form verileri:', shopierData);
                         await submitToShopier(shopierData);
                         console.log('✅ Shopier\'e başarıyla gönderildi');
                     } catch (error) {
