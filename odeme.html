@@ -878,7 +878,7 @@
         const SHOPIER_CONFIG = {
             api_key: 'ba946ce45c717d982cc6decbcb616bb2',
             secret: '8a186b6f15655c57c65ec415ae121e69',
-            payment_endpoint_url: 'https://www.shopier.com/ShowProduct/api_pay2.php', // Farklı endpoint
+            payment_endpoint_url: 'https://www.shopier.com/ShowProduct/api_pay4.php', // WooCommerce plugin'ine göre
             website_index: '0', // İlk website index
             return_url: 'http://1sthillman.github.io/garsqn/odeme-sonrasi.html', // HTTP protokolü kullanıyoruz
             test_mode: false, // Gerçek ödeme modu aktif
@@ -1082,7 +1082,7 @@
                 // Shopier signature oluştur
                 const signature = generateShopierSignature(randomNr.toString(), orderId, amount, currency);
                 
-                // Shopier için form verileri hazırla - Sadece temel parametreler
+                // Shopier için form verileri hazırla - WooCommerce plugin'ine göre
                 const minimalShopierData = {
                     API_key: SHOPIER_CONFIG.api_key,
                     website_index: SHOPIER_CONFIG.website_index,
@@ -1090,11 +1090,25 @@
                     product_name: selectedPackage.name,
                     total_order_value: selectedPackage.price,
                     currency: '0', // TRY
-                    buyer_info: restaurantInfo,
-                    return_url: SHOPIER_CONFIG.return_url,
-                    cancel_url: SHOPIER_CONFIG.cancel_url,
-                    signature: signature,
-                    random_nr: randomNr.toString() // Shopier için gerekli
+                    buyer_name: restaurantInfo?.name || 'Restoran',
+                    buyer_surname: 'Sahibi',
+                    buyer_email: restaurantInfo?.email || 'info@restoran.com',
+                    buyer_phone: restaurantInfo?.phone || '5551234567',
+                    billing_address: 'Dijital Ürün - QR Menü',
+                    billing_city: 'İstanbul',
+                    billing_country: 'TR',
+                    billing_postcode: '34000',
+                    shipping_address: 'Dijital Ürün - QR Menü',
+                    shipping_city: 'İstanbul',
+                    shipping_country: 'TR',
+                    shipping_postcode: '34000',
+                    product_type: '0', // Dijital ürün
+                    platform: '0',
+                    is_in_frame: '0',
+                    current_language: '0', // TR
+                    modul_version: '2.0.0',
+                    random_nr: randomNr.toString(),
+                    signature: signature
                 };
                 
                 // Test modu kontrolü
