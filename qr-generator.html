@@ -449,7 +449,7 @@
             try {
                 // QR kod API'si kullan
                 const apiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(text)}&format=png&margin=2&color=000000&bgcolor=FFFFFF`;
-                
+          
                 // Canvas oluştur
                 const canvas = document.createElement('canvas');
                 canvas.width = size;
@@ -464,8 +464,8 @@
                     img.onload = function() {
                         ctx.drawImage(img, 0, 0, size, size);
                         resolve(canvas);
-                    };
-                    
+          };
+          
                     img.onerror = function() {
                         reject(new Error('QR kod API\'si yüklenemedi'));
                     };
@@ -556,7 +556,7 @@
                         .select('*')
                     .eq('restaurant_id', RESTAURANT_ID)
                     .order('id', { ascending: true });
-                
+                    
                 if (error) throw error;
                 return data || [];
             } catch (error) {
@@ -630,7 +630,7 @@
                         console.error(`QR kod oluşturulamadı (Masa ${i}):`, error);
                     }
                 }
-            } else {
+                    } else {
                 // Gerçek masaları kullan
                 console.log(`${tables.length} adet gerçek masa QR kodu oluşturuluyor...`);
                 
@@ -658,7 +658,7 @@
                         console.log(`${table.name || 'Masa'} QR kodu başarıyla oluşturuldu`);
                 } catch (error) {
                         console.error(`QR kod oluşturulamadı (${table.name || 'Masa'}):`, error);
-                    }
+                }
                 }
             }
             
