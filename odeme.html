@@ -878,11 +878,11 @@
         const SHOPIER_CONFIG = {
             api_key: 'ba946ce45c717d982cc6decbcb616bb2',
             secret: '8a186b6f15655c57c65ec415ae121e69',
-            payment_endpoint_url: 'https://www.shopier.com/ShowProduct/api_pay4.php',
-            website_index: '0', // Shopier panelinde görülen website index
+            payment_endpoint_url: 'https://www.shopier.com/ShowProduct/api_pay4.php', // WooCommerce plugin'inden
+            website_index: '1', // WooCommerce plugin'inden
             return_url: 'https://1sthillman.github.io/garsqn/odeme-sonrasi.html',
             test_mode: false, // Gerçek ödeme modu aktif
-            domain_id: '0', // Shopier panelinde görülen domain ID
+            domain_id: '1', // WooCommerce plugin'inden
             order_id_prefix: 'ADISYON',
             timeout: 30000,
             retry_count: 3,
@@ -1081,7 +1081,7 @@
                 // Shopier signature oluştur
                 const signature = generateShopierSignature(randomNr.toString(), orderId, amount, currency);
                 
-                // Shopier için form verileri hazırla - Dijital ürün için temel parametreler
+                // Shopier için form verileri hazırla - WooCommerce plugin'inden alınan doğru parametreler
                 const minimalShopierData = {
                     API_key: SHOPIER_CONFIG.api_key,
                     website_index: SHOPIER_CONFIG.website_index,
@@ -1093,10 +1093,14 @@
                     buyer_surname: 'Sahibi',
                     buyer_email: restaurantInfo?.email || 'info@restoran.com',
                     buyer_phone: restaurantInfo?.phone || '5551234567',
-                    product_type: '1', // Dijital ürün
-                    is_digital: '1',
-                    no_shipping: '1',
+                    product_type: '1', // Dijital ürün (WooCommerce plugin'inden)
+                    is_digital: '1', // Dijital ürün
+                    digital_delivery: '1', // Dijital teslimat
+                    no_shipping: '1', // Kargo yok
                     platform: '0',
+                    is_in_frame: '0',
+                    current_language: '0', // TR
+                    modul_version: '2.0.0', // WooCommerce plugin'inden
                     domain: 'https://1sthillman.github.io/garsqn', // Tam domain bilgisi
                     random_nr: randomNr.toString(),
                     signature: signature
