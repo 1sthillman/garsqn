@@ -1082,61 +1082,47 @@
                 // Shopier signature oluştur
                 const signature = generateShopierSignature(randomNr.toString(), orderId, amount, currency);
                 
-                // Gerçek Shopier ödeme için form verileri (Dijital ürün)
-                const shopierData = {
-                    // API Bilgileri
+                // Shopier'ın resmi dokümantasyonuna göre minimum gerekli alanlar
+                const minimalShopierData = {
                     API_key: SHOPIER_CONFIG.api_key,
                     website_index: SHOPIER_CONFIG.website_index,
-                    
-                    // Sipariş Bilgileri
                     platform_order_id: orderId,
                     product_name: selectedPackage.name + ' - Dijital QR Menü',
-                    product_type: '0',       // Dijital ürün (0 = dijital, 1 = fiziksel)
+                    product_type: '0', // Dijital ürün
                     total_order_value: amount,
-                    currency: SHOPIER_CONFIG.currency,
+                    currency: currency,
                     
-                    // Müşteri Bilgileri
+                    // Müşteri bilgileri
                     buyer_name: restaurantInfo?.name || 'Restoran',
                     buyer_surname: 'Sahibi',
                     buyer_email: restaurantInfo?.email || 'info@restoran.com',
-                    buyer_account_age: '0',
-                    buyer_id_nr: RESTAURANT_ID,
                     buyer_phone: restaurantInfo?.phone || '5551234567',
                     
-                    // Dijital ürün için adres bilgileri (basitleştirilmiş)
+                    // Adres bilgileri (minimum)
                     billing_address: 'Dijital Ürün - Adisyon QR Menü',
                     billing_city: 'İstanbul',
                     billing_country: 'TR',
                     billing_postcode: '34000',
-                    shipping_address: 'Dijital Ürün - Adisyon QR Menü',
-                    shipping_city: 'İstanbul',
-                    shipping_country: 'TR',
-                    shipping_postcode: '34000',
                     
-                    // Dijital ürün için özel ayarlar
-                    product_type: '0',       // Dijital ürün (0 = dijital, 1 = fiziksel)
-                    is_physical: '0',        // Fiziksel ürün değil
-                    is_digital: '1',         // Dijital ürün
-                    digital_delivery: '1',   // Dijital teslimat
-                    no_shipping: '1',        // Kargo gerekmez
+                    // Dijital ürün için
+                    is_digital: '1',
+                    digital_delivery: '1',
+                    no_shipping: '1',
                     
-                    // Domain doğrulama için
-                    domain_id: SHOPIER_CONFIG.domain_id,
-                    
-                    // Teknik Bilgiler
-                    is_in_frame: '0',
-                    current_language: '0', // TR
-                    modul_version: '1.0.4',
+                    // Teknik bilgiler
                     random_nr: randomNr.toString(),
                     signature: signature,
+                    modul_version: '1.2.0', // Güncel modül versiyonu
+                    current_language: '0', // TR
+                    is_in_frame: '0',
                     platform: '1', // WooCommerce
+                    
+                    // Shopier domain doğrulama için
+                    domain_id: SHOPIER_CONFIG.domain_id,
                     
                     // Dönüş URL'leri
                     return_url: `${SHOPIER_CONFIG.success_url}?payment_id=${orderId}&restaurant_id=${RESTAURANT_ID}&status=success`,
-                    cancel_url: `${SHOPIER_CONFIG.cancel_url}?restaurant_id=${RESTAURANT_ID}&status=cancelled`,
-                    
-                    // Shopier Shop ID
-                    shopier_show_id: SHOPIER_CONFIG.shop_id
+                    cancel_url: `${SHOPIER_CONFIG.cancel_url}?restaurant_id=${RESTAURANT_ID}&status=cancelled`
                 };
                 
                 // Test modu kontrolü
@@ -1218,31 +1204,7 @@
                     return;
                 }
                 
-                // Gerçek Shopier ödeme sayfasına yönlendirme
-                console.log('Gerçek Shopier ödeme sayfasına yönlendiriliyor...');
-                
-                // Debug için logla
-                console.log('Shopier signature:', signature);
-                console.log('Shopier data:', randomNr.toString() + orderId + amount + currency);
-                
-                // Gerçek ödeme için debug bilgileri
-                console.log('------------------------------------------------');
-                console.log('✅ Shopier Debug Bilgileri - Gerçek Ödeme');
-                console.log('------------------------------------------------');
-                console.log('Domain:', window.location.origin);
-                console.log('API Key:', SHOPIER_CONFIG.api_key);
-                console.log('API Endpoint:', SHOPIER_CONFIG.payment_endpoint_url);
-                console.log('Shop ID:', SHOPIER_CONFIG.shop_id);
-                console.log('Test Mode:', SHOPIER_CONFIG.test_mode);
-                console.log('Tarayıcı:', navigator.userAgent);
-                console.log('Protokol:', window.location.protocol);
-                console.log('------------------------------------------------');
-                
-                // Gerçek domain kontrolü - GitHub Pages veya diğer canlı ortamlar
-                const currentDomain = window.location.hostname;
-                console.log('Mevcut domain:', currentDomain);
-                
-                // Shopier için yükleniyor göstergesi
+                // Gerçek ödeme için yükleniyor göstergesi
                 const loadingOverlay = document.createElement('div');
                 loadingOverlay.style.position = 'fixed';
                 loadingOverlay.style.top = '0';
@@ -1275,67 +1237,6 @@
                         // Ignore
                     }
                 }, 10000);
-                
-                // Domain için özel ayarları kontrol et
-                if (SHOPIER_DOMAIN_CONFIG[currentDomain]) {
-                    shopierData.domain_id = SHOPIER_DOMAIN_CONFIG[currentDomain].domain_id;
-                    shopierData.website_index = SHOPIER_DOMAIN_CONFIG[currentDomain].website_index;
-                    console.log(`Domain özel ayarları kullanılıyor: ${currentDomain}`, shopierData.domain_id, shopierData.website_index);
-                } else {
-                    // Varsayılan ayarları kullan
-                    shopierData.domain_id = SHOPIER_CONFIG.domain_id;
-                    shopierData.website_index = SHOPIER_CONFIG.website_index;
-                    console.log('Varsayılan domain ayarları kullanılıyor');
-                }
-                
-                // Shopier'a gönderilecek form verilerini güncelle
-                shopierData.API_key = SHOPIER_CONFIG.api_key;
-                
-                // Shopier form gönderimi için doğrudan form oluştur
-                console.log('Shopier form verileri:', shopierData);
-                
-                // Shopier'ın resmi dokümantasyonuna göre minimum gerekli alanlar
-                const minimalShopierData = {
-                    API_key: SHOPIER_CONFIG.api_key,
-                    website_index: SHOPIER_CONFIG.website_index,
-                    platform_order_id: orderId,
-                    product_name: selectedPackage.name + ' - Dijital QR Menü',
-                    product_type: '0', // Dijital ürün
-                    total_order_value: amount,
-                    currency: currency,
-                    
-                    // Müşteri bilgileri
-                    buyer_name: restaurantInfo?.name || 'Restoran',
-                    buyer_surname: 'Sahibi',
-                    buyer_email: restaurantInfo?.email || 'info@restoran.com',
-                    buyer_phone: restaurantInfo?.phone || '5551234567',
-                    
-                    // Adres bilgileri (minimum)
-                    billing_address: 'Dijital Ürün - Adisyon QR Menü',
-                    billing_city: 'İstanbul',
-                    billing_country: 'TR',
-                    billing_postcode: '34000',
-                    
-                    // Dijital ürün için
-                    is_digital: '1',
-                    digital_delivery: '1',
-                    no_shipping: '1',
-                    
-                    // Teknik bilgiler
-                    random_nr: randomNr.toString(),
-                    signature: signature,
-                    modul_version: '1.2.0', // Güncel modül versiyonu
-                    current_language: '0', // TR
-                    is_in_frame: '0',
-                    platform: '1', // WooCommerce
-                    
-                    // Shopier domain doğrulama için
-                    domain_id: SHOPIER_CONFIG.domain_id,
-                    
-                    // Dönüş URL'leri
-                    return_url: `${SHOPIER_CONFIG.success_url}?payment_id=${orderId}&restaurant_id=${RESTAURANT_ID}&status=success`,
-                    cancel_url: `${SHOPIER_CONFIG.cancel_url}?restaurant_id=${RESTAURANT_ID}&status=cancelled`
-                };
                 
                 // Form oluştur
                 const shopierForm = document.createElement('form');
