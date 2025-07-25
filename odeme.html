@@ -880,18 +880,18 @@
             secret: '8a186b6f15655c57c65ec415ae121e69',
             payment_endpoint_url: 'https://www.shopier.com/ShowProduct/api_pay4.php',
             website_index: '1',
-            return_url: 'https://1sthillman.github.io/garsqn/odeme-sonrasi.html',
+            return_url: 'http://1sthillman.github.io/garsqn/odeme-sonrasi.html', // HTTP protokolü kullanıyoruz
             test_mode: false, // Gerçek ödeme modu aktif
             domain_id: '1', // Gerçek domain ID
             order_id_prefix: 'ADISYON',
-            shop_id: '1234567', // Gerçek Shopier Shop ID
+            // shop_id kaldırıldı - Shopier'de otomatik belirleniyor
             timeout: 30000,
             retry_count: 3,
             // Gerçek ödeme için ek ayarlar
             currency: 'TRY',
             language: 'tr',
-            success_url: 'https://1sthillman.github.io/garsqn/odeme-sonrasi.html',
-            cancel_url: 'https://1sthillman.github.io/garsqn/odeme.html'
+            success_url: 'http://1sthillman.github.io/garsqn/odeme-sonrasi.html', // HTTP protokolü
+            cancel_url: 'http://1sthillman.github.io/garsqn/odeme.html' // HTTP protokolü
         };
         
         // Shopier'a gönderilecek alan adı ayarları
@@ -1084,7 +1084,7 @@
                 
                 // Shopier'ın resmi dokümantasyonuna göre minimum gerekli alanlar
                 const minimalShopierData = {
-                    API_key: SHOPIER_CONFIG.api_key,
+                    api_key: SHOPIER_CONFIG.api_key,
                     website_index: SHOPIER_CONFIG.website_index,
                     platform_order_id: orderId,
                     product_name: selectedPackage.name + ' - Dijital QR Menü',
@@ -1121,7 +1121,7 @@
                     domain_id: SHOPIER_CONFIG.domain_id,
                     
                     // Dönüş URL'leri
-                    return_url: `${SHOPIER_CONFIG.success_url}?payment_id=${orderId}&restaurant_id=${RESTAURANT_ID}&status=success`,
+                    return_url: `${SHOPIER_CONFIG.return_url}?payment_id=${orderId}&restaurant_id=${RESTAURANT_ID}&status=success`,
                     cancel_url: `${SHOPIER_CONFIG.cancel_url}?restaurant_id=${RESTAURANT_ID}&status=cancelled`
                 };
                 
