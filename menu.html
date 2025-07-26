@@ -1956,8 +1956,6 @@
             let currentLanguage = 'tr';
             let isWelcomeScreenActive = true;
             
-            
-            
             // Dil çevirileri
             const translations = {
                 tr: {
@@ -2014,26 +2012,20 @@
             
             async function initializeApp() {
                 try {
-                    // Giriş animasyonu kaldırıldı
-                    
-                    // Supabase zaten başlatıldı
-                    // supabase = await setupSupabase();
-                    
-                    // URL parametrelerini al
-                    const params = getUrlParams();
-                    RESTAURANT_ID = params.restaurant_id;
-                    TABLE_ID = params.table_id;
-                    
-                    if (!RESTAURANT_ID) {
-                        showErrorMessage('Restoran bilgisi eksik. Lütfen QR kodu tekrar okutun.');
+                    // URL parametrelerini kontrol et
+                    if (!RESTAURANT_ID || RESTAURANT_ID === 'null' || !TABLE_ID || TABLE_ID === 'null') {
+                        console.error('URL parametreleri eksik. restaurant_id ve table_id gerekli.');
+                        showErrorMessage('URL parametreleri eksik. Lütfen doğru linki kullanın.');
                         return;
                     }
                     
-                    // Restoran ve masa bilgilerini al
-                    restaurantInfo = await getRestaurantInfo(RESTAURANT_ID);
+                    restaurantInfo = await getRestaurantInfo();
+                    tableInfo = await getTableInfo();
                     
-                    if (TABLE_ID) {
-                        tableInfo = await getTableInfo(TABLE_ID);
+                    if (!restaurantInfo || !tableInfo) {
+                        console.error('Restoran veya masa bilgileri bulunamadı');
+                        showErrorMessage('Restoran veya masa bilgileri bulunamadı. Lütfen QR kodu tekrar tarayın.');
+                        return;
                     }
                     
                     updateUI();
@@ -2140,18 +2132,29 @@
             
             async function initWelcomeAnimation() {
                 try {
-                    console.log('Giriş animasyonu devre dışı bırakıldı');
-                    return;
-                    
-                    // Background animasyonu için ayrı canvas
-                    const bgCanvas = document.querySelector('#background-canvas');
-                    if (bgCanvas) {
-                        console.log('Initializing background animation...');
-                        // initNewBackgroundAnimation(); // Devre dışı bırakıldı
-                        console.log('Background animation disabled');
-                    } else {
-                        console.error('Background canvas not found!');
+                    const canvas = document.querySelector('#welcome-canvas');
+                    if (!canvas) {
+                        console.log('Canvas elementi bulunamadı, animasyon atlanıyor');
+                        return;
                     }
+
+                    const THREE = await import('https://cdn.skypack.dev/three@0.136.0/build/three.module.js');
+                    const { OrbitControls } = await import('https://cdn.skypack.dev/three@0.136.0/examples/jsm/controls/OrbitControls.js');
+                    const { EffectComposer } = await import('https://cdn.skypack.dev/three@0.136.0/examples/jsm/postprocessing/EffectComposer.js');
+                    const { RenderPass } = await import('https://cdn.skypack.dev/three@0.136.0/examples/jsm/postprocessing/RenderPass.js');
+                    const { ShaderPass } = await import('https://cdn.skypack.dev/three@0.136.0/examples/jsm/postprocessing/ShaderPass.js');
+                    const { UnrealBloomPass } = await import('https://cdn.skypack.dev/three@0.136.0/examples/jsm/postprocessing/UnrealBloomPass.js');
+                    
+                                    // Background animasyonu için ayrı canvas
+                const bgCanvas = document.querySelector('#background-canvas');
+                console.log('Background canvas found:', bgCanvas);
+                if (bgCanvas) {
+                    console.log('Initializing background animation...');
+                    initNewBackgroundAnimation();
+                    console.log('Background animation initialized successfully');
+                } else {
+                    console.error('Background canvas not found!');
+                }
 
                     const renderer = new THREE.default.WebGLRenderer({ canvas, alpha: true });
                     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -2374,9 +2377,6 @@
             // Yeni arkaplan animasyonu başlatma fonksiyonu
             async function initNewBackgroundAnimation() {
                 try {
-                    console.log('Background animasyonu devre dışı bırakıldı');
-                    return;
-                    
                     const bgCanvas = document.getElementById('background-canvas');
                     if (!bgCanvas) {
                         console.error('Background canvas bulunamadı!');
@@ -3914,15 +3914,6 @@
                     });
                 });
             }
-        }
-
-        // URL parametrelerini almak için fonksiyon
-        function getUrlParams() {
-            const urlParams = new URLSearchParams(window.location.search);
-            return {
-                restaurant_id: urlParams.get('restaurant_id'),
-                table_id: urlParams.get('table_id')
-            };
         }
     </script>
 </body>
