@@ -3913,6 +3913,15 @@
                 });
             }
         }
+
+        // URL parametrelerini almak için fonksiyon
+        function getUrlParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return {
+                restaurant_id: urlParams.get('restaurant_id'),
+                table_id: urlParams.get('table_id')
+            };
+        }
     </script>
 </body>
 </html> 
