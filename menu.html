@@ -3605,6 +3605,9 @@
             isInitialized = true;
             animate();
             console.log("Initialization complete.");
+            
+            // Tıklama ile şekil değiştirme özelliğini aktifleştir
+            setupShapeClickHandler();
         }
 
         function setupPostProcessing() {
@@ -3875,6 +3878,43 @@
         }
 
         init();
+
+        // Tıklama ile şekil değiştirme fonksiyonu
+        function setupShapeClickHandler() {
+            const bgCanvas = document.getElementById('background-canvas');
+            if (bgCanvas) {
+                bgCanvas.style.cursor = 'pointer';
+                bgCanvas.addEventListener('click', function() {
+                    // Manuel olarak şekil ve renk değiştir
+                    autoChangeShapeAndColor();
+                    
+                    // Tıklama efekti
+                    const positions = particlesGeometry.attributes.position.array;
+                    const effectStrengths = particlesGeometry.attributes.aEffectStrength.array;
+                    
+                    for (let i = 0; i < CONFIG.particleCount; i++) {
+                        effectStrengths[i] = Math.random() * 0.5 + 0.5; // Rastgele parlaklık efekti
+                    }
+                    particlesGeometry.attributes.aEffectStrength.needsUpdate = true;
+                    
+                    // Tıklama animasyonu
+                    anime({
+                        targets: camera.position,
+                        z: camera.position.z - 2,
+                        duration: 200,
+                        easing: 'easeOutQuad',
+                        complete: function() {
+                            anime({
+                                targets: camera.position,
+                                z: camera.position.z + 2,
+                                duration: 300,
+                                easing: 'easeInOutQuad'
+                            });
+                        }
+                    });
+                });
+            }
+        }
     </script>
 </body>
 </html> 
