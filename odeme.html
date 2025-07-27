@@ -874,15 +874,15 @@
             });
         }
         
-        // Shopier API bilgileri (WooCommerce eklentisinden uyarlanmış)
+        // Shopier API bilgileri (güncellenmiş)
         const SHOPIER_CONFIG = {
             api_key: 'ba946ce45c717d982cc6decbcb616bb2',
             secret: '8a186b6f15655c57c65ec415ae121e69',
-            payment_endpoint_url: 'https://www.shopier.com/ShowProduct/api_pay.php', // WooCommerce eklentisinden alınan endpoint
-            website_index: '1', // WooCommerce eklentisinden
+            payment_endpoint_url: 'https://www.shopier.com/ShowProduct/api_pay.php', // Güncel endpoint
+            website_index: '0', // Shopier panelindeki ilk site
             return_url: 'https://1sthillman.github.io/garsqn/odeme-sonrasi.html',
             test_mode: false, // Gerçek ödeme modu aktif
-            domain_id: '1', // WooCommerce eklentisinden
+            domain_id: '0', // Shopier panelindeki ilk domain
             order_id_prefix: 'ADISYON',
             timeout: 30000,
             retry_count: 3,
@@ -910,11 +910,11 @@
             }
         };
         
-        // Alternatif endpoint'ler (504 hatası durumunda) - WooCommerce eklentisinden
+        // Alternatif endpoint'ler (güncel Shopier API'sine göre)
         const SHOPIER_ENDPOINTS = [
-            'https://www.shopier.com/ShowProduct/api_pay4.php', // WooCommerce eklentisinden
+            'https://www.shopier.com/ShowProduct/api_pay.php',
             'https://www.shopier.com/ShowProduct/api_pay2.php',
-            'https://www.shopier.com/ShowProduct/api_pay.php'
+            'https://www.shopier.com/ShowProduct/api_pay4.php'
         ];
         
         console.log('Shopier Entegrasyonu - Domain Kontrolü:', window.location.origin);
@@ -1070,7 +1070,7 @@
                 const randomNr = Math.floor(Math.random() * 900000) + 100000;
                 const orderId = payment.id;
                 const amount = selectedPackage.price.replace('₺', '').replace('.', ''); // Nokta işaretini kaldır
-                const currency = '0'; // TRY - WooCommerce eklentisinden (0=TRY, 1=USD, 2=EUR)
+                const currency = 'TRY'; // Güncel Shopier API'si TRY string değerini bekliyor
                 
                 console.log('Shopier için form verileri hazırlanıyor:');
                 console.log('- Random Number:', randomNr);
@@ -1081,26 +1081,23 @@
                 // Shopier signature oluştur
                 const signature = generateShopierSignature(randomNr.toString(), orderId, amount, currency);
                 
-                // Shopier için form verileri hazırla - WooCommerce eklentisinden uyarlanmış
+                // Shopier için form verileri hazırla - Güncel API gereksinimleri
                 const minimalShopierData = {
                     API_key: SHOPIER_CONFIG.api_key,
                     website_index: SHOPIER_CONFIG.website_index,
                     platform_order_id: orderId,
                     product_name: selectedPackage.name,
+                    product_type: 0, // Fiziksel ürün olarak deneyelim
                     total_order_value: amount,
                     currency: currency,
                     buyer_name: restaurantInfo?.name || 'Restoran',
                     buyer_surname: 'Sahibi',
                     buyer_email: restaurantInfo?.email || 'info@restoran.com',
                     buyer_phone: restaurantInfo?.phone || '5551234567',
-                    product_type: '1', // Dijital ürün (WooCommerce eklentisinden)
-                    is_digital: '1', // Dijital ürün
-                    digital_delivery: '1', // Dijital teslimat
-                    no_shipping: '1', // Kargo yok
+                    lang: 'tr',
+                    current_language: 'tr',
+                    modul_version: '1.0.4',
                     platform: '0',
-                    is_in_frame: '0',
-                    current_language: '0', // TR
-                    modul_version: '2.0.0', // WooCommerce eklentisinden
                     domain: SHOPIER_CONFIG.domain, // Domain bilgisi (https:// olmadan)
                     random_nr: randomNr.toString(),
                     signature: signature
