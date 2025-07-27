@@ -555,8 +555,8 @@
             position: relative;
             background: linear-gradient(
                 135deg,
-                rgba(255, 255, 255, 0.1),
-                rgba(255, 255, 255, 0.05)
+                rgba(255, 255, 255, 0.12),
+                rgba(255, 255, 255, 0.06)
             );
             color: #fff;
             padding: 0.75rem 1.5rem;
@@ -564,25 +564,43 @@
             font-weight: 600;
             font-size: 0.9rem;
             backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.25);
             box-shadow: 
-                0 8px 32px rgba(0, 0, 0, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                0 10px 30px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.25);
             transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
             cursor: pointer;
             letter-spacing: 0.5px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .table-info::after {
+            content: '📋';
+            font-size: 0.9rem;
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.3s ease;
         }
         
         .table-info:hover {
             background: linear-gradient(
                 135deg,
-                rgba(255, 255, 255, 0.15),
-                rgba(255, 255, 255, 0.08)
+                rgba(255, 255, 255, 0.18),
+                rgba(255, 255, 255, 0.1)
             );
-            transform: translateY(-2px);
+            transform: translateY(-3px);
             box-shadow: 
-                0 12px 40px rgba(0, 0, 0, 0.15),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+                0 15px 40px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.35);
+            padding-right: 2rem;
+        }
+        
+        .table-info:hover::after {
+            opacity: 1;
+            transform: translateX(5px);
         }
         
         .table-info::before {
@@ -596,15 +614,28 @@
             background: linear-gradient(
                 45deg,
                 transparent 30%,
-                rgba(255, 255, 255, 0.1) 50%,
+                rgba(255, 255, 255, 0.15) 50%,
                 transparent 70%
             );
             opacity: 0;
             transition: opacity 0.3s ease;
+            z-index: 1;
         }
         
         .table-info:hover::before {
             opacity: 1;
+            animation: shine 2s ease-in-out infinite;
+        }
+        
+        .table-info span {
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+        
+        .table-info:active {
+            transform: translateY(-1px);
+            transition: transform 0.1s ease;
         }
 
         /* Modern Cart and Contact Buttons */
@@ -612,37 +643,51 @@
             position: relative;
             background: linear-gradient(
                 135deg,
-                rgba(255, 255, 255, 0.1),
-                rgba(255, 255, 255, 0.05)
+                rgba(255, 255, 255, 0.12),
+                rgba(255, 255, 255, 0.06)
             );
             border: none;
             color: #fff;
             padding: 0.75rem;
             border-radius: 50%;
             cursor: pointer;
-            width: 45px;
-            height: 45px;
+            width: 48px;
+            height: 48px;
             display: flex;
             align-items: center;
             justify-content: center;
             backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.25);
             box-shadow: 
-                0 8px 32px rgba(0, 0, 0, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                0 10px 30px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.25);
             transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            overflow: hidden;
+        }
+        
+        .cart-btn i, .contact-btn i {
+            font-size: 1.25rem;
+            filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.3));
+            transition: transform 0.3s ease, color 0.3s ease;
+            z-index: 2;
+            position: relative;
         }
         
         .cart-btn:hover, .contact-btn:hover {
             background: linear-gradient(
                 135deg,
-                rgba(255, 255, 255, 0.15),
-                rgba(255, 255, 255, 0.08)
+                rgba(255, 255, 255, 0.18),
+                rgba(255, 255, 255, 0.1)
             );
-            transform: scale(1.05) translateY(-2px);
+            transform: scale(1.08) translateY(-3px);
             box-shadow: 
-                0 12px 40px rgba(0, 0, 0, 0.15),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+                0 15px 40px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.35);
+        }
+        
+        .cart-btn:hover i, .contact-btn:hover i {
+            transform: scale(1.1);
+            color: rgba(255, 255, 255, 1);
         }
         
         .cart-btn::before, .contact-btn::before {
@@ -656,26 +701,38 @@
             background: linear-gradient(
                 45deg,
                 transparent 30%,
-                rgba(255, 255, 255, 0.1) 50%,
+                rgba(255, 255, 255, 0.15) 50%,
                 transparent 70%
             );
             opacity: 0;
             transition: opacity 0.3s ease;
+            z-index: 1;
         }
         
         .cart-btn:hover::before, .contact-btn:hover::before {
             opacity: 1;
+            animation: shine 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes shine {
+            0% { background-position: -100% 0; }
+            100% { background-position: 200% 0; }
+        }
+        
+        .cart-btn:active, .contact-btn:active {
+            transform: scale(0.95);
+            transition: transform 0.1s ease;
         }
         
         .cart-badge {
             position: absolute;
-            top: -8px;
-            right: -8px;
+            top: -6px;
+            right: -6px;
             background: linear-gradient(135deg, #ff4757, #ff3742);
             color: white;
             font-size: 0.75rem;
-            width: 24px;
-            height: 24px;
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -683,9 +740,12 @@
             font-weight: 700;
             box-shadow: 
                 0 4px 12px rgba(255, 71, 87, 0.4),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.1);
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.2);
             animation: pulse 2s infinite;
+            z-index: 3;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            letter-spacing: -0.5px;
         }
 
         /* Language Selector */
@@ -693,32 +753,50 @@
             display: flex;
             gap: 0.5rem;
             align-items: center;
+            position: relative;
+            padding: 0.25rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
         .lang-btn {
             position: relative;
             background: linear-gradient(
                 135deg,
-                rgba(255, 255, 255, 0.1),
-                rgba(255, 255, 255, 0.05)
+                rgba(255, 255, 255, 0.12),
+                rgba(255, 255, 255, 0.06)
             );
             border: none;
             color: #fff;
             padding: 0.5rem;
             border-radius: 50%;
             cursor: pointer;
-            width: 35px;
-            height: 35px;
+            width: 38px;
+            height: 38px;
             display: flex;
             align-items: center;
             justify-content: center;
             backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.25);
             box-shadow: 
                 0 4px 16px rgba(0, 0, 0, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                inset 0 1px 0 rgba(255, 255, 255, 0.25);
             transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-            font-size: 1rem;
+            font-size: 1.1rem;
+            overflow: hidden;
+        }
+        
+        .lang-btn span {
+            display: block;
+            line-height: 1;
+            transform: scale(1);
+            transition: transform 0.3s ease;
+            filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.2));
+            z-index: 2;
+            position: relative;
         }
         
         .lang-btn::before {
@@ -732,35 +810,47 @@
             background: linear-gradient(
                 45deg,
                 transparent 30%,
-                rgba(255, 255, 255, 0.1) 50%,
+                rgba(255, 255, 255, 0.15) 50%,
                 transparent 70%
             );
             opacity: 0;
             transition: opacity 0.3s ease;
+            z-index: 1;
         }
         
         .lang-btn:hover {
             background: linear-gradient(
                 135deg,
-                rgba(255, 255, 255, 0.15),
-                rgba(255, 255, 255, 0.08)
+                rgba(255, 255, 255, 0.18),
+                rgba(255, 255, 255, 0.1)
             );
-            transform: scale(1.05) translateY(-1px);
+            transform: scale(1.08);
             box-shadow: 
-                0 6px 20px rgba(0, 0, 0, 0.15),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+                0 8px 25px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.35);
+        }
+        
+        .lang-btn:hover span {
+            transform: scale(1.1);
         }
         
         .lang-btn:hover::before {
             opacity: 1;
+            animation: shine 2s ease-in-out infinite;
         }
         
         .lang-btn.active {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             box-shadow: 
-                0 4px 16px rgba(102, 126, 234, 0.4),
+                0 6px 20px rgba(102, 126, 234, 0.4),
                 inset 0 1px 0 rgba(255, 255, 255, 0.3);
             border: 1px solid rgba(102, 126, 234, 0.3);
+            transform: scale(1.05);
+        }
+        
+        .lang-btn:active {
+            transform: scale(0.95);
+            transition: transform 0.1s ease;
         }
         
         @keyframes pulse {
