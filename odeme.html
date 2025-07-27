@@ -878,11 +878,11 @@
         const SHOPIER_CONFIG = {
             api_key: 'ba946ce45c717d982cc6decbcb616bb2',
             secret: '8a186b6f15655c57c65ec415ae121e69',
-            payment_endpoint_url: 'https://www.shopier.com/ShowProduct/api_pay4.php', // WooCommerce plugin'inden
-            website_index: '1', // WooCommerce plugin'inden
+            payment_endpoint_url: 'https://www.shopier.com/ShowProduct/api_pay.php', // En temel endpoint
+            website_index: '0', // 0 = ilk website
             return_url: 'https://1sthillman.github.io/garsqn/odeme-sonrasi.html',
             test_mode: false, // Gerçek ödeme modu aktif
-            domain_id: '1', // WooCommerce plugin'inden
+            domain_id: '0', // 0 = ilk domain
             order_id_prefix: 'ADISYON',
             timeout: 30000,
             retry_count: 3,
@@ -890,7 +890,7 @@
             language: 'tr',
             success_url: 'https://1sthillman.github.io/garsqn/odeme-sonrasi.html',
             cancel_url: 'https://1sthillman.github.io/garsqn/odeme.html',
-            domain: 'https://1sthillman.github.io/garsqn/odeme.html' // Tam URL olarak kayıtlı domain
+            domain: '1sthillman.github.io' // Domain bilgisi (https:// olmadan)
         };
         
         // Shopier'a gönderilecek alan adı ayarları
@@ -912,9 +912,9 @@
         
         // Alternatif endpoint'ler (504 hatası durumunda)
         const SHOPIER_ENDPOINTS = [
-            'https://www.shopier.com/ShowProduct/api_pay4.php', // Birincil endpoint
+            'https://www.shopier.com/ShowProduct/api_pay.php',  // En temel endpoint
             'https://www.shopier.com/ShowProduct/api_pay2.php',
-            'https://www.shopier.com/ShowProduct/api_pay.php'  // Ek endpoint
+            'https://www.shopier.com/ShowProduct/api_pay4.php'  // Daha karmaşık endpoint
         ];
         
         console.log('Shopier Entegrasyonu - Domain Kontrolü:', window.location.origin);
@@ -923,18 +923,18 @@
         // Shopier signature oluştur - Resmi Shopier dokümanına göre
         function generateShopierSignature(randomNr, orderId, amount, currency) {
             try {
-                // Shopier'in beklediği formatta signature oluşturma
-                const data = randomNr + orderId + amount + currency;
-                console.log('Signature data:', data);
-                
-                // SHA256 HMAC oluştur
-                const hmacData = CryptoJS.HmacSHA256(data, SHOPIER_CONFIG.secret);
-                
-                // Base64 encoding
-                const signature = CryptoJS.enc.Base64.stringify(hmacData);
-                console.log('Generated signature:', signature);
-                
-                return signature;
+            // Shopier'in beklediği formatta signature oluşturma
+            const data = randomNr + orderId + amount + currency;
+            console.log('Signature data:', data);
+            
+            // SHA256 HMAC oluştur
+            const hmacData = CryptoJS.HmacSHA256(data, SHOPIER_CONFIG.secret);
+            
+            // Base64 encoding
+            const signature = CryptoJS.enc.Base64.stringify(hmacData);
+            console.log('Generated signature:', signature);
+            
+            return signature;
             } catch (error) {
                 console.error('Signature oluşturma hatası:', error);
                 // Hata durumunda boş signature döndürme
@@ -1025,7 +1025,7 @@
                 
                 try {
                     console.log('Shopier form gönderiliyor...');
-                    form.submit();
+                form.submit();
                 } catch (error) {
                     console.error('Form gönderim hatası:', error);
                     clearTimeout(timeoutId);
@@ -1070,7 +1070,7 @@
                 const randomNr = Math.floor(Math.random() * 900000) + 100000;
                 const orderId = payment.id;
                 const amount = selectedPackage.price.replace('₺', '').replace('.', ''); // Nokta işaretini kaldır
-                const currency = '0'; // TRY
+                const currency = 'TRY'; // TRY
                 
                 console.log('Shopier için form verileri hazırlanıyor:');
                 console.log('- Random Number:', randomNr);
@@ -1081,27 +1081,21 @@
                 // Shopier signature oluştur
                 const signature = generateShopierSignature(randomNr.toString(), orderId, amount, currency);
                 
-                // Shopier için form verileri hazırla - WooCommerce plugin'inden alınan doğru parametreler
+                // Shopier için form verileri hazırla - Sadece gerekli parametreler
                 const minimalShopierData = {
                     API_key: SHOPIER_CONFIG.api_key,
                     website_index: SHOPIER_CONFIG.website_index,
                     platform_order_id: orderId,
                     product_name: selectedPackage.name,
-                    total_order_value: selectedPackage.price,
-                    currency: '0', // TRY
+                    total_order_value: amount,
+                    currency: currency,
                     buyer_name: restaurantInfo?.name || 'Restoran',
                     buyer_surname: 'Sahibi',
                     buyer_email: restaurantInfo?.email || 'info@restoran.com',
                     buyer_phone: restaurantInfo?.phone || '5551234567',
-                    product_type: '1', // Dijital ürün (WooCommerce plugin'inden)
-                    is_digital: '1', // Dijital ürün
-                    digital_delivery: '1', // Dijital teslimat
-                    no_shipping: '1', // Kargo yok
+                    product_type: '0', // Fiziksel ürün olarak deneyelim
                     platform: '0',
-                    is_in_frame: '0',
-                    current_language: '0', // TR
-                    modul_version: '2.0.0', // WooCommerce plugin'inden
-                    domain: 'https://1sthillman.github.io/garsqn/odeme.html', // Tam URL olarak domain bilgisi
+                    domain: SHOPIER_CONFIG.domain, // Domain bilgisi (https:// olmadan)
                     random_nr: randomNr.toString(),
                     signature: signature
                 };
@@ -1138,10 +1132,10 @@
                     
                     // Devam et butonuna tıklandığında
                     document.getElementById('testContinueBtn').addEventListener('click', async function() {
-                        // Yükleniyor göster
+                    // Yükleniyor göster
                         this.disabled = true;
                         this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> İşleniyor...';
-                        
+                    
                         try {
                             // Ödeme durumunu güncelle
                             await supabase
@@ -1225,7 +1219,7 @@
                 shopierForm.action = SHOPIER_CONFIG.payment_endpoint_url;
                 shopierForm.target = '_self';
                 shopierForm.acceptCharset = 'UTF-8';
-                
+                        
                 // Form alanlarını ekle
                 Object.keys(minimalShopierData).forEach(key => {
                     const input = document.createElement('input');
