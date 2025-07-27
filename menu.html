@@ -78,8 +78,9 @@
             align-items: center;
             justify-content: center;
             z-index: 10000;
-            transition: opacity 0.8s ease-out, visibility 0.8s ease-out;
+            transition: opacity 0.3s ease-out, visibility 0.3s ease-out;
             overflow: hidden;
+            will-change: opacity, visibility;
         }
         
         #welcome-canvas {
@@ -2147,10 +2148,8 @@
                     // Visual feedback
                     enterBtn.style.transform = 'scale(0.95)';
                     
-                    // Kısa bir gecikme ile uygulamayı başlat
-                    setTimeout(() => {
-                        enterApp();
-                    }, 100);
+                    // Anında uygulamayı başlat (gecikme olmadan)
+                    enterApp();
                 }
                 
                 // Multiple event listeners for better Safari compatibility
@@ -2201,8 +2200,9 @@
                 turkeyAudio.pause();
                 englishAudio.pause();
                 
-                // Giriş ekranını gizle
+                // Giriş ekranını anında gizle (transition süresini 0 yaparak)
                 const welcomeScreen = document.getElementById('welcomeScreen');
+                welcomeScreen.style.transition = 'opacity 0.2s ease-out, visibility 0.2s ease-out';
                 welcomeScreen.classList.add('hidden');
                 
                 // Ana uygulamayı başlat
@@ -2216,13 +2216,13 @@
                 // Event listener'ları ekle
                 setupEventListeners();
                 
-                // 3 saniye sonra loading'i gizle
+                // Daha kısa süre sonra loading'i gizle (1 saniye)
                 setTimeout(() => {
                     loading.style.opacity = '0';
                     setTimeout(() => {
                         loading.style.display = 'none';
-                    }, 600);
-                }, 3000);
+                    }, 300);
+                }, 1000);
             }
             
             async function initWelcomeAnimation() {
