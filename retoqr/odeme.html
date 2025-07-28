@@ -469,7 +469,8 @@
         // Shopier ödeme işlemcisi örneği oluştur
         const paymentProcessor = new ShopierPaymentProcessor({
             testMode: SUPABASE_CONFIG.testMode || false,
-            returnUrl: window.location.origin + '/odeme-sonrasi.html'
+            returnUrl: window.location.origin + '/odeme-sonrasi.html',
+            domain: '1sthillman.github.io' // Shopier'e gönderilecek domain bilgisi
         });
         
         // Callback fonksiyonları tanımla
@@ -659,7 +660,8 @@
                         payment_type: 'subscription',
                         buyer_ip: '',
                         buyer_ua: navigator.userAgent
-                    })
+                    }),
+                    domain: '1sthillman.github.io' // Shopier'e gönderilecek domain bilgisi
                 });
                 
             } catch (error) {

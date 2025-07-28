@@ -29,9 +29,10 @@ if ($request_method === "OPTIONS") {
 $config = [
     'api_key' => 'ba946ce45c717d982cc6decbcb616bb2',
     'secret' => '8a186b6f15655c57c65ec415ae121e69',
-    'payment_endpoint' => 'https://www.shopier.com/ShowProduct/api_pay4.php',
+    'payment_endpoint' => 'https://www.shopier.com/ShowProduct/api_pay.php',
     'website_index' => '1',
-    'return_url' => 'https://1sthillman.github.io/garsqn/odeme-sonrasi.html'
+    'return_url' => 'https://1sthillman.github.io/garsqn/odeme-sonrasi.html',
+    'domain' => '1sthillman.github.io'
 ];
 
 // İşlem tipini belirle
@@ -108,6 +109,9 @@ function handle_create_payment() {
     // Shopier için imza oluştur
     $signature = generate_shopier_signature($random_nr, $order_id, $amount, $currency_code, $config['secret']);
     
+    // Domain bilgisi al
+    $domain = isset($post_data['domain']) ? $post_data['domain'] : $config['domain'];
+    
     // Shopier'e gönderilecek verileri hazırla
     $shopier_data = [
         'API_key' => $config['api_key'],
@@ -137,9 +141,7 @@ function handle_create_payment() {
         'modul_version' => '1.0.0',
         'random_nr' => $random_nr,
         'signature' => $signature,
-        // İsteğe bağlı olarak ek alanlar
-        'product_info' => $post_data['product_info'] ?? '',
-        'general_info' => $post_data['general_info'] ?? ''
+        'domain' => $domain
     ];
     
     // Form verileri ve URL'i döndür

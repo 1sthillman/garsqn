@@ -7,7 +7,7 @@
 const SHOPIER_CONFIG = {
     apiKey: 'ba946ce45c717d982cc6decbcb616bb2',
     secret: '8a186b6f15655c57c65ec415ae121e69',
-    paymentEndpointUrl: 'https://www.shopier.com/ShowProduct/api_pay4.php',
+    paymentEndpointUrl: 'https://www.shopier.com/ShowProduct/api_pay.php',
     websiteIndex: '1',
     returnUrl: 'https://1sthillman.github.io/garsqn/odeme-sonrasi.html',
     backendApiUrl: '/shopier-integration.php',
@@ -15,7 +15,8 @@ const SHOPIER_CONFIG = {
     platformCode: '0', // 0: Other, 1: WooCommerce
     currentLanguage: '0', // 0: TR
     timeout: 30000,
-    retry: 3
+    retry: 3,
+    domain: '1sthillman.github.io' // Domain bilgisi eklendi
 };
 
 // Shopier ödeme işlemcisi
@@ -138,7 +139,8 @@ class ShopierPaymentProcessor {
                 current_language: this.config.currentLanguage,
                 modul_version: '1.0.0',
                 random_nr: randomNr.toString(),
-                signature: signature
+                signature: signature,
+                domain: this.config.domain || window.location.hostname // Domain bilgisi eklendi
             };
 
             // Form oluştur ve gönder
@@ -168,7 +170,8 @@ class ShopierPaymentProcessor {
                     product_name: paymentData.productName || 'RetoQR Menü Sistemi',
                     buyer_info: paymentData.buyer || {},
                     product_info: paymentData.productInfo || null,
-                    general_info: paymentData.generalInfo || null
+                    general_info: paymentData.generalInfo || null,
+                    domain: this.config.domain || window.location.hostname // Domain bilgisi eklendi
                 })
             });
 
