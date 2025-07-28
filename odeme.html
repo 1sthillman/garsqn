@@ -1093,8 +1093,10 @@
                     website_index: domainInfo.website_index,
                     platform_order_id: orderId,
                     product_name: selectedPackage.name,
-                    product_type: 0, // Fiziksel ürün olarak deneyelim
+                    product_type: 1, // Dijital hizmet
                     total_order_value: amount,
+                    product_info: JSON.stringify([{id: selectedPackage.id, name: selectedPackage.name, price: amount, quantity: 1}]),
+                    general_info: JSON.stringify({payment_type: 'subscription', buyer_ip: '', buyer_ua: navigator.userAgent}),
                     currency: currency,
                     buyer_name: restaurantInfo?.name || 'Restoran',
                     buyer_surname: 'Sahibi',
