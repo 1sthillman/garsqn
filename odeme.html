@@ -1069,10 +1069,7 @@
                 // Shopier form verilerini hazırla
                 const randomNr = Math.floor(Math.random() * 900000) + 100000;
                 const orderId = payment.id;
-                let amount = selectedPackage.price.replace('₺', '').trim();
-                if(!amount.includes('.')) {
-                    amount = Number(amount).toFixed(2); // 1 -> 1.00
-                }
+                const amount = selectedPackage.price.replace('₺', '').trim();
                 const currency = 'TRY'; // Güncel Shopier API'si TRY string değerini bekliyor
                 
                 console.log('Shopier için form verileri hazırlanıyor:');
@@ -1096,7 +1093,7 @@
                     website_index: domainInfo.website_index,
                     platform_order_id: orderId,
                     product_name: selectedPackage.name,
-                    product_type: 0,
+                    product_type: 1,
                     total_order_value: amount,
                     product_info: JSON.stringify([{id: selectedPackage.id, name: selectedPackage.name, price: amount, quantity: 1}]),
                     general_info: JSON.stringify({payment_type: 'subscription', buyer_ip: '', buyer_ua: navigator.userAgent}),
