@@ -1090,10 +1090,10 @@
                 // Shopier için form verileri hazırla - Güncel API gereksinimleri
                 const minimalShopierData = {
                     API_key: SHOPIER_CONFIG.api_key,
-                    website_index: domainInfo.website_index,
+                    website_index: SHOPIER_CONFIG.website_index,
                     platform_order_id: orderId,
                     product_name: selectedPackage.name,
-                    product_type: 1, // Dijital hizmet
+                    product_type: 0,
                     total_order_value: amount,
                     product_info: JSON.stringify([{id: selectedPackage.id, name: selectedPackage.name, price: amount, quantity: 1}]),
                     general_info: JSON.stringify({payment_type: 'subscription', buyer_ip: '', buyer_ua: navigator.userAgent}),
@@ -1116,7 +1116,7 @@
                     shipping_postcode: restaurantInfo?.postcode || '34000',
                     lang: 'tr',
                     current_language: 'tr',
-                    modul_version: '1.0.4',
+                    modul_version: '2.0.0',
                     platform: '0',
                     // domain parametresi Shopier v4'te gerekli değil
                     random_nr: randomNr.toString(),
