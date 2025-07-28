@@ -1069,7 +1069,7 @@
                 // Shopier form verilerini hazırla
                 const randomNr = Math.floor(Math.random() * 900000) + 100000;
                 const orderId = payment.id;
-                const amount = selectedPackage.price.replace('₺', '').replace('.', ''); // Nokta işaretini kaldır
+                const amount = selectedPackage.price.replace('₺', '').trim(); // Nokta korunur (Shopier 199.90 formatı bekler)
                 const currency = 'TRY'; // Güncel Shopier API'si TRY string değerini bekliyor
                 
                 console.log('Shopier için form verileri hazırlanıyor:');
@@ -1090,7 +1090,7 @@
                 // Shopier için form verileri hazırla - Güncel API gereksinimleri
                 const minimalShopierData = {
                     API_key: SHOPIER_CONFIG.api_key,
-                    website_index: SHOPIER_CONFIG.website_index,
+                    website_index: domainInfo.website_index,
                     platform_order_id: orderId,
                     product_name: selectedPackage.name,
                     product_type: 0, // Fiziksel ürün olarak deneyelim
@@ -1104,8 +1104,7 @@
                     current_language: 'tr',
                     modul_version: '1.0.4',
                     platform: '0',
-                    domain: SHOPIER_CONFIG.domain, // Domain bilgisi (https:// olmadan)
-                    domain_id: domainInfo.domain_id,
+                    // domain parametresi Shopier v4'te gerekli değil
                     random_nr: randomNr.toString(),
                     signature: signature
                 };
