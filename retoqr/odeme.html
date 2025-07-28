@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RetoQR - Premium Paketler</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --premium-gold: linear-gradient(135deg, #ffd700 0%, #ffb347 100%);
+            --premium-silver: linear-gradient(135deg, #c0c0c0 0%, #e6e6fa 100%);
+            --premium-rose: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            --premium-ocean: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            --premium-emerald: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --test-gradient: linear-gradient(135deg, #ff6b6b 0%, #ffa500 100%);
+        }
+        
+        .packages-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-2xl);
+            margin-bottom: var(--space-3xl);
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .package-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(30px) saturate(200%);
+            -webkit-backdrop-filter: blur(30px) saturate(200%);
+            border: 2px solid var(--glass-border-strong);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-2xl);
+            transition: var(--transition-elastic);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .discount-badge {
+            position: absolute;
+            top: var(--space-md);
+            right: var(--space-md);
+            background: var(--premium-gold);
+            color: white;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-bold);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            z-index: 10;
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+        }
+        
+        .popular-badge {
+            position: absolute;
+            top: var(--space-md);
+            left: var(--space-md);
+            background: var(--premium-rose);
+            color: white;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-bold);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            z-index: 10;
+            box-shadow: 0 4px 12px rgba(255, 154, 158, 0.4);
+        }
+        
+        .package-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--premium-ocean);
+            opacity: 0;
+            transition: var(--transition-slow);
+            z-index: 0;
+        }
+        
+        .package-card:hover::before {
+            opacity: 0.1;
+        }
+        
+        .package-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .package-card.selected {
+            border-color: var(--premium-gold);
+            box-shadow: 0 20px 60px rgba(255, 215, 0, 0.3);
+        }
+        
+        .package-header {
+            text-align: center;
+            margin-bottom: var(--space-xl);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .package-name {
+            font-size: var(--font-size-2xl);
+            font-weight: var(--font-weight-bold);
+            margin-bottom: var(--space-sm);
+            background: var(--premium-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .package-price {
+            font-size: var(--font-size-4xl);
+            font-weight: var(--font-weight-black);
+            color: var(--text-primary);
+            margin-bottom: var(--space-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+        }
+        
+        .original-price {
+            font-size: var(--font-size-lg);
+            color: var(--text-muted);
+            text-decoration: line-through;
+            font-weight: var(--font-weight-normal);
+        }
+        
+        .package-period {
+            font-size: var(--font-size-sm);
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .package-features {
+            list-style: none;
+            margin-bottom: var(--space-xl);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .package-features li {
+            padding: var(--space-sm) 0;
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            color: var(--text-secondary);
+        }
+        
+        .package-features li i {
+            color: var(--success);
+            font-size: var(--font-size-lg);
+        }
+        
+        .package-btn {
+            width: 100%;
+            padding: var(--space-lg) var(--space-xl);
+            background: var(--premium-ocean);
+            color: white;
+            border: none;
+            border-radius: var(--radius-xl);
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-bold);
+            cursor: pointer;
+            transition: var(--transition-elastic);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .package-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(106, 17, 203, 0.5);
+        }
+        
+        .payment-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(30px) saturate(200%);
+            -webkit-backdrop-filter: blur(30px) saturate(200%);
+            border: 2px solid var(--glass-border-strong);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-2xl);
+            margin-top: var(--space-2xl);
+        }
+        
+        .payment-title {
+            font-size: var(--font-size-2xl);
+            font-weight: var(--font-weight-bold);
+            margin-bottom: var(--space-xl);
+            text-align: center;
+            background: var(--premium-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .payment-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-lg);
+            margin-bottom: var(--space-xl);
+        }
+        
+        .info-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            text-align: center;
+            transition: var(--transition-normal);
+        }
+        
+        .info-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--glass-border-strong);
+        }
+        
+        .info-card i {
+            font-size: var(--font-size-3xl);
+            color: var(--premium-gold);
+            margin-bottom: var(--space-md);
+            display: block;
+        }
+        
+        .info-card h3 {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-bold);
+            margin-bottom: var(--space-sm);
+            color: var(--text-primary);
+        }
+        
+        .info-card p {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        
+        .pay-btn {
+            width: 100%;
+            padding: var(--space-xl);
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: var(--radius-xl);
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-bold);
+            cursor: pointer;
+            transition: var(--transition-elastic);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: var(--space-lg);
+        }
+        
+        .pay-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(16, 185, 129, 0.5);
+        }
+        
+        .pay-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Test paketi özel stilleri */
+        .package-card[data-package-id="test_package"] {
+            border-color: var(--test-gradient);
+            background: rgba(255, 107, 107, 0.1);
+        }
+        
+        .package-card[data-package-id="test_package"]:hover {
+            border-color: #ff6b6b;
+            box-shadow: 0 20px 60px rgba(255, 107, 107, 0.3);
+        }
+        
+        .package-card[data-package-id="test_package"] .package-name {
+            background: var(--test-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .package-card[data-package-id="test_package"] .package-btn {
+            background: var(--test-gradient);
+        }
+        
+        .package-card[data-package-id="test_package"] .package-btn:hover {
+            box-shadow: 0 15px 40px rgba(255, 107, 107, 0.5);
+        }
+        
+        .package-card[data-package-id="test_package"] .popular-badge {
+            background: var(--test-gradient);
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+        }
+        
+        @media (max-width: 768px) {
+            .packages-grid {
+                grid-template-columns: 1fr;
+                gap: var(--space-lg);
+                max-width: none;
+            }
+            
+            .package-card {
+                padding: var(--space-xl);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <i class="fas fa-qrcode"></i>
+                <span>RetoQR</span>
+            </div>
+            <div class="subtitle">QR Menü Sistemi - Premium Paketler</div>
+        </div>
+        
+        <div class="packages-grid" id="packagesGrid">
+            <!-- Paketler dinamik olarak yüklenecek -->
+        </div>
+        
+        <div class="payment-section" id="paymentSection" style="display: none;">
+            <div class="payment-title">Ödeme Bilgileri</div>
+            <div class="payment-info">
+                <div class="info-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Güvenli Ödeme</h3>
+                    <p>Ödeme işleminiz Shopier güvenli ödeme sistemi üzerinden gerçekleştirilecektir.</p>
+                </div>
+                
+                <div class="info-card">
+                    <i class="fas fa-credit-card"></i>
+                    <h3>Kredi Kartı</h3>
+                    <p>Tüm kredi kartları ile güvenli ödeme yapabilirsiniz.</p>
+                </div>
+                
+                <div class="info-card">
+                    <i class="fas fa-lock"></i>
+                    <h3>SSL Korumalı</h3>
+                    <p>256-bit SSL şifreleme ile verileriniz korunmaktadır.</p>
+                </div>
+            </div>
+            
+            <button type="button" class="pay-btn" id="payBtn">
+                <i class="fas fa-lock"></i> Shopier ile Güvenli Ödeme
+            </button>
+        </div>
+    </div>
+
+    <!-- Shopier entegrasyonu -->
+    <script src="payment.js"></script>
+    <script src="config.js"></script>
+
+    <script>
+        // URL parametrelerinden restoran ID'sini al
+        const urlParams = new URLSearchParams(window.location.search);
+        const RESTAURANT_ID = urlParams.get('restaurant_id');
+        
+        let selectedPackage = null;
+        let restaurantInfo = null;
+        
+        // Paketleri tanımla
+        const packages = [
+            {
+                id: 'test_package',
+                name: 'Test Paketi',
+                price: '1₺',
+                period: '1 Ay',
+                originalPrice: null,
+                discount: null,
+                tables: 20,
+                features: [
+                    '20 Masa QR Kodu',
+                    'Müşteri Siparişleri',
+                    'Garson Çağırma',
+                    'Köz İsteme',
+                    'Mobil Uyumlu',
+                    'Test Amaçlı'
+                ]
+            },
+            {
+                id: 'starter_monthly',
+                name: 'Başlangıç Paketi',
+                price: '199₺',
+                period: 'Aylık',
+                originalPrice: '299₺',
+                discount: '33%',
+                tables: 10,
+                features: [
+                    '10 Masa QR Kodu',
+                    'Müşteri Siparişleri',
+                    'Garson Çağırma',
+                    'Köz İsteme',
+                    'Mobil Uyumlu'
+                ]
+            },
+            {
+                id: 'starter_yearly',
+                name: 'Başlangıç Paketi',
+                price: '1.999₺',
+                period: 'Yıllık',
+                originalPrice: '3.588₺',
+                discount: '44%',
+                tables: 10,
+                features: [
+                    '10 Masa QR Kodu',
+                    'Müşteri Siparişleri',
+                    'Garson Çağırma',
+                    'Köz İsteme',
+                    'Mobil Uyumlu',
+                    '2 Ay Bedava'
+                ]
+            },
+            {
+                id: 'professional_monthly',
+                name: 'Profesyonel Paket',
+                price: '399₺',
+                period: 'Aylık',
+                originalPrice: '599₺',
+                discount: '33%',
+                tables: 25,
+                features: [
+                    '25 Masa QR Kodu',
+                    'Müşteri Siparişleri',
+                    'Garson Çağırma',
+                    'Köz İsteme',
+                    'Mobil Uyumlu',
+                    '7/24 Destek'
+                ]
+            },
+            {
+                id: 'professional_yearly',
+                name: 'Profesyonel Paket',
+                price: '3.999₺',
+                period: 'Yıllık',
+                originalPrice: '7.188₺',
+                discount: '44%',
+                tables: 25,
+                features: [
+                    '25 Masa QR Kodu',
+                    'Müşteri Siparişleri',
+                    'Garson Çağırma',
+                    'Köz İsteme',
+                    'Mobil Uyumlu',
+                    '7/24 Destek',
+                    '2 Ay Bedava'
+                ]
+            }
+        ];
+        
+        // Shopier ödeme işlemcisi örneği oluştur
+        const paymentProcessor = new ShopierPaymentProcessor({
+            testMode: SUPABASE_CONFIG.testMode || false,
+            returnUrl: window.location.origin + '/odeme-sonrasi.html'
+        });
+        
+        // Callback fonksiyonları tanımla
+        paymentProcessor.setCallbacks({
+            onStart: function() {
+                document.getElementById('payBtn').disabled = true;
+                document.getElementById('payBtn').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Shopier\'e Yönlendiriliyor...';
+            },
+            onSuccess: function(result) {
+                console.log('Ödeme başarılı:', result);
+                window.location.href = `odeme-sonrasi.html?payment_id=${result.paymentId}&status=success&restaurant_id=${RESTAURANT_ID}`;
+            },
+            onError: function(error) {
+                console.error('Ödeme hatası:', error);
+                document.getElementById('payBtn').disabled = false;
+                document.getElementById('payBtn').innerHTML = '<i class="fas fa-lock"></i> Tekrar Dene';
+                alert('Ödeme işlemi başarısız: ' + (error.message || 'Bilinmeyen hata'));
+            }
+        });
+        
+        // Supabase istemcisi oluştur
+        const supabase = window.supabase.createClient(
+            SUPABASE_CONFIG.url,
+            SUPABASE_CONFIG.anonKey
+        );
+        
+        // Uygulamayı başlat
+        async function initializeApp() {
+            try {
+                // Restoran bilgilerini al
+                restaurantInfo = await getRestaurantInfo();
+                
+                if (!restaurantInfo) {
+                    alert('Restoran bilgileri bulunamadı!');
+                    return;
+                }
+                
+                // Paketleri render et
+                renderPackages();
+                
+                // Event listener'ları ekle
+                setupEventListeners();
+                
+            } catch (error) {
+                console.error('Uygulama başlatılamadı:', error);
+                alert('Uygulama yüklenirken hata oluştu');
+            }
+        }
+        
+        // Restoran bilgilerini getir
+        async function getRestaurantInfo() {
+            try {
+                const { data, error } = await supabase
+                    .from('restaurants')
+                    .select('*')
+                    .eq('id', RESTAURANT_ID)
+                    .single();
+                
+                if (error) throw error;
+                return data;
+            } catch (error) {
+                console.error('Restoran bilgileri alınamadı:', error);
+                return null;
+            }
+        }
+        
+        // Paketleri render et
+        function renderPackages() {
+            const packagesGrid = document.getElementById('packagesGrid');
+            packagesGrid.innerHTML = '';
+            
+            packages.forEach((package, index) => {
+                const card = document.createElement('div');
+                card.className = 'package-card';
+                card.setAttribute('data-package-id', package.id);
+                
+                // Popüler paket işaretle (Test paketi özel olarak işaretlenir)
+                const isPopular = package.id === 'test_package';
+                const isYearly = package.period === 'Yıllık';
+                
+                card.innerHTML = `
+                    ${package.discount ? `<div class="discount-badge">${package.discount} İndirim</div>` : ''}
+                    ${isPopular ? '<div class="popular-badge">Test Paketi</div>' : ''}
+                    <div class="package-header">
+                        <div class="package-name">${package.name}</div>
+                        <div class="package-price">
+                            ${package.originalPrice ? `<span class="original-price">${package.originalPrice}</span>` : ''}
+                            ${package.price}
+                        </div>
+                        <div class="package-period">${package.period}</div>
+                    </div>
+                    <ul class="package-features">
+                        ${package.features.map(feature => `
+                            <li><i class="fas fa-check"></i> ${feature}</li>
+                        `).join('')}
+                    </ul>
+                    <button class="package-btn" onclick="selectPackage('${package.id}')">
+                        ${isYearly ? '<i class="fas fa-gift"></i> ' : ''}${package.id === 'test_package' ? '<i class="fas fa-flask"></i> Test Et' : 'Bu Paketi Seç'}
+                    </button>
+                `;
+                
+                packagesGrid.appendChild(card);
+            });
+        }
+        
+        // Paket seç
+        window.selectPackage = function(packageId) {
+            // Önceki seçimi temizle
+            document.querySelectorAll('.package-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Yeni paketi seç
+            const selectedCard = document.querySelector(`[data-package-id="${packageId}"]`);
+            if (selectedCard) {
+                selectedCard.classList.add('selected');
+            }
+            
+            selectedPackage = packages.find(p => p.id === packageId);
+            
+            // Ödeme bölümünü göster
+            document.getElementById('paymentSection').style.display = 'block';
+            
+            // Sayfayı ödeme bölümüne kaydır
+            document.getElementById('paymentSection').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        };
+        
+        // Event listener'ları ayarla
+        function setupEventListeners() {
+            // Ödeme butonu click event
+            document.getElementById('payBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                processPayment();
+            });
+        }
+        
+        // Ödeme işlemi
+        async function processPayment() {
+            if (!selectedPackage || !restaurantInfo) {
+                alert('Lütfen bir paket seçin');
+                return;
+            }
+            
+            try {
+                // Ödeme kaydını oluştur
+                const { data: payment, error: paymentError } = await supabase
+                    .from('payments')
+                    .insert([{
+                        restaurant_id: RESTAURANT_ID,
+                        package_id: selectedPackage.id,
+                        amount: selectedPackage.price.replace('₺', ''),
+                        status: 'pending',
+                        type: 'subscription',
+                        created_at: new Date().toISOString()
+                    }])
+                    .select()
+                    .single();
+                
+                if (paymentError) throw paymentError;
+                
+                // Shopier ödeme işlemini başlat
+                paymentProcessor.processPayment({
+                    orderId: payment.id,
+                    amount: selectedPackage.price,
+                    currency: '0', // TRY
+                    productName: `RetoQR ${selectedPackage.name} - ${selectedPackage.period}`,
+                    buyer: {
+                        name: restaurantInfo.name || 'Restoran',
+                        surname: 'Sahibi',
+                        email: restaurantInfo.email || 'info@restoran.com',
+                        phone: restaurantInfo.phone || '5551234567',
+                        id: RESTAURANT_ID,
+                        address: restaurantInfo.address || '',
+                        city: restaurantInfo.city || 'İstanbul',
+                        country: 'TR',
+                        postcode: restaurantInfo.postcode || '34000'
+                    },
+                    productInfo: JSON.stringify([{
+                        id: selectedPackage.id,
+                        name: selectedPackage.name,
+                        price: selectedPackage.price.replace('₺', ''),
+                        quantity: 1
+                    }]),
+                    generalInfo: JSON.stringify({
+                        payment_type: 'subscription',
+                        buyer_ip: '',
+                        buyer_ua: navigator.userAgent
+                    })
+                });
+                
+            } catch (error) {
+                console.error('Ödeme başlatma hatası:', error);
+                alert('Ödeme işlemi başlatılamadı: ' + error.message);
+                
+                document.getElementById('payBtn').disabled = false;
+                document.getElementById('payBtn').innerHTML = '<i class="fas fa-lock"></i> Tekrar Dene';
+            }
+        }
+        
+        // Uygulamayı başlat
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+            
+            // URL callback parametrelerini kontrol et (Shopier'den dönüş)
+            paymentProcessor.processCallbackParams();
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ödeme Sonucu - RetoQR</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="result-card" id="resultCard">
+            <div class="result-icon" id="resultIcon">
+                <i class="fas fa-spinner fa-spin"></i>
+            </div>
+            
+            <div class="result-title" id="resultTitle">
+                Ödeme Durumu Kontrol Ediliyor...
+            </div>
+            
+            <div class="result-message" id="resultMessage">
+                Ödeme bilgileriniz kontrol ediliyor, lütfen bekleyin...
+            </div>
+            
+            <div class="payment-details" id="paymentDetails">
+                <div class="detail-row">
+                    <span class="detail-label">Ödeme Durumu</span>
+                    <span class="detail-value" id="paymentStatus">İşleniyor</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Paket</span>
+                    <span class="detail-value" id="packageName">Yükleniyor...</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Tutar</span>
+                    <span class="detail-value" id="paymentAmount">Yükleniyor...</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Tarih</span>
+                    <span class="detail-value" id="paymentDate">Yükleniyor...</span>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <a href="#" class="btn btn-primary" id="dashboardBtn">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Yönetim Paneli
+                </a>
+                <a href="#" class="btn btn-secondary" id="menuBtn">
+                    <i class="fas fa-qrcode"></i>
+                    QR Menü
+                </a>
+            </div>
+            
+            <div class="countdown" id="countdown">
+                <i class="fas fa-clock"></i> <span id="countdownText">5 saniye sonra yönetim paneline yönlendirileceksiniz...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shopier entegrasyonu -->
+    <script src="payment.js"></script>
+    <script src="config.js"></script>
+    
+    <script>
+        // Supabase istemcisi oluştur
+        const supabase = window.supabase.createClient(
+            SUPABASE_CONFIG.url,
+            SUPABASE_CONFIG.anonKey
+        );
+        
+        // URL parametrelerinden değerleri al
+        const urlParams = new URLSearchParams(window.location.search);
+        const paymentId = urlParams.get('payment_id') || urlParams.get('platform_order_id');
+        const status = urlParams.get('status');
+        const restaurantId = urlParams.get('restaurant_id');
+        const message = urlParams.get('message');
+        
+        // Shopier özel parametreler
+        const shopierStatus = urlParams.get('status');
+        const shopierPaymentId = urlParams.get('payment_id'); 
+        const shopierRandomNumber = urlParams.get('random_nr'); 
+        const shopierSignature = urlParams.get('signature');
+        
+        // Shopier ödeme işlemcisi örneği oluştur
+        const paymentProcessor = new ShopierPaymentProcessor({
+            testMode: SUPABASE_CONFIG.testMode || false
+        });
+        
+        // Sayaç değişkeni
+        let countdown = 5;
+        
+        // Uygulamayı başlat
+        async function initializeApp() {
+            try {
+                // Callback parametrelerini işle
+                const callbackResult = paymentProcessor.processCallbackParams();
+                
+                // Ödeme sonucunu kontrol et
+                if (callbackResult && callbackResult.status === 'success') {
+                    // Shopier'den başarılı yanıt
+                    await processSuccessfulPayment(callbackResult.paymentId || paymentId);
+                } else if (callbackResult && callbackResult.status === 'failed') {
+                    // Shopier'den başarısız yanıt
+                    showErrorResult(callbackResult.message || message);
+                } else if (status === 'success' || shopierStatus === 'success') {
+                    // URL parametrelerinden başarılı durum
+                    await processSuccessfulPayment(paymentId);
+                } else if (status === 'failed' || shopierStatus === 'failed') {
+                    // URL parametrelerinden başarısız durum
+                    showErrorResult(message);
+                } else {
+                    // Ödeme durumunu veritabanından kontrol et
+                    await checkPaymentFromDatabase();
+                }
+                
+                // Geri sayım başlat
+                startCountdown();
+                
+            } catch (error) {
+                console.error('Uygulama başlatılamadı:', error);
+                showErrorResult('Ödeme sonucu kontrol edilirken bir hata oluştu.');
+            }
+        }
+        
+        // Başarılı ödemeyi işle
+        async function processSuccessfulPayment(paymentId) {
+            try {
+                // Ödeme kaydını güncelle
+                const { data: payment, error } = await supabase
+                    .from('payments')
+                    .update({
+                        status: 'success',
+                        shopier_payment_id: shopierPaymentId || 'direct_' + Date.now(),
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('id', paymentId)
+                    .select()
+                    .single();
+                
+                if (error) throw error;
+                
+                // Restoran bilgilerini al
+                const { data: restaurant } = await supabase
+                    .from('restaurants')
+                    .select('*')
+                    .eq('id', payment.restaurant_id || restaurantId)
+                    .single();
+                
+                // Restoran aboneliğini güncelle
+                if (restaurant) {
+                    const packageId = payment.package_id;
+                    const period = packageId.includes('yearly') ? 365 : 30; // Gün cinsinden süre
+                    const tableLimit = packageId === 'test_package' ? 20 : 
+                                     (packageId.includes('starter') ? 10 : 25);
+                    
+                    await supabase
+                        .from('restaurants')
+                        .update({
+                            subscription_package: packageId,
+                            subscription_status: 'active',
+                            subscription_start: new Date().toISOString(),
+                            subscription_end: new Date(Date.now() + period * 24 * 60 * 60 * 1000).toISOString(),
+                            table_limit: tableLimit
+                        })
+                        .eq('id', restaurant.id);
+                }
+                
+                // Paket bilgilerini göster
+                showSuccessResult(payment);
+                
+            } catch (error) {
+                console.error('Ödeme işleme hatası:', error);
+                showPartialSuccess();
+            }
+        }
+        
+        // Veritabanından ödeme durumunu kontrol et
+        async function checkPaymentFromDatabase() {
+            try {
+                if (!paymentId) {
+                    showErrorResult('Ödeme bilgisi bulunamadı.');
+                    return;
+                }
+                
+                const { data: payment, error } = await supabase
+                    .from('payments')
+                    .select('*')
+                    .eq('id', paymentId)
+                    .single();
+                
+                if (error || !payment) {
+                    showErrorResult('Ödeme kaydı bulunamadı.');
+                    return;
+                }
+                
+                if (payment.status === 'success') {
+                    showSuccessResult(payment);
+                } else if (payment.status === 'pending') {
+                    // Ödeme beklemede, Shopier callback'i henüz çalışmamış olabilir
+                    showPartialSuccess();
+                } else {
+                    showErrorResult('Ödeme işlemi başarısız oldu.');
+                }
+                
+            } catch (error) {
+                console.error('Veritabanı sorgulama hatası:', error);
+                showErrorResult('Ödeme bilgileri alınamadı.');
+            }
+        }
+        
+        // Başarılı sonuç göster
+        function showSuccessResult(payment) {
+            document.getElementById('resultIcon').className = 'result-icon success';
+            document.getElementById('resultIcon').innerHTML = '<i class="fas fa-check"></i>';
+            document.getElementById('resultTitle').textContent = 'Ödemeniz Gerçekleşti!';
+            document.getElementById('resultMessage').textContent = 'RetoQR QR Menü sisteminiz başarıyla aktifleştirildi. Artık müşterileriniz QR kodlar ile sipariş verebilir.';
+            
+            document.getElementById('paymentStatus').textContent = 'Başarılı';
+            document.getElementById('paymentStatus').style.color = 'var(--success)';
+            
+            // Paket bilgilerini göster
+            const packages = {
+                'test_package': 'Test Paketi (20 Masa) - 1 Ay',
+                'starter_monthly': 'Başlangıç Paketi (10 Masa) - Aylık',
+                'starter_yearly': 'Başlangıç Paketi (10 Masa) - Yıllık',
+                'professional_monthly': 'Profesyonel Paket (25 Masa) - Aylık',
+                'professional_yearly': 'Profesyonel Paket (25 Masa) - Yıllık'
+            };
+            
+            document.getElementById('packageName').textContent = packages[payment.package_id] || 'Bilinmeyen Paket';
+            document.getElementById('paymentAmount').textContent = `${payment.amount}₺`;
+            document.getElementById('paymentDate').textContent = new Date(payment.created_at).toLocaleDateString('tr-TR');
+            
+            // Butonları güncelle
+            document.getElementById('dashboardBtn').href = `dashboard.html?restaurant_id=${payment.restaurant_id || restaurantId}`;
+            document.getElementById('menuBtn').href = `menu.html?restaurant_id=${payment.restaurant_id || restaurantId}&table_id=1`;
+        }
+        
+        // Hata sonucunu göster
+        function showErrorResult(errorMessage) {
+            document.getElementById('resultIcon').className = 'result-icon error';
+            document.getElementById('resultIcon').innerHTML = '<i class="fas fa-times"></i>';
+            document.getElementById('resultTitle').textContent = 'Ödeme Alınamadı';
+            document.getElementById('resultMessage').textContent = errorMessage || 'Ödeme işlemi sırasında bir hata oluştu. Lütfen tekrar deneyin veya destek ekibimizle iletişime geçin.';
+            
+            document.getElementById('paymentStatus').textContent = 'Başarısız';
+            document.getElementById('paymentStatus').style.color = 'var(--error)';
+            
+            // Ödeme detaylarını gizle
+            document.getElementById('paymentDetails').style.display = 'none';
+            
+            // Butonları güncelle
+            document.getElementById('dashboardBtn').href = `odeme.html?restaurant_id=${restaurantId}`;
+            document.getElementById('dashboardBtn').innerHTML = '<i class="fas fa-redo"></i> Tekrar Dene';
+            document.getElementById('menuBtn').style.display = 'none';
+        }
+        
+        // Kısmi başarı (işleniyor) göster
+        function showPartialSuccess() {
+            document.getElementById('resultIcon').className = 'result-icon success';
+            document.getElementById('resultIcon').innerHTML = '<i class="fas fa-check"></i>';
+            document.getElementById('resultTitle').textContent = 'Ödemeniz İşleniyor';
+            document.getElementById('resultMessage').textContent = 'Ödemeniz alındı ve işleme alındı. Sistemsel bir gecikme nedeniyle detaylar birkaç dakika içinde güncellenecektir.';
+            
+            document.getElementById('paymentStatus').textContent = 'İşleniyor';
+            document.getElementById('paymentStatus').style.color = 'var(--warning)';
+            
+            // Kısmi ödeme detaylarını göster
+            document.getElementById('packageName').textContent = 'İşleniyor...';
+            document.getElementById('paymentAmount').textContent = 'İşleniyor...';
+            document.getElementById('paymentDate').textContent = new Date().toLocaleDateString('tr-TR');
+            
+            // Butonları güncelle
+            document.getElementById('dashboardBtn').href = `dashboard.html?restaurant_id=${restaurantId}`;
+            document.getElementById('menuBtn').style.display = 'inline-flex';
+            document.getElementById('menuBtn').href = `menu.html?restaurant_id=${restaurantId}&table_id=1`;
+        }
+        
+        // Geri sayım başlat
+        function startCountdown() {
+            const countdownElement = document.getElementById('countdownText');
+            
+            const timer = setInterval(() => {
+                countdown--;
+                countdownElement.textContent = `${countdown} saniye sonra yönetim paneline yönlendirileceksiniz...`;
+                
+                if (countdown <= 0) {
+                    clearInterval(timer);
+                    redirectToDashboard();
+                }
+            }, 1000);
+        }
+        
+        // Yönetim paneline yönlendir
+        function redirectToDashboard() {
+            const isSuccess = (status === 'success' || shopierStatus === 'success') && restaurantId;
+            if (isSuccess) {
+                window.location.href = `dashboard.html?restaurant_id=${restaurantId}`;
+            } else {
+                window.location.href = `odeme.html?restaurant_id=${restaurantId}`;
+            }
+        }
+        
+        // Buton event listener'ları
+        document.getElementById('dashboardBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            redirectToDashboard();
+        });
+        
+        document.getElementById('menuBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            if (restaurantId) {
+                window.location.href = `menu.html?restaurant_id=${restaurantId}&table_id=1`;
+            }
+        });
+        
+        // Uygulamayı başlat
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+        });
+    </script>
+</body>
+</html> 

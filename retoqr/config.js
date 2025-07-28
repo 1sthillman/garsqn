@@ -1,118 +1,117 @@
-// Güvenli API Konfigürasyonu - Konsol erişimi engellendi
-(function() {
-  'use strict';
-  
-  // Şifrelenmiş veriler (Base64 + XOR)
-  const _0x4a2b = {
-    _0x7c1d: 'aHR0cHM6Ly9lZ2NrbHpmaXl4eG52eXh3b293dy5zdXBhYmFzZS5jbw==',
-    _0x8e3f: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVnY2tsemZpeXh4bnZ5eHdvb3dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0NjQxMTcsImV4cCI6MjA2NDA0MDExN30.dfRQv3lYFCaI1T5ydOw4HyoEJ0I1wOSIUcG8ueEbxKQ'
+/**
+ * RetoQR - Uygulama Yapılandırması
+ * @version 1.0.0
+ */
+
+// Supabase API yapılandırması
+const SUPABASE_CONFIG = {
+    url: 'https://egcklzfiyxxnvyxwoowq.supabase.co',
+    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVnY2tsemZpeXh4bnZ5eHdvb3dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0NjQxMTcsImV4cCI6MjA2NDA0MDExN30.dfRQv3lYFCaI1T5ydOw4HyoEJ0I1wOSIUcG8ueEbxKQ',
+    testMode: false // Geliştirme modunda true, canlı modda false
 };
-  
-  // Şifre çözme fonksiyonu
-  function _0x2d8e(_0x5f1a) {
-    return atob(_0x5f1a);
-  }
-  
-  // Config objesi oluştur (sadece okunabilir)
-  const _0x6c4a = {
-    url: _0x2d8e(_0x4a2b._0x7c1d),
-    anonKey: _0x4a2b._0x8e3f
-  };
-  
-  // Global erişimi engelle
-  Object.defineProperty(window, 'SUPABASE_CONFIG', {
-    get: function() {
-      return {
-        url: _0x2d8e(_0x4a2b._0x7c1d),
-        anonKey: _0x4a2b._0x8e3f
-      };
-    },
-    set: function() {
-      console.warn('⚠️ API konfigürasyonu korunuyor');
-      return false;
-    },
-    configurable: false,
-    enumerable: false
-  });
-  
-  // Konsol erişimini engelle
-  const _0x3f7e = console.log;
-  const _0x1a2b = console.warn;
-  const _0x5c4d = console.error;
-  
-  console.log = function(...args) {
-    const _0x9e2f = args.join(' ').toLowerCase();
-    if (_0x9e2f.includes('supabase') || _0x9e2f.includes('api') || _0x9e2f.includes('key') || _0x9e2f.includes('url')) {
-      return;
-    }
-    _0x3f7e.apply(console, args);
-  };
-  
-  console.warn = function(...args) {
-    const _0x9e2f = args.join(' ').toLowerCase();
-    if (_0x9e2f.includes('supabase') || _0x9e2f.includes('api') || _0x9e2f.includes('key') || _0x9e2f.includes('url')) {
-      return;
-    }
-    _0x1a2b.apply(console, args);
-  };
-  
-  console.error = function(...args) {
-    const _0x9e2f = args.join(' ').toLowerCase();
-    if (_0x9e2f.includes('supabase') || _0x9e2f.includes('api') || _0x9e2f.includes('key') || _0x9e2f.includes('url')) {
-      return;
-    }
-    _0x5c4d.apply(console, args);
-  };
-  
-  // Object.keys ve Object.values erişimini engelle
-  const _0x8f2c = Object.keys;
-  const _0x7d4e = Object.values;
-  
-  Object.keys = function(obj) {
-    if (obj === window.SUPABASE_CONFIG) {
-      return [];
-    }
-    return _0x8f2c.call(this, obj);
-  };
-  
-  Object.values = function(obj) {
-    if (obj === window.SUPABASE_CONFIG) {
-      return [];
-    }
-    return _0x7d4e.call(this, obj);
-  };
-  
-  // JSON.stringify erişimini engelle
-  const _0x4e2a = JSON.stringify;
-  JSON.stringify = function(obj) {
-    if (obj && (obj.url || obj.anonKey)) {
-      return '{"protected": true}';
-    }
-    return _0x4e2a.call(this, obj);
-  };
-  
-  // toString erişimini engelle
-  const _0x6f1a = _0x6c4a.toString;
-  _0x6c4a.toString = function() {
-    return '[object Protected]';
-  };
-  
-  // DevTools erişimini engelle
-  setInterval(function() {
-    if (window.outerHeight - window.innerHeight > 200) {
-      // DevTools açık, API bilgilerini gizle
-      window.SUPABASE_CONFIG = {
-        url: '[PROTECTED]',
-        anonKey: '[PROTECTED]'
-      };
-    }
-  }, 1000);
-  
-})();
 
-// URL parametrelerinden restoran ve masa bilgilerini al
+// URL'den restoran ve masa ID parametrelerini al
 const urlParams = new URLSearchParams(window.location.search);
-const RESTAURANT_ID = urlParams.get('restaurant_id') || 'default-restaurant-id';
-const TABLE_ID = urlParams.get('table_id') || 'default-table-id';
+const RESTAURANT_ID = urlParams.get('restaurant_id');
+const TABLE_ID = urlParams.get('table_id');
 
-export { SUPABASE_CONFIG, RESTAURANT_ID, TABLE_ID }; 
+// Shopier API yapılandırması
+const SHOPIER_API = {
+    apiKey: 'ba946ce45c717d982cc6decbcb616bb2',
+    secret: '8a186b6f15655c57c65ec415ae121e69',
+    paymentEndpoint: 'https://www.shopier.com/ShowProduct/api_pay4.php',
+    websiteIndex: '1'
+};
+
+// Uygulama ayarları
+const APP_CONFIG = {
+    appName: 'RetoQR',
+    version: '1.0.0',
+    defaultLanguage: 'tr',
+    supportedLanguages: ['tr', 'en'],
+    baseUrl: window.location.origin,
+    apiTimeout: 30000, // 30 saniye
+    debugMode: false
+};
+
+// Paket ayarları
+const PACKAGE_CONFIG = {
+    trial: {
+        duration: 7, // gün
+        tableLimit: 5
+    },
+    starter: {
+        monthly: {
+            price: '199',
+            tableLimit: 10
+        },
+        yearly: {
+            price: '1999',
+            tableLimit: 10
+        }
+    },
+    professional: {
+        monthly: {
+            price: '399',
+            tableLimit: 25
+        },
+        yearly: {
+            price: '3999',
+            tableLimit: 25
+        }
+    },
+    test: {
+        price: '1',
+        tableLimit: 20,
+        duration: 30 // gün
+    }
+};
+
+// Kullanıcı dostu hata mesajları
+const ERROR_MESSAGES = {
+    networkError: 'Sunucuya bağlanırken bir hata oluştu. Lütfen internet bağlantınızı kontrol edin.',
+    paymentError: 'Ödeme işlemi sırasında bir hata oluştu. Lütfen daha sonra tekrar deneyin.',
+    authError: 'Oturum açma hatası. Lütfen bilgilerinizi kontrol edin.',
+    serverError: 'Sunucu hatası. Lütfen daha sonra tekrar deneyin.',
+    validationError: 'Girdiğiniz bilgilerde hata var. Lütfen kontrol edin.',
+    notFound: 'İstediğiniz sayfa bulunamadı.',
+    permissionError: 'Bu işlemi yapmaya yetkiniz yok.'
+};
+
+// Analytics ayarları (isteğe bağlı)
+const ANALYTICS_CONFIG = {
+    enabled: false,
+    trackErrors: true,
+    trackPageViews: true,
+    trackClicks: false
+};
+
+// Sayfa yüklenme zamanını ölç
+const PAGE_LOAD_TIME = new Date().getTime();
+
+// Tarayıcı bilgilerini kontrol et
+const BROWSER_INFO = {
+    userAgent: navigator.userAgent,
+    language: navigator.language,
+    platform: navigator.platform,
+    isOnline: navigator.onLine
+};
+
+// Konsol güvenliği (canlıda aktif)
+if (!APP_CONFIG.debugMode) {
+    console.log = function() {};
+    console.warn = function() {};
+    console.error = function() {};
+}
+
+// Export işlevleri ve değişkenleri
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+    module.exports = {
+        SUPABASE_CONFIG,
+        RESTAURANT_ID,
+        TABLE_ID,
+        SHOPIER_API,
+        APP_CONFIG,
+        PACKAGE_CONFIG
+    };
+} 
