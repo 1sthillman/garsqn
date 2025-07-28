@@ -1069,7 +1069,10 @@
                 // Shopier form verilerini hazırla
                 const randomNr = Math.floor(Math.random() * 900000) + 100000;
                 const orderId = payment.id;
-                const amount = selectedPackage.price.replace('₺', '').trim(); // Nokta korunur (Shopier 199.90 formatı bekler)
+                let amount = selectedPackage.price.replace('₺', '').trim();
+                if(!amount.includes('.')) {
+                    amount = Number(amount).toFixed(2); // 1 -> 1.00
+                }
                 const currency = 'TRY'; // Güncel Shopier API'si TRY string değerini bekliyor
                 
                 console.log('Shopier için form verileri hazırlanıyor:');
