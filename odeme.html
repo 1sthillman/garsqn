@@ -1078,6 +1078,12 @@
                 console.log('- Amount:', amount);
                 console.log('- Currency:', currency);
                 
+                // Geçerli domain için Shopier alan adı bilgisini al
+                const domainInfo = SHOPIER_DOMAIN_CONFIG[window.location.hostname] || {
+                    domain_id: SHOPIER_CONFIG.domain_id,
+                    website_index: SHOPIER_CONFIG.website_index
+                };
+
                 // Shopier signature oluştur
                 const signature = generateShopierSignature(randomNr.toString(), orderId, amount, currency);
                 
@@ -1099,6 +1105,7 @@
                     modul_version: '1.0.4',
                     platform: '0',
                     domain: SHOPIER_CONFIG.domain, // Domain bilgisi (https:// olmadan)
+                    domain_id: domainInfo.domain_id,
                     random_nr: randomNr.toString(),
                     signature: signature
                 };
