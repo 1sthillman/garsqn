@@ -878,7 +878,7 @@
         const SHOPIER_CONFIG = {
             api_key: 'ba946ce45c717d982cc6decbcb616bb2',
             secret: '8a186b6f15655c57c65ec415ae121e69',
-            payment_endpoint_url: 'https://www.shopier.com/ShowProduct/api_pay.php', // Güncel endpoint
+            payment_endpoint_url: 'https://www.shopier.com/ShowProduct/api_pay4.php', // Güncel endpoint (Shopier dokümantasyonuna göre en stabil sürüm)
             website_index: '0', // Shopier panelindeki ilk site
             return_url: 'https://1sthillman.github.io/garsqn/odeme-sonrasi.html',
             test_mode: false, // Gerçek ödeme modu aktif
@@ -912,9 +912,9 @@
         
         // Alternatif endpoint'ler (güncel Shopier API'sine göre)
         const SHOPIER_ENDPOINTS = [
-            'https://www.shopier.com/ShowProduct/api_pay.php',
-            'https://www.shopier.com/ShowProduct/api_pay2.php',
-            'https://www.shopier.com/ShowProduct/api_pay4.php'
+            'https://www.shopier.com/ShowProduct/api_pay4.php', // Birincil endpoint
+            'https://www.shopier.com/ShowProduct/api_pay2.php', // Yedek
+            'https://www.shopier.com/ShowProduct/api_pay.php'   // Eski sürüm, en son denenecek
         ];
         
         console.log('Shopier Entegrasyonu - Domain Kontrolü:', window.location.origin);
