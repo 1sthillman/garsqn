@@ -52,7 +52,7 @@ Kullanıcılar şu haklara sahiptir:
 
 Gizlilik politikamızla ilgili sorularınız için:
 
-E-posta: info@adistow.com
+E-posta: sthillmanbusiness@gmail.com
 
 ## Değişiklikler
 
