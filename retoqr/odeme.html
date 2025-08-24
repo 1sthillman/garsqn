@@ -377,7 +377,7 @@
         let selectedPackage = null;
         let restaurantInfo = null;
         
-        // Paketleri tanımla
+        // Paketleri tanımla - YENİ FİYAT YAPISI
         const packages = [
             {
                 id: 'test_package',
@@ -399,10 +399,10 @@
             {
                 id: 'starter_monthly',
                 name: 'Başlangıç Paketi',
-                price: '199₺',
+                price: '1.500₺',  // YENİ FİYAT
                 period: 'Aylık',
-                originalPrice: '299₺',
-                discount: '33%',
+                originalPrice: '2.000₺', // YENİ FİYAT
+                discount: '25%',
                 tables: 10,
                 features: [
                     '10 Masa QR Kodu',
@@ -415,10 +415,10 @@
             {
                 id: 'starter_yearly',
                 name: 'Başlangıç Paketi',
-                price: '1.999₺',
+                price: '15.000₺',  // YENİ FİYAT
                 period: 'Yıllık',
-                originalPrice: '3.588₺',
-                discount: '44%',
+                originalPrice: '24.000₺', // YENİ FİYAT
+                discount: '38%',
                 tables: 10,
                 features: [
                     '10 Masa QR Kodu',
@@ -430,12 +430,12 @@
                 ]
             },
             {
-                id: 'professional_monthly',
-                name: 'Profesyonel Paket',
-                price: '399₺',
+                id: 'medium_monthly',
+                name: 'Orta Paket',
+                price: '2.500₺',  // YENİ FİYAT
                 period: 'Aylık',
-                originalPrice: '599₺',
-                discount: '33%',
+                originalPrice: '3.500₺', // YENİ FİYAT
+                discount: '29%',
                 tables: 25,
                 features: [
                     '25 Masa QR Kodu',
@@ -443,24 +443,100 @@
                     'Garson Çağırma',
                     'Köz İsteme',
                     'Mobil Uyumlu',
+                    'Özel Tasarım'
+                ]
+            },
+            {
+                id: 'medium_yearly',
+                name: 'Orta Paket',
+                price: '25.000₺',  // YENİ FİYAT
+                period: 'Yıllık',
+                originalPrice: '42.000₺', // YENİ FİYAT
+                discount: '40%',
+                tables: 25,
+                features: [
+                    '25 Masa QR Kodu',
+                    'Müşteri Siparişleri',
+                    'Garson Çağırma',
+                    'Köz İsteme',
+                    'Mobil Uyumlu',
+                    'Özel Tasarım',
+                    '2 Ay Bedava'
+                ]
+            },
+            {
+                id: 'professional_monthly',
+                name: 'Profesyonel Paket',
+                price: '3.500₺',  // YENİ FİYAT
+                period: 'Aylık',
+                originalPrice: '5.000₺', // YENİ FİYAT
+                discount: '30%',
+                tables: 50,  // YENİ MASA SAYISI
+                features: [
+                    '50 Masa QR Kodu',  // YENİ MASA SAYISI
+                    'Müşteri Siparişleri',
+                    'Garson Çağırma',
+                    'Köz İsteme',
+                    'Mobil Uyumlu',
+                    'Özel Tasarım',
                     '7/24 Destek'
                 ]
             },
             {
                 id: 'professional_yearly',
                 name: 'Profesyonel Paket',
-                price: '3.999₺',
+                price: '35.000₺',  // YENİ FİYAT
                 period: 'Yıllık',
-                originalPrice: '7.188₺',
-                discount: '44%',
-                tables: 25,
+                originalPrice: '60.000₺', // YENİ FİYAT
+                discount: '42%',
+                tables: 50,  // YENİ MASA SAYISI
                 features: [
-                    '25 Masa QR Kodu',
+                    '50 Masa QR Kodu',  // YENİ MASA SAYISI
                     'Müşteri Siparişleri',
                     'Garson Çağırma',
                     'Köz İsteme',
                     'Mobil Uyumlu',
+                    'Özel Tasarım',
                     '7/24 Destek',
+                    '2 Ay Bedava'
+                ]
+            },
+            {
+                id: 'enterprise_monthly',
+                name: 'Kurumsal Paket',
+                price: '4.500₺',  // YENİ FİYAT
+                period: 'Aylık',
+                originalPrice: '7.000₺', // YENİ FİYAT
+                discount: '35%',
+                tables: 80,  // YENİ MASA SAYISI
+                features: [
+                    '80 Masa QR Kodu',  // YENİ MASA SAYISI
+                    'Müşteri Siparişleri',
+                    'Garson Çağırma',
+                    'Köz İsteme',
+                    'Mobil Uyumlu',
+                    'Özel Tasarım',
+                    '7/24 Öncelikli Destek',
+                    'Özel Entegrasyonlar'
+                ]
+            },
+            {
+                id: 'enterprise_yearly',
+                name: 'Kurumsal Paket',
+                price: '45.000₺',  // YENİ FİYAT
+                period: 'Yıllık',
+                originalPrice: '84.000₺', // YENİ FİYAT
+                discount: '46%',
+                tables: 80,  // YENİ MASA SAYISI
+                features: [
+                    '80 Masa QR Kodu',  // YENİ MASA SAYISI
+                    'Müşteri Siparişleri',
+                    'Garson Çağırma',
+                    'Köz İsteme',
+                    'Mobil Uyumlu',
+                    'Özel Tasarım',
+                    '7/24 Öncelikli Destek',
+                    'Özel Entegrasyonlar',
                     '2 Ay Bedava'
                 ]
             }
@@ -682,4 +758,4 @@
         });
     </script>
 </body>
-</html> 
+</html>
