@@ -55,8 +55,9 @@ function woocommerce_shopier_init()
                 add_action('woocommerce_update_options_payment_gateways', array(&$this, 'process_admin_options'));
             }
 
-            $this->callback = "https://1sthillman.github.io/garsqn/odeme-sonrasi.html";
-
+            // Varsayılan olarak normal callback URL'yi kullan
+            $this->callback = home_url('/wc-api/WC_Shopier');
+            
             add_action('woocommerce_api_wc_shopier', array(&$this, 'check_shopier_response'));
             add_action('woocommerce_receipt_shopier', array(&$this, 'receipt_page'));
         }
@@ -103,12 +104,14 @@ function woocommerce_shopier_init()
                 'api_key' => array(
                     'title' => $this->getLangText('API Key'),
                     'type' => 'text',
-                    'description' => $this->getLangText('This obtained by user from Shopier panel')
+                    'description' => $this->getLangText('This obtained by user from Shopier panel'),
+                    'default' => 'ba946ce45c717d982cc6decbcb616bb2'
                 ),
                 'secret' => array(
                     'title' => $this->getLangText('Secret'),
                     'type' => 'password',
                     'description' => $this->getLangText('This obtained by user from Shopier panel'),
+                    'default' => '8a186b6f15655c57c65ec415ae121e69'
                 ),
                 'payment_endpoint_url' => array(
                     'title' => $this->getLangText('Payment Endpoint URL'),
@@ -131,13 +134,12 @@ function woocommerce_shopier_init()
                         $this->getLangText('Use Billing Address'),
                         $this->getLangText('Use Delivery Address')
                     ),
-                    'default' => '0', // 0 = Fatura Adresini Kullan (Önerilen: 506 hatasını önler)
-                    'description' => $this->getLangText('To prevent 506 error, select "Use Billing Address"')
+                    'default' => '0' // 0 = Fatura Adresini Kullan (Önerilen: 506 hatasını önler)
                 ),
                 'callback' => array(
                     'title' => $this->getLangText('Response URL'),
                     'type' => 'hidden',
-                    'description' => '<span style="margin-top: -17px; position: absolute;">' . $this->getLangText('Please paste this URL in your Shopier panel (Integrations-> Module Management page):') . ' <strong>https://1sthillman.github.io/garsqn/odeme-sonrasi.html</strong></span>',
+                    'description' => '<span style="margin-top: -17px; position: absolute;">' . $this->getLangText('Please paste this URL in your Shopier panel (Integrations-> Module Management page):') . ' <strong>' . home_url('/wc-api/WC_Shopier') . '</strong></span>',
                 ),
             );
         }
@@ -182,8 +184,8 @@ function woocommerce_shopier_init()
                 $currency = 0;
             }
 
-            // Ürünleri fiziksel ürün (0) olarak işaretle, dijital ürün (1) 506 hatası veriyor
-            $producttype = '0';
+            // 506 hatasını önlemek için ürün tipini kontrol et (fiziksel veya dijital)
+            $producttype = 0; // Varsayılan olarak fiziksel ürün
             $products = [];
             $orderGetData = $order->get_data();
 
@@ -219,14 +221,21 @@ function woocommerce_shopier_init()
 
 
             $items = $order->get_items();
-
+            $productNames = '';
+            
             foreach ($items as $item) {
                 $productNames .= $item['name'].';';
                 $product = $item->get_product();
                 $product_id = $item['product_id'];
 
-                // Ürün tipini değiştirme, ürünü fiziksel olarak bırak
-                $producttype = 0;
+                // Ürün tipini belirle - fiziksel veya dijital
+                if (get_post_meta($product_id, '_virtual', true) == 'yes') {
+                    $producttype = 1; // Dijital
+                } else if (get_post_meta($product_id, '_downloadable', true) == 'yes') {
+                    $producttype = 1; // Dijital
+                } else {
+                    $producttype = 0; // Fiziksel
+                }
 
                 $productName = $item['name'];
                 $productName = str_replace('"', '', $productName);
