@@ -2,10 +2,10 @@
 
 ## Yapılan Değişiklikler
 
-Bu repoda, Shopier 506 hatasını çözmek ve tüm siparişleri **dijital ürün** olarak göndermek için aşağıdaki düzenlemeler yapılmıştır:
+Bu repoda, Shopier 506 hatasını çözmek ve tüm siparişleri **fiziksel ürün** olarak göndermek için aşağıdaki düzenlemeler yapılmıştır:
 
 ### 1. Shopier Eklentisi Düzenlemeleri
-- Tüm ürünler otomatik olarak dijital/sanal olarak işaretlendi
+- Tüm ürünler otomatik olarak fiziksel ürün olarak işaretlendi
 - "Adres Kullanımı" ayarı varsayılan olarak "Fatura Adresini Kullan" şeklinde ayarlandı
 
 ### 2. Tema Düzenlemeleri

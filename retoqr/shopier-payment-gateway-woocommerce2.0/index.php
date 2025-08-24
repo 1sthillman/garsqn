@@ -182,8 +182,8 @@ function woocommerce_shopier_init()
                 $currency = 0;
             }
 
-            // Shopier 506 hatasını önlemek için tüm ürünler dijital ürün (1) olarak işaretleniyor
-            $producttype = '1';
+            // Ürünleri fiziksel ürün (0) olarak işaretle, dijital ürün (1) 506 hatası veriyor
+            $producttype = '0';
             $products = [];
             $orderGetData = $order->get_data();
 
@@ -225,8 +225,8 @@ function woocommerce_shopier_init()
                 $product = $item->get_product();
                 $product_id = $item['product_id'];
 
-                // Tüm ürünleri sanal/dijital olarak işaretle (Shopier 506 hatasını önlemek için)
-            $producttype = 1;
+                // Ürün tipini değiştirme, ürünü fiziksel olarak bırak
+                $producttype = 0;
 
                 $productName = $item['name'];
                 $productName = str_replace('"', '', $productName);
