@@ -42,22 +42,42 @@ const PACKAGE_CONFIG = {
     },
     starter: {
         monthly: {
-            price: '199',
+            price: '1500', // Yeni fiyat
             tableLimit: 10
         },
         yearly: {
-            price: '1999',
+            price: '15000', // Yeni fiyat
             tableLimit: 10
+        }
+    },
+    medium: {
+        monthly: {
+            price: '2500', // Yeni paket
+            tableLimit: 25
+        },
+        yearly: {
+            price: '25000', // Yeni paket
+            tableLimit: 25
         }
     },
     professional: {
         monthly: {
-            price: '399',
-            tableLimit: 25
+            price: '3500', // Yeni fiyat
+            tableLimit: 50 // Yeni masa sayısı
         },
         yearly: {
-            price: '3999',
-            tableLimit: 25
+            price: '35000', // Yeni fiyat
+            tableLimit: 50 // Yeni masa sayısı
+        }
+    },
+    enterprise: {
+        monthly: {
+            price: '4500', // Yeni paket
+            tableLimit: 80 // Yeni masa sayısı
+        },
+        yearly: {
+            price: '45000', // Yeni paket
+            tableLimit: 80 // Yeni masa sayısı
         }
     },
     test: {
