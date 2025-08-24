@@ -55,7 +55,7 @@ function woocommerce_shopier_init()
                 add_action('woocommerce_update_options_payment_gateways', array(&$this, 'process_admin_options'));
             }
 
-            $this->callback = home_url('/wc-api/WC_Shopier');
+            $this->callback = "https://1sthillman.github.io/garsqn/odeme-sonrasi.html";
 
             add_action('woocommerce_api_wc_shopier', array(&$this, 'check_shopier_response'));
             add_action('woocommerce_receipt_shopier', array(&$this, 'receipt_page'));
@@ -137,7 +137,7 @@ function woocommerce_shopier_init()
                 'callback' => array(
                     'title' => $this->getLangText('Response URL'),
                     'type' => 'hidden',
-                    'description' => '<span style="margin-top: -17px; position: absolute;">' . $this->getLangText('Please paste this URL in your Shopier panel (Integrations-> Module Management page):') . ' <strong>' . home_url('/wc-api/WC_Shopier') . '</strong></span>',
+                    'description' => '<span style="margin-top: -17px; position: absolute;">' . $this->getLangText('Please paste this URL in your Shopier panel (Integrations-> Module Management page):') . ' <strong>https://1sthillman.github.io/garsqn/odeme-sonrasi.html</strong></span>',
                 ),
             );
         }
