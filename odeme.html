@@ -552,9 +552,21 @@
                 </div>
             </div>
             
-            <button type="button" class="pay-btn" id="payBtn">
+            <div style="margin-bottom: 20px;">
+                <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                    <strong style="margin-right: 10px; font-size: 14px;">Restoran ID:</strong>
+                    <div id="restaurant-id-display" style="padding: 8px 12px; background: rgba(255,255,255,0.2); border-radius: 6px; font-family: monospace; min-width: 200px; margin-right: 10px;">${RESTAURANT_ID}</div>
+                    <button type="button" id="copyBtn" style="padding: 5px 10px; background: rgba(255,255,255,0.3); border: none; border-radius: 4px; cursor: pointer;">
+                        <i class="fas fa-copy"></i> Kopyala
+                    </button>
+                </div>
+                <div style="font-size: 12px; margin-bottom: 20px; color: rgba(255,255,255,0.8);">
+                    Bu Restaurant ID'yi Shopier ödeme sayfasındaki "Açıklama" alanına girmeniz gereklidir.
+                </div>
+            </div>
+            <a href="#" class="pay-btn" id="payBtn" target="_blank">
                 <i class="fas fa-lock"></i> Shopier ile Güvenli Ödeme
-            </button>
+            </a>
         </div>
         
         <div class="trial-info" id="trialInfo">
@@ -676,23 +688,6 @@
         // Paketleri tanımla
         const packages = [
             {
-                id: 'test_package',
-                name: 'Test Paketi',
-                price: '1₺',
-                period: '1 Ay',
-                originalPrice: null,
-                discount: null,
-                tables: 20,
-                features: [
-                    '20 Masa QR Kodu',
-                    'Müşteri Siparişleri',
-                    'Garson Çağırma',
-                    'Köz İsteme',
-                    'Mobil Uyumlu',
-                    'Test Amaçlı'
-                ]
-            },
-            {
                 id: 'starter_monthly',
                 name: 'Başlangıç Paketi',
                 price: '1.500₺',
@@ -700,6 +695,7 @@
                 originalPrice: '2.000₺',
                 discount: '25%',
                 tables: 10,
+                shopierLink: 'https://www.shopier.com/38795939',
                 features: [
                     '10 Masa QR Kodu',
                     'Müşteri Siparişleri',
@@ -716,6 +712,7 @@
                 originalPrice: '24.000₺',
                 discount: '38%',
                 tables: 10,
+                shopierLink: 'https://www.shopier.com/38795995',
                 features: [
                     '10 Masa QR Kodu',
                     'Müşteri Siparişleri',
@@ -733,6 +730,7 @@
                 originalPrice: '3.500₺',
                 discount: '29%',
                 tables: 25,
+                shopierLink: 'https://www.shopier.com/38796029',
                 features: [
                     '25 Masa QR Kodu',
                     'Müşteri Siparişleri',
@@ -750,6 +748,7 @@
                 originalPrice: '42.000₺',
                 discount: '40%',
                 tables: 25,
+                shopierLink: 'https://www.shopier.com/38796048',
                 features: [
                     '25 Masa QR Kodu',
                     'Müşteri Siparişleri',
@@ -768,6 +767,7 @@
                 originalPrice: '5.000₺',
                 discount: '30%',
                 tables: 50,
+                shopierLink: 'https://www.shopier.com/38796080',
                 features: [
                     '50 Masa QR Kodu',
                     'Müşteri Siparişleri',
@@ -786,6 +786,7 @@
                 originalPrice: '60.000₺',
                 discount: '42%',
                 tables: 50,
+                shopierLink: 'https://www.shopier.com/38796107',
                 features: [
                     '50 Masa QR Kodu',
                     'Müşteri Siparişleri',
@@ -805,6 +806,7 @@
                 originalPrice: '7.000₺',
                 discount: '35%',
                 tables: 80,
+                shopierLink: 'https://www.shopier.com/38796119',
                 features: [
                     '80 Masa QR Kodu',
                     'Müşteri Siparişleri',
@@ -824,6 +826,7 @@
                 originalPrice: '84.000₺',
                 discount: '46%',
                 tables: 80,
+                shopierLink: 'https://www.shopier.com/38796141',
                 features: [
                     '80 Masa QR Kodu',
                     'Müşteri Siparişleri',
@@ -931,6 +934,15 @@
             }
             
             selectedPackage = packages.find(p => p.id === packageId);
+            
+            // Restaurant ID'yi göster ve ödeme butonunu güncelle
+            document.getElementById('restaurant-id-display').textContent = RESTAURANT_ID;
+            
+            // Ödeme butonuna Shopier linkini ekle
+            const payBtn = document.getElementById('payBtn');
+            if (selectedPackage && selectedPackage.shopierLink) {
+                payBtn.href = selectedPackage.shopierLink;
+            }
             
             // Ödeme bölümünü göster
             document.getElementById('paymentSection').style.display = 'block';
@@ -1121,231 +1133,37 @@
         
         // Ödeme işlemi
         async function processPayment() {
-            const payBtn = document.getElementById('payBtn');
-            payBtn.disabled = true;
-            payBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Shopier\'e Yönlendiriliyor...';
-            
-            try {
-                // Ödeme kaydını oluştur
-                const { data: payment, error: paymentError } = await supabase
-                    .from('payments')
-                    .insert([{
-                        restaurant_id: RESTAURANT_ID,
-                        package_id: selectedPackage.id,
-                        amount: selectedPackage.price.replace('₺', ''),
-                        status: 'pending',
-                        type: 'subscription',
-                        created_at: new Date().toISOString()
-                    }])
-                    .select()
-                    .single();
-                
-                if (paymentError) throw paymentError;
-                
-                // Shopier form verilerini hazırla
-                const randomNr = Math.floor(Math.random() * 900000) + 100000;
-                const orderId = payment.id;
-                const amount = selectedPackage.price.replace('₺', '').trim();
-                const currency = 'TRY'; // Güncel Shopier API'si TRY string değerini bekliyor
-                
-                console.log('Shopier için form verileri hazırlanıyor:');
-                console.log('- Random Number:', randomNr);
-                console.log('- Order ID:', orderId);
-                console.log('- Amount:', amount);
-                console.log('- Currency:', currency);
-                
-                // Geçerli domain için Shopier alan adı bilgisini al
-                const domainInfo = SHOPIER_DOMAIN_CONFIG[window.location.hostname] || {
-                    domain_id: SHOPIER_CONFIG.domain_id,
-                    website_index: SHOPIER_CONFIG.website_index
-                };
-
-                // Shopier signature oluştur
-                const signature = generateShopierSignature(randomNr.toString(), orderId, amount, currency);
-                
-                // Shopier için form verileri hazırla - Güncel API gereksinimleri
-                const minimalShopierData = {
-                    API_key: SHOPIER_CONFIG.api_key,
-                    website_index: domainInfo.website_index,
-                    platform_order_id: orderId,
-                    product_name: selectedPackage.name,
-                    product_type: 1,
-                    total_order_value: amount,
-                    product_info: JSON.stringify([{id: selectedPackage.id, name: selectedPackage.name, price: amount, quantity: 1}]),
-                    general_info: JSON.stringify({payment_type: 'subscription', buyer_ip: '', buyer_ua: navigator.userAgent}),
-                    currency: currency,
-                    buyer_name: restaurantInfo?.name || 'Restoran',
-                    buyer_surname: 'Sahibi',
-                    buyer_email: restaurantInfo?.email || 'info@restoran.com',
-                    buyer_phone: restaurantInfo?.phone || '5551234567',
-                    buyer_id_nr: RESTAURANT_ID,
-                    buyer_account_age: 0,
-                    use_adress: '0',
-                    is_in_frame: '0',
-                    billing_address: (restaurantInfo?.address || 'Adres') + ' ' + (restaurantInfo?.city || ''),
-                    billing_city: restaurantInfo?.city || 'İstanbul',
-                    billing_country: 'TR',
-                    billing_postcode: restaurantInfo?.postcode || '34000',
-                    shipping_address: (restaurantInfo?.address || 'Adres') + ' ' + (restaurantInfo?.city || ''),
-                    shipping_city: restaurantInfo?.city || 'İstanbul',
-                    shipping_country: 'TR',
-                    shipping_postcode: restaurantInfo?.postcode || '34000',
-                    lang: 'tr',
-                    current_language: 'tr',
-                    modul_version: '2.0.0',
-                    platform: '0',
-                    // domain parametresi Shopier v4'te gerekli değil
-                    random_nr: randomNr.toString(),
-                    signature: signature
-                };
-                
-                // Test modu kontrolü
-                if (SHOPIER_CONFIG.test_mode === true) {
-                    console.log('Test modu aktif - Shopier API çağrısı simüle ediliyor');
-                    console.log('Shopier verileri:', minimalShopierData);
-                    
-                    // Kullanıcıya test modu bilgisi göster
-                    const testModeInfo = document.createElement('div');
-                    testModeInfo.style.position = 'fixed';
-                    testModeInfo.style.top = '50%';
-                    testModeInfo.style.left = '50%';
-                    testModeInfo.style.transform = 'translate(-50%, -50%)';
-                    testModeInfo.style.background = 'rgba(0,0,0,0.9)';
-                    testModeInfo.style.color = 'white';
-                    testModeInfo.style.padding = '20px';
-                    testModeInfo.style.borderRadius = '10px';
-                    testModeInfo.style.zIndex = '10000';
-                    testModeInfo.style.maxWidth = '400px';
-                    testModeInfo.style.textAlign = 'center';
-                    testModeInfo.style.boxShadow = '0 0 20px rgba(0,0,0,0.5)';
-                    testModeInfo.innerHTML = `
-                        <h3 style="margin-top:0;">Test Modu Aktif</h3>
-                        <p>Gerçek ödeme sayfasına gitmeden test simülasyonu yapılıyor.</p>
-                        <p>Sipariş ID: ${orderId}</p>
-                        <p>Paket: ${selectedPackage.name} - ${selectedPackage.price}</p>
-                        <div style="margin-top:20px;">
-                            <button id="testContinueBtn" style="background:#10b981; border:none; color:white; padding:10px 20px; border-radius:5px; cursor:pointer;">Devam Et</button>
-                        </div>
-                    `;
-                    document.body.appendChild(testModeInfo);
-                    
-                    // Devam et butonuna tıklandığında
-                    document.getElementById('testContinueBtn').addEventListener('click', async function() {
-                    // Yükleniyor göster
-                        this.disabled = true;
-                        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> İşleniyor...';
-                    
-                        try {
-                            // Ödeme durumunu güncelle
-                            await supabase
-                                .from('payments')
-                                .update({ 
-                                    status: 'success',
-                                    shopier_payment_id: 'test_' + Date.now(),
-                                    updated_at: new Date().toISOString()
-                                })
-                                .eq('id', orderId);
-                            
-                            // Restoran aboneliğini güncelle
-                            await supabase
-                                .from('restaurants')
-                                .update({
-                                    subscription_package: selectedPackage.id,
-                                    subscription_status: 'active',
-                                    subscription_start: new Date().toISOString(),
-                                    subscription_end: new Date(Date.now() + (selectedPackage.id.includes('yearly') ? 365 : 30) * 24 * 60 * 60 * 1000).toISOString(),
-                                    table_limit: selectedPackage.id === 'test_package' ? 20 : (selectedPackage.id.includes('starter') ? 10 : 25)
-                                })
-                                .eq('id', RESTAURANT_ID);
-                            
-                            // Başarılı ödeme sayfasına yönlendir
-                            window.location.href = `${SHOPIER_CONFIG.return_url}?payment_id=${orderId}&restaurant_id=${RESTAURANT_ID}&status=success`;
-                        } catch (error) {
-                            console.error('Test ödeme simülasyonu hatası:', error);
-                            alert('Ödeme işlemi başarısız: ' + error.message);
-                            
-                            document.body.removeChild(testModeInfo);
-                            payBtn.disabled = false;
-                            payBtn.innerHTML = '<i class="fas fa-lock"></i> Shopier ile Güvenli Ödeme';
-                        }
-                    });
-                    
-                    // Ödeme butonunu normale döndür
-                    payBtn.disabled = false;
-                    payBtn.innerHTML = '<i class="fas fa-lock"></i> Shopier ile Güvenli Ödeme';
-                    
-                    // Test modu aktif olduğu için form gönderme işlemini durdur
-                    return;
-                }
-                
-                // Gerçek ödeme için yükleniyor göstergesi
-                const loadingOverlay = document.createElement('div');
-                loadingOverlay.style.position = 'fixed';
-                loadingOverlay.style.top = '0';
-                loadingOverlay.style.left = '0';
-                loadingOverlay.style.width = '100%';
-                loadingOverlay.style.height = '100%';
-                loadingOverlay.style.background = 'rgba(0,0,0,0.7)';
-                loadingOverlay.style.zIndex = '9999';
-                loadingOverlay.style.display = 'flex';
-                loadingOverlay.style.flexDirection = 'column';
-                loadingOverlay.style.alignItems = 'center';
-                loadingOverlay.style.justifyContent = 'center';
-                loadingOverlay.style.color = 'white';
-                loadingOverlay.style.fontSize = '18px';
-                loadingOverlay.innerHTML = `
-                    <div style="text-align:center;">
-                        <div style="width:60px; height:60px; border:5px solid #f3f3f3; border-top:5px solid #3498db; border-radius:50%; margin:0 auto; animation:spin 1s linear infinite;"></div>
-                        <style>@keyframes spin {0% {transform:rotate(0deg);} 100% {transform:rotate(360deg);}}</style>
-                        <p style="margin-top:20px;">Shopier Ödeme Sayfasına Yönlendiriliyor...</p>
-                        <p style="font-size:14px; margin-top:10px;">Lütfen bekleyin...</p>
-                    </div>
-                `;
-                document.body.appendChild(loadingOverlay);
-                
-                // 10 saniye sonra yükleniyor göstergesini kaldır (Shopier'a yönlendirme yapıldıysa zaten sayfadan çıkılmış olacak)
-                setTimeout(() => {
-                    try {
-                        document.body.removeChild(loadingOverlay);
-                    } catch (e) {
-                        // Ignore
-                    }
-                }, 10000);
-                
-                // Form oluştur - WooCommerce eklentisinden uyarlanmış
-                const shopierForm = document.createElement('form');
-                shopierForm.method = 'POST';
-                shopierForm.action = SHOPIER_CONFIG.payment_endpoint_url;
-                shopierForm.target = '_self';
-                shopierForm.acceptCharset = 'UTF-8';
-                shopierForm.id = 'shopier_payment_form';
-                        
-                // Form alanlarını ekle
-                Object.keys(minimalShopierData).forEach(key => {
-                    const input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = key;
-                    input.value = minimalShopierData[key];
-                    shopierForm.appendChild(input);
-                });
-                
-                // Formu sayfaya ekle ve gönder
-                document.body.appendChild(shopierForm);
-                
-                console.log('Shopier formunu gönderiyorum...');
-                
-                // WooCommerce eklentisindeki gibi form gönderimini geciktir
-                setTimeout(() => {
-                    shopierForm.submit();
-                    console.log('✅ Shopier\'e başarıyla gönderildi');
-                }, 500);
-            } catch (error) {
-                console.error('Ödeme hatası:', error);
-                alert('Ödeme işlemi başarısız: ' + error.message);
-                
-                payBtn.disabled = false;
-                payBtn.innerHTML = '<i class="fas fa-lock"></i> Güvenli Ödeme Yap';
+            if (!selectedPackage || !selectedPackage.shopierLink) {
+                alert('Lütfen bir paket seçin');
+                return;
             }
+            
+            // Doğrudan Shopier linke yönlendir
+            window.open(selectedPackage.shopierLink, '_blank');
+        }
+        
+        // Kopyalama butonu işlevi
+        document.addEventListener('DOMContentLoaded', function() {
+            const copyBtn = document.getElementById('copyBtn');
+            if (copyBtn) {
+                copyBtn.addEventListener('click', function() {
+                    const restaurantId = document.getElementById('restaurant-id-display').textContent;
+                    navigator.clipboard.writeText(restaurantId).then(function() {
+                        // Kopyalama başarılı
+                        copyBtn.innerHTML = '<i class="fas fa-check"></i> Kopyalandı';
+                        setTimeout(function() {
+                            copyBtn.innerHTML = '<i class="fas fa-copy"></i> Kopyala';
+                        }, 2000);
+                    }, function(err) {
+                        // Kopyalama başarısız
+                        console.error('Kopyalama hatası:', err);
+                        alert('Kopyalama başarısız. Lütfen manuel olarak seçip kopyalayın.');
+                    });
+                });
+            }
+        });
+                
+                // Boş
         }
         
         // Uygulamayı başlat
