@@ -524,16 +524,46 @@
                 <span>ADİSTOW</span>
             </div>
             <div class="subtitle">QR Menü Sistemi - Premium Paketler</div>
-            <div style="text-align: center; margin-top: 10px; background-color: rgba(255, 255, 255, 0.2); padding: 15px; border-radius: 10px; color: white; font-weight: bold; display: flex; justify-content: center; align-items: center; gap: 10px;">
-                <div>
-                    <span style="color: yellow;">Restaurant ID:</span> 
-                    <span id="restaurantIdDisplay" style="background: rgba(0,0,0,0.2); padding: 5px 10px; border-radius: 5px; margin: 0 5px; font-family: monospace; font-size: 16px;"></span>
+            <div style="margin: 20px auto; max-width: 800px; background: rgba(0,0,0,0.3); border: 2px solid rgba(255,255,255,0.2); backdrop-filter: blur(10px); padding: 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
+                    <div style="background: rgba(255, 193, 7, 0.2); padding: 10px 20px; border-radius: 50px; border-left: 4px solid #FFC107; width: 100%; text-align: center;">
+                        <span style="font-weight: bold; font-size: 16px; color: #FFC107;"><i class="fas fa-exclamation-triangle"></i> ÖNEMLİ: Restaurant ID'nizi kopyalayıp SİPARİŞ NOTUNA yapıştırmanız gerekmektedir!</span>
+                    </div>
+                    
+                    <div style="display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.1); padding: 15px 25px; border-radius: 10px; width: 100%; justify-content: space-between; flex-wrap: wrap;">
+                        <div style="display: flex; align-items: center; gap: 10px; flex: 1;">
+                            <div style="font-weight: 600; color: white; font-size: 16px;">Restaurant ID:</div>
+                            <div id="restaurantIdDisplay" style="background: rgba(0,0,0,0.3); color: #4fc3f7; padding: 10px 15px; border-radius: 8px; font-family: 'Consolas', monospace; font-size: 18px; letter-spacing: 1px; border: 1px solid rgba(79, 195, 247, 0.3); min-width: 150px; text-align: center; font-weight: bold;"></div>
+                        </div>
+                        
+                        <button onclick="copyRestaurantId()" style="background: linear-gradient(135deg, #4CAF50, #2E7D32); border: none; color: white; padding: 12px 20px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: bold; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);">
+                            <i class="fas fa-copy"></i> KOPYALA
+                        </button>
+                    </div>
+                    
+                    <div id="copyMessage" style="display: none; background: rgba(76, 175, 80, 0.2); color: white; padding: 10px 20px; border-radius: 8px; font-weight: 600; animation: fadeInOut 2s ease;">
+                        <i class="fas fa-check-circle"></i> ID başarıyla kopyalandı! Lütfen sipariş notuna yapıştırın.
+                    </div>
                 </div>
-                <button onclick="copyRestaurantId()" style="background: #4CAF50; border: none; color: white; padding: 5px 15px; border-radius: 5px; cursor: pointer; display: flex; align-items: center; gap: 5px;">
-                    <i class="fas fa-copy"></i> Kopyala
-                </button>
-                <span id="copyMessage" style="display: none; color: #4CAF50; font-size: 14px;">Kopyalandı!</span>
             </div>
+            
+            <style>
+                @keyframes fadeInOut {
+                    0% { opacity: 0; transform: translateY(-10px); }
+                    15% { opacity: 1; transform: translateY(0); }
+                    85% { opacity: 1; transform: translateY(0); }
+                    100% { opacity: 0; transform: translateY(-10px); }
+                }
+                
+                button:hover {
+                    transform: translateY(-3px);
+                    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+                }
+                
+                button:active {
+                    transform: translateY(0);
+                }
+            </style>
             
             <script>
                 // URL'den Restaurant ID'yi çek ve göster
@@ -554,10 +584,24 @@
                         navigator.clipboard.writeText(restaurantId)
                             .then(() => {
                                 const copyMessage = document.getElementById('copyMessage');
-                                copyMessage.style.display = 'inline';
+                                copyMessage.style.display = 'block';
+                                
+                                // Animasyon için zamanlama
                                 setTimeout(() => {
                                     copyMessage.style.display = 'none';
                                 }, 2000);
+                                
+                                // Kopyalama başarılı olduğunda butonu geçici olarak değiştir
+                                const copyButton = document.querySelector('button[onclick="copyRestaurantId()"]');
+                                const originalButtonContent = copyButton.innerHTML;
+                                copyButton.innerHTML = '<i class="fas fa-check"></i> KOPYALANDI';
+                                copyButton.style.background = 'linear-gradient(135deg, #2E7D32, #1B5E20)';
+                                
+                                // Butonu eski haline getir
+                                setTimeout(() => {
+                                    copyButton.innerHTML = originalButtonContent;
+                                    copyButton.style.background = 'linear-gradient(135deg, #4CAF50, #2E7D32)';
+                                }, 1500);
                             })
                             .catch(err => {
                                 console.error('Kopyalama hatası:', err);
