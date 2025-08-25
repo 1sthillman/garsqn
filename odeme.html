@@ -524,9 +524,51 @@
                 <span>ADİSTOW</span>
             </div>
             <div class="subtitle">QR Menü Sistemi - Premium Paketler</div>
-            <div style="text-align: center; margin-top: 10px; background-color: rgba(255, 255, 255, 0.2); padding: 10px; border-radius: 10px; color: yellow; font-weight: bold;">
-                <i class="fas fa-info-circle"></i> Restaurant ID'nizi URL'nin sonunda görebilirsiniz (Kopyalayıp not alın!)
+            <div style="text-align: center; margin-top: 10px; background-color: rgba(255, 255, 255, 0.2); padding: 15px; border-radius: 10px; color: white; font-weight: bold; display: flex; justify-content: center; align-items: center; gap: 10px;">
+                <div>
+                    <span style="color: yellow;">Restaurant ID:</span> 
+                    <span id="restaurantIdDisplay" style="background: rgba(0,0,0,0.2); padding: 5px 10px; border-radius: 5px; margin: 0 5px; font-family: monospace; font-size: 16px;"></span>
+                </div>
+                <button onclick="copyRestaurantId()" style="background: #4CAF50; border: none; color: white; padding: 5px 15px; border-radius: 5px; cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                    <i class="fas fa-copy"></i> Kopyala
+                </button>
+                <span id="copyMessage" style="display: none; color: #4CAF50; font-size: 14px;">Kopyalandı!</span>
             </div>
+            
+            <script>
+                // URL'den Restaurant ID'yi çek ve göster
+                function displayRestaurantId() {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const restaurantId = urlParams.get('restaurant_id');
+                    if (restaurantId) {
+                        document.getElementById('restaurantIdDisplay').textContent = restaurantId;
+                    } else {
+                        document.getElementById('restaurantIdDisplay').textContent = "ID bulunamadı";
+                    }
+                }
+                
+                // Restaurant ID'yi panoya kopyala
+                function copyRestaurantId() {
+                    const restaurantId = document.getElementById('restaurantIdDisplay').textContent;
+                    if (restaurantId && restaurantId !== "ID bulunamadı") {
+                        navigator.clipboard.writeText(restaurantId)
+                            .then(() => {
+                                const copyMessage = document.getElementById('copyMessage');
+                                copyMessage.style.display = 'inline';
+                                setTimeout(() => {
+                                    copyMessage.style.display = 'none';
+                                }, 2000);
+                            })
+                            .catch(err => {
+                                console.error('Kopyalama hatası:', err);
+                                alert('Kopyalama başarısız oldu: ' + err);
+                            });
+                    }
+                }
+                
+                // Sayfa yüklendiğinde ID'yi göster
+                document.addEventListener('DOMContentLoaded', displayRestaurantId);
+            </script>
         </div>
         
         <div class="packages-grid" id="packagesGrid">
